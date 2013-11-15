@@ -2,18 +2,26 @@
 #define CONTAINER_H
 
 #include <iostream>
-#include <vector>
+#include <unordered_map>
 
-#include "Block.h"
-
+/*
+ * Klasa pojemnika.
+ */
 class Container
 {
 private:
-	std::vector<Block*> includedBlocks;
+	//Mapuje kolor na ilosc przechowywanych klockow w tym kolorze.
+	std::unordered_map<unsigned int, unsigned int> content;
+	//Pojemnoœæ pojmenika.
+	const unsigned int capacity;
+	//Pozosta³e miejsce do zajêcia.
+	unsigned int leftPlace;
 public:
-	Container(std::vector<unsigned int> & included);
+	Container(const std::vector<unsigned int> & included,
+		      const unsigned int capacity,
+			  const unsigned int colorsNumber);
 	~Container();
-
+	void showInfo();
 };
 
 #endif 

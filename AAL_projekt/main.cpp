@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Interpreter.h"
+#include "ContainerSet.h"
 
 /*
  * Wejscie do programu.
@@ -12,6 +13,12 @@ int main(int argc, char* argv[])
 	{
 		interpreter.showGatheredInfo();
 	}
+	
+	ContainerSet containerSet(interpreter.getConatinersCapacity(),
+							  interpreter.getIncludingList(),
+							  interpreter.getColorsNumber());
+
+	containerSet.showInfo();
 
 	system("PAUSE");
 	return 0;

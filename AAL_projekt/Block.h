@@ -3,6 +3,9 @@
 
 #include <iostream>
 
+/*
+ * Blok o zadanym w konstruktorze kolorze.
+ */
 class Block
 {
 private:
