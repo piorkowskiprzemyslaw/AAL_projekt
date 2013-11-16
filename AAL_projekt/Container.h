@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 
 /*
  * Klasa pojemnika.
@@ -22,6 +23,7 @@ public:
 			  const unsigned int colorsNumber);
 	~Container();
 	void showInfo();
+	bool checkState();
 };
 
 #endif 

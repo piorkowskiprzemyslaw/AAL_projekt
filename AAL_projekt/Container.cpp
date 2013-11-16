@@ -29,9 +29,24 @@ Container::~Container(){ }
  */
 void Container::showInfo()
 {
-	std::cout << "Capacity : " << capacity << " leftPlace : " << leftPlace << std::endl;
+	std::cout << "Capacity : " << capacity << " leftPlace : " << leftPlace << " state : " << this->checkState() << std::endl;
 	for (auto x : content)
 	{
 		std::cout << x.first << " : " << x.second << std::endl;
 	}
+}
+
+/*
+ * Sprawdza czy pojemnik spe³nia warunki zadania.
+ */
+bool Container::checkState()
+{
+	for (auto x : content)
+	{
+		if (x.second > 1)
+		{
+			return false;
+		}
+	}
+	return true;
 }
