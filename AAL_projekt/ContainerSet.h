@@ -17,6 +17,7 @@ public:
 	ContainerSet(const std::vector<unsigned int> & containersCapacity,
 		         const std::vector<std::vector<unsigned int> > & includingList,
 				 const unsigned int colorsNumber);
+	ContainerSet(const ContainerSet& another);
 	~ContainerSet();
 	void showInfo();
 };

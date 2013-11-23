@@ -20,6 +20,14 @@ Container::Container(const std::vector<unsigned int> & included,
 }
 
 /*
+ * Konstruktor kopiuj¹cy wykonuj¹cy g³êbok¹ kopie danych.
+ */
+Container::Container(const Container& another) : capacity(another.capacity), leftPlace(another.leftPlace)
+{
+	content = another.content;
+}
+
+/*
  * Destruktor.
  */
 Container::~Container(){ }
@@ -27,7 +35,7 @@ Container::~Container(){ }
 /*
  * Wyœwietl informacje na temat tego pojemnika.
  */
-void Container::showInfo()
+void Container::showInfo() const
 {
 	std::cout << "Capacity : " << capacity << " leftPlace : " << leftPlace << " state : " << this->checkState() << std::endl;
 	for (auto x : content)
@@ -39,7 +47,7 @@ void Container::showInfo()
 /*
  * Sprawdza czy pojemnik spe³nia warunki zadania.
  */
-bool Container::checkState()
+bool Container::checkState() const
 {
 	for (auto x : content)
 	{
@@ -49,4 +57,12 @@ bool Container::checkState()
 		}
 	}
 	return true;
+}
+
+/*
+ * Pobranie pojemnoœci pojemnika.
+ */
+unsigned int Container::getCapacity() const
+{
+	return capacity;
 }

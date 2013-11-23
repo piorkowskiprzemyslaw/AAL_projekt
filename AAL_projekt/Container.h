@@ -22,8 +22,10 @@ public:
 		      const unsigned int capacity,
 			  const unsigned int colorsNumber);
 	~Container();
-	void showInfo();
-	bool checkState();
+	Container(const Container & anther);
+	void showInfo() const;
+	bool checkState() const;
+	unsigned int getCapacity() const;
 };
 
 #endif 

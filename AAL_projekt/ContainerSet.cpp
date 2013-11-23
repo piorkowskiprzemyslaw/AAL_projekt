@@ -1,7 +1,7 @@
 #include "ContainerSet.h"
 
 /*
- * Konstruktor który przyjmu
+ * Konstruktor który przyjmuje pojemnosci pojemnikow, listy zawierania oraz ilosc roznych kolorów.
  */
 ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity, 
 						   const std::vector<std::vector<unsigned int> > & includingList,
@@ -18,6 +18,17 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 		containers.push_back(new Container(includingList[i], containersCapacity[i], colorsNumber));
 	}
 	
+}
+
+/*
+ * Konstruktor kopiuj¹cy wykonuj¹cy g³êbok¹ kopie danych.
+ */
+ContainerSet::ContainerSet(const ContainerSet& another)
+{
+	for (auto x : another.containers)
+	{
+		containers.push_back(new Container(*x));
+	}
 }
 
 /*
