@@ -2,6 +2,7 @@
 #include "Interpreter.h"
 #include "ContainerSet.h"
 #include "CycleCounter.h"
+#include "DataGenerator.h"
 
 /* Naglowki plikow z algorytmami rozwiazan */
 #include "ContainersSweep.h"
@@ -16,22 +17,20 @@ int main(int argc, char* argv[])
 	
 	if (interpreter.verifyGatheredInfo())
 	{
-		interpreter.showGatheredInfo();
+		//interpreter.showGatheredInfo();
 	}
 	
-	ContainerSet containerSet(interpreter.getConatinersCapacity(),
-							  interpreter.getIncludingList(),
-							  interpreter.getColorsNumber());
+	ContainerSet containerSet(interpreter.getConatinersCapacity(), interpreter.getIncludingList(), interpreter.getColorsNumber());
 
-	containerSet.showInfo();
+	//containerSet.showInfo();
 
-	ContainersSweep containersSweep(containerSet);
+	DataGenerator generator(4, 1, 5, 0.75, 4);
 
-	cycleCounter.startCounting();
-	containersSweep.solveProblem();
-	cycleCounter.stopCounting();
+	generator.generateData();
+	generator.showGeneratedInfo();
 
-	std::cout << cycleCounter.getNumerOfCycles() << std::endl;
+	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
+	containerSet1.showInfo();
 
 	system("PAUSE");
 	return 0;

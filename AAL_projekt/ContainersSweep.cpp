@@ -25,10 +25,15 @@ ContainersSweep::~ContainersSweep()
 	delete(containerSet);
 }
 
+bool ContainersSweep::checkPreconditions()
+{
+	return false;
+}
+
 /*
  * Metoda rozwiazujaca problem implementowanym algorytmem.
  */
 void ContainersSweep::solveProblem()
 {
-
+	std::cout << "Solving problem with ContainersSweep" << std::endl << std::endl;
 }

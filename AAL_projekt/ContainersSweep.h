@@ -12,6 +12,7 @@ class ContainersSweep
 {
 private:
 	ContainerSet * containerSet;
+	bool checkPreconditions();
 public:
 	ContainersSweep();
 	ContainersSweep(const ContainerSet & containerSet);

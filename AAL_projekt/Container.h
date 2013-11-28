@@ -23,6 +23,7 @@ public:
 			  const unsigned int colorsNumber);
 	~Container();
 	Container(const Container & anther);
+	bool moveBlock(unsigned int blockColor, Container& destiny);
 	void showInfo() const;
 	bool checkState() const;
 	unsigned int getCapacity() const;
