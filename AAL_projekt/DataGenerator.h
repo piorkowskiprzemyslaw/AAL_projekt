@@ -6,6 +6,7 @@
 #include <ctime>
 #include <vector>
 #include <random>
+#include <map>
 
 /*
  * Klasa przedstawiaj¹ca generator danych dla problemu.

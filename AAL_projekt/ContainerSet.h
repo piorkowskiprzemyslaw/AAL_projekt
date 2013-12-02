@@ -13,6 +13,10 @@ class ContainerSet
 private:
 	// Wektor kontenerów znajduj¹cych siê w tym zbiorze.
 	std::vector<Container *> containers;
+	//liczba kolorów
+	unsigned int colorsNumber;
+	//liczba pojemników.
+	unsigned int containersNumber;
 public:
 	ContainerSet(const std::vector<unsigned int> & containersCapacity,
 		         const std::vector<std::vector<unsigned int> > & includingList,
@@ -20,6 +24,9 @@ public:
 	ContainerSet(const ContainerSet& another);
 	~ContainerSet();
 	void showInfo();
+	unsigned int getColorsNumber();
+	unsigned int getContainersNumer();
+
 };
 
 #endif

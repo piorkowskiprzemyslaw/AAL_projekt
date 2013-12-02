@@ -17,7 +17,9 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 	{
 		containers.push_back(new Container(includingList[i], containersCapacity[i], colorsNumber));
 	}
-	
+
+	this->colorsNumber = colorsNumber;
+	this->containersNumber = includingList.size();
 }
 
 /*
@@ -52,4 +54,20 @@ void ContainerSet::showInfo()
 		x->showInfo();
 		std::cout << std::endl;
 	}
+}
+
+/*
+ * Pobierz ilosc roznych kolorow.
+ */
+unsigned int ContainerSet::getColorsNumber()
+{
+	return colorsNumber;
+}
+
+/*
+ * Pobierz ilosc pojemnikow.
+ */
+unsigned int ContainerSet::getContainersNumer()
+{
+	return containersNumber;
 }

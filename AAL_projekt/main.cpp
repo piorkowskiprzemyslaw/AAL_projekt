@@ -13,6 +13,8 @@
 int main(int argc, char* argv[])
 {
 	Interpreter interpreter(argv[1]);
+	DataGenerator generator(6, 3, 6, 0.98, 6);
+	generator.generateData();
 	CycleCounter cycleCounter;
 	
 	if (interpreter.verifyGatheredInfo())
@@ -21,14 +23,7 @@ int main(int argc, char* argv[])
 	}
 	
 	ContainerSet containerSet(interpreter.getConatinersCapacity(), interpreter.getIncludingList(), interpreter.getColorsNumber());
-
 	//containerSet.showInfo();
-
-	DataGenerator generator(4, 1, 5, 0.75, 4);
-
-	generator.generateData();
-	generator.showGeneratedInfo();
-
 	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	containerSet1.showInfo();
 

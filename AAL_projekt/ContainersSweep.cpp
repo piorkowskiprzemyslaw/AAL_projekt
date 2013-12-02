@@ -25,9 +25,19 @@ ContainersSweep::~ContainersSweep()
 	delete(containerSet);
 }
 
+/*
+ * Sprawdz warunki poczatkowe.
+ */
 bool ContainersSweep::checkPreconditions()
 {
-	return false;
+	//liczba kolorow musi byc mniejsza badz rowna liczbe dostepnych pojemnikow.
+	if (this->containerSet->getColorsNumber() > this->containerSet->getContainersNumer())
+	{
+		return false;
+	}
+
+	return true;
+
 }
 
 /*

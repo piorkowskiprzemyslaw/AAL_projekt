@@ -29,6 +29,8 @@ void DataGenerator::generateData()
 	unsigned int generate = 0;
 	//wskaznik zapelnienia. Dla kazdego pojemnika bedzie obliczany oddzielnie
 	float degree = 0;
+	//loteria zaokraglenia liczby.
+	float lottery = 0;
 	//tablica z przedzialami do rodzielania kolorow wg rozkladu normalnego.
 	float* colorsInterval = new float[colorsNumber + 1];
 	//rozk³ad równomierny do pojemnoœci pojemników
@@ -37,6 +39,13 @@ void DataGenerator::generateData()
 	std::uniform_real_distribution<double> realDistribution(0.0, 1.0);
 	//Aktualnie wylosowany kolor
 	float color;
+	//Mapa z mo¿liwoœci¹ wstawiania konkretnych kolorów.
+	std::map<unsigned int, unsigned int > colorsMap;
+
+	for (size_t i = 0; i < static_cast<size_t>(colorsNumber); i++)
+	{
+		colorsMap.insert({ i, numberOfContainers });
+	}
 	
 	//Inicjalizacja przedzia³ów dla rozk³adu normalnego
 	colorsInterval[colorsNumber] = 1.0;
@@ -59,19 +68,71 @@ void DataGenerator::generateData()
 
 	//zapelnianie wszystkich pojemników.
 	for (size_t i = 0; i < static_cast<size_t>(includingList.size()); i++)
-	{
+	{//jesli generowane dane musza byc takie jak w opisie zadania tzn zadnego koloru nie moze byc wiecej niz n to musi zostac to co odkomentowane.
+	 //w innym przypadku ³adniejsze jest to co jest zakomentowane i tego nalezy sie trzymac.
+
+		//degree = containerscapacity[i] * fillingdegree;
+		//for (size_t k = 0; k < static_cast<size_t>(degree) ; k++)
+		//{
+		//	color = realdistribution(engine);
+		//	for (size_t m = 0; m < static_cast<size_t>(colorsnumber + 1); m++)
+		//	{
+		//		if (color < colorsinterval[m])
+		//		{
+		//			includinglist[i].push_back(m-1);
+		//			break;
+		//		}
+		//	}
+		//}
+		bool flag = false;
+		int counter = 0;
+
 		degree = containersCapacity[i] * fillingDegree;
-		for (size_t k = 0; k < static_cast<size_t>(degree) ; k++)
+
+		//loteria dotyczaca zapelniania kube³ka.
+		lottery = realDistribution(engine);
+		if (lottery <= 0.33)
 		{
+			degree--;
+		}
+		else if (lottery <= 0.66)
+		{
+			degree++;
+		}
+
+		while (true)
+		{
+			if (counter >= static_cast<int>(degree))
+			{
+				counter = 0;
+				break;
+			}
+
 			color = realDistribution(engine);
+
 			for (size_t m = 0; m < static_cast<size_t>(colorsNumber + 1); m++)
 			{
 				if (color < colorsInterval[m])
 				{
-					includingList[i].push_back(m-1);
+					//sprawdzenie czy mozna jeszcze wstawiac
+					if (colorsMap[m - 1])
+					{
+						includingList[i].push_back(m - 1);
+						colorsMap[m - 1]--;
+						flag = true;
+					} else {
+						flag = false;
+					}
+
 					break;
 				}
 			}
+
+			if (flag)
+			{
+				counter++;
+			}
+
 		}
 	}
 }
