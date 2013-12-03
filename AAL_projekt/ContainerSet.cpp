@@ -3,7 +3,7 @@
 /*
  * Konstruktor który przyjmuje pojemnosci pojemnikow, listy zawierania oraz ilosc roznych kolorów.
  */
-ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity, 
+ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 						   const std::vector<std::vector<unsigned int> > & includingList,
 						   const unsigned int colorsNumber)
 {
@@ -38,7 +38,7 @@ ContainerSet::ContainerSet(const ContainerSet& another)
  */
 ContainerSet::~ContainerSet()
 {
-	for each (Container * pointer in containers)
+	for(auto pointer : containers)
 	{
 		delete(pointer);
 	}
