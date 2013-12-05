@@ -1,3 +1,9 @@
+/*
+ * Projekt z AAL.
+ *
+ * Przemys³aw Piórkowski.
+ */
+
 #include <iostream>
 #include <stdlib.h>
 #include "Interpreter.h"
