@@ -1,7 +1,7 @@
 /*
  * Projekt z AAL.
  *
- * Przemys³aw Piórkowski.
+ * PrzemysÂ³aw PiÃ³rkowski.
  */
 
 #include <iostream>
@@ -13,6 +13,7 @@
 
 /* Naglowki plikow z algorytmami rozwiazan */
 #include "ContainersSweep.h"
+#include "SearchTree.h"
 
 /*
  * Wejscie do programu.

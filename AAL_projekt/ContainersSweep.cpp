@@ -36,6 +36,12 @@ bool ContainersSweep::checkPreconditions()
 		return false;
 	}
 
+    //lacznie we wszystkich pojemnikach jest nie wiecej niz n klockow danego koloru.
+	for(int i = 0 ; i < containerSet->getColorsNumber() ; i++)
+	{
+
+	}
+
 	return true;
 
 }

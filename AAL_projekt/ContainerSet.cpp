@@ -71,3 +71,14 @@ unsigned int ContainerSet::getContainersNumer()
 {
 	return containersNumber;
 }
+
+/*
+ * Pobierz ilosc klockow w kolorze color ktore znajduja sie we wszystkich pojemnikach.
+ */
+unsigned int ContainerSet::getColorMultiplicity(unsigned int color)
+{
+    for(auto x : this->containers)
+    {
+
+    }
+}

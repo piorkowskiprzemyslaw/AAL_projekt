@@ -26,6 +26,7 @@ public:
 	void showInfo();
 	unsigned int getColorsNumber();
 	unsigned int getContainersNumer();
+	unsigned int getColorMultiplicity(unsigned int color);
 
 };
 
