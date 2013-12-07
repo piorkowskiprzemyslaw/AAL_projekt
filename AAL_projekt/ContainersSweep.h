@@ -5,13 +5,15 @@
 #include "ContainerSet.h"
 
 /*
- * Klasa realizuj¹ca podejœcie do rozwiazania problemu za pomoc¹ omiatania pojemników z klocków
- * o kolorach ktore ju¿ nie mog¹ siê w tym pojemniku znajdowaæ.
+ * Klasa realizujÂ¹ca podejÅ“cie do rozwiazania problemu za pomocÂ¹ omiatania pojemnikÃ³w z klockÃ³w
+ * o kolorach ktore juÂ¿ nie mogÂ¹ siÃª w tym pojemniku znajdowaÃ¦.
  */
+template <int (*sort)(std::pair<unsigned int, unsigned int> * array, unsigned int size) >
 class ContainersSweep
 {
 private:
 	ContainerSet * containerSet;
+	size_t * colorMultiplicity;
 	bool checkPreconditions();
 public:
 	ContainersSweep();

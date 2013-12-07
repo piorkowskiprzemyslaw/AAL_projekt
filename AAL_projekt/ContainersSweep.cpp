@@ -3,32 +3,39 @@
 /*
  * Domyslny konstruktor.
  */
-ContainersSweep::ContainersSweep()
+template <int (*sort)(std::pair<unsigned int, unsigned int> * array, unsigned int size) >
+ContainersSweep<sort>::ContainersSweep()
 {
 	containerSet = nullptr;
+	colorMultiplicity = nullptr;
 }
 
 
 /*
- * Konstrutkor pobierajacy konkretny zbiÛr pojemnikÛw.
+ * Konstrutkor pobierajacy konkretny zbi√≥r pojemnik√≥w.
  */
-ContainersSweep::ContainersSweep(const ContainerSet & containerSet)
+template <int (*sort)(std::pair<unsigned int, unsigned int> * array, unsigned int size) >
+ContainersSweep<sort>::ContainersSweep(const ContainerSet & containerSet)
 {
 	this->containerSet = new ContainerSet(containerSet);
+	colorMultiplicity = new size_t[this->containerSet->getColorsNumber()];
 }
 
 /*
  * Destruktor.
  */
-ContainersSweep::~ContainersSweep()
+template <int (*sort)(std::pair<unsigned int, unsigned int> * array, unsigned int size) >
+ContainersSweep<sort>::~ContainersSweep()
 {
 	delete(containerSet);
+	delete(colorMultiplicity);
 }
 
 /*
  * Sprawdz warunki poczatkowe.
  */
-bool ContainersSweep::checkPreconditions()
+template <int (*sort)(std::pair<unsigned int, unsigned int> * array, unsigned int size) >
+bool ContainersSweep<sort>::checkPreconditions()
 {
 	unsigned int allColorSum = 0;
 	unsigned int allCapacitySum = 0;
@@ -40,18 +47,20 @@ bool ContainersSweep::checkPreconditions()
 	}
 
     //lacznie we wszystkich pojemnikach jest nie wiecej niz n klockow danego koloru.
+    //przy okazji wykonuje zliczanie ka≈ºdego koloru - potrzebne do dalszej czesci algorytmu,
 	for(int i = 0 ; i < containerSet->getColorsNumber() ; i++)
 	{
-		allColorSum += containerSet->colorMultiplicity(i);
-		if (containerSet->colorMultiplicity(i) > containerSet->size())
+		colorMultiplicity[i] = containerSet->colorMultiplicity(i);
+		allColorSum += colorMultiplicity[i];
+		if (colorMultiplicity[i] > containerSet->size())
 		{
 			return false;
 		}
 
 	}
 
-	//zapewnienie aby wszystkie klocki miescily sie w pojemnikach, oraz øeby da≥o
-	//siÍ wykonaÊ ruch.
+	//zapewnienie aby wszystkie klocki miescily sie w pojemnikach, oraz ¬øeby da¬≥o
+	//si√™ wykona√¶ ruch.
 	if (allColorSum >= containerSet->getCapacitySum())
 	{
 		return true;
@@ -63,10 +72,27 @@ bool ContainersSweep::checkPreconditions()
 /*
  * Metoda rozwiazujaca problem implementowanym algorytmem.
  */
-void ContainersSweep::solveProblem()
+template <int (*sort)(std::pair<unsigned int, unsigned int> * array, unsigned int size) >
+void ContainersSweep<sort>::solveProblem()
 {
 	std::cout << "Solving problem with ContainersSweep" << std::endl;
-	std::cout << "Preconditions ... " << std::boolalpha << checkPreconditions() << std::noboolalpha << std::endl;
+	std::cout << "Checking preconditions ... ";
 
+	if(!checkPreconditions())
+	{
+        std::cout << "[FALSE]" << std::endl;
+        std::cout << "End of solving problem" << std::endl;
+        return;
+	}
+
+	std::cout << "[OK]" << std::endl;
+
+	std::cout << "Colors multiplicity  : " << std::endl;
+	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
+	{
+        std::cout << "Color [" << i << "] = " << colorMultiplicity[i] << std::endl;
+	}
+
+    //zliczanie wystapien poszczeg√≥lnych kolor√≥w we wszystkich pude≈Çkach.
 
 }

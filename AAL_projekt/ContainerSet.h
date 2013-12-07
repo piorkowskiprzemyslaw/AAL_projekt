@@ -75,10 +75,10 @@ public:
 			return backup;
 		}
 	};
+
 	//Klasa zwyk³ego iteratora.
 	class iterator : public const_iterator
 	{
-	protected:
 	public:
 		iterator() : const_iterator() {}
 		iterator(const const_iterator & a) : const_iterator(a) {}

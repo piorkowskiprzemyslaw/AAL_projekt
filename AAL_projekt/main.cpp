@@ -14,6 +14,7 @@
 /* Naglowki plikow z algorytmami rozwiazan */
 #include "ContainersSweep.h"
 #include "SearchTree.h"
+#include "InsertionSort.h"
 
 /*
  * Wejscie do programu.
@@ -34,9 +35,8 @@ int main(int argc, char* argv[])
 	//containerSet.showInfo();
 	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	containerSet1.showInfo();
-	
-	ContainersSweep sweep(containerSet1);
-	sweep.solveProblem();
+
+	ContainersSweep<insertionSort> contSweep(containerSet1);
 
 
     #ifdef _WIN32
