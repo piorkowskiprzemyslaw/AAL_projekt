@@ -16,13 +16,14 @@
 #include "SearchTree.h"
 #include "InsertionSort.h"
 
+
 /*
  * Wejscie do programu.
  */
 int main(int argc, char* argv[])
 {
 	Interpreter interpreter(argv[1]);
-	DataGenerator generator(6, 3, 6, 0.98, 6);
+	DataGenerator generator(6, 3, 6, 0.80, 6);
 	generator.generateData();
 	CycleCounter cycleCounter;
 
@@ -36,8 +37,9 @@ int main(int argc, char* argv[])
 	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	containerSet1.showInfo();
 
-	ContainersSweep<insertionSort> contSweep(containerSet1);
+	//insertionSort(nullptr, 0);
 
+	ContainersSweep<insertionSort> contSweep;
 
     #ifdef _WIN32
 	system("PAUSE");
@@ -45,3 +47,4 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+

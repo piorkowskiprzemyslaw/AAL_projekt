@@ -1,13 +1,15 @@
 #ifndef INSERTIONSORT_H
 #define INSERTIONSORT_H
 
+#include <iostream>
+
 /*
  * Funkcja stosująca sortowanie przez wstawienie.
  */
-
-int insertionSort(std::pair<unsigned int, unsigned int> * array, unsigned int size)
+int insertionSort(std::pair<unsigned int, unsigned int> * table, unsigned int size)
 {
-    return 0;
+	std::cout << "troll" << std::endl;
+	return 0;
 }
 
 #endif // INSERTIONSORT_H
