@@ -78,3 +78,11 @@ unsigned int Container::getCapacity() const
 {
 	return capacity;
 }
+
+/*
+ * Pobranie ilosci klocków koloru color znajdujacych sie w pojemniku.
+ */
+unsigned int Container::getColorMultiplicity(unsigned int color) const
+{
+	return content.at(color);
+}

@@ -27,6 +27,7 @@ public:
 	void showInfo() const;
 	bool checkState() const;
 	unsigned int getCapacity() const;
+	unsigned int getColorMultiplicity(unsigned int color) const;
 };
 
 #endif 

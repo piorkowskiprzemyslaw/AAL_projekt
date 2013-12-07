@@ -34,6 +34,9 @@ int main(int argc, char* argv[])
 	//containerSet.showInfo();
 	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	containerSet1.showInfo();
+	
+	ContainersSweep sweep(containerSet1);
+	sweep.solveProblem();
 
 
     #ifdef _WIN32

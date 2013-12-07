@@ -13,13 +13,17 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 		exit(1);
 	}
 
+	containers = new Container*[containersCapacity.size()];
+	this->colorsNumber = colorsNumber;
+	arraySize = includingList.size();
+	capacitySum = 0;
+
 	for (size_t i = 0; i < containersCapacity.size(); i++)
 	{
-		containers.push_back(new Container(includingList[i], containersCapacity[i], colorsNumber));
+		capacitySum += containersCapacity[i];
+		containers[i] = new Container(includingList[i], containersCapacity[i], colorsNumber);
 	}
 
-	this->colorsNumber = colorsNumber;
-	this->containersNumber = includingList.size();
 }
 
 /*
@@ -27,9 +31,13 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
  */
 ContainerSet::ContainerSet(const ContainerSet& another)
 {
-	for (auto x : another.containers)
+	colorsNumber = another.colorsNumber;
+	arraySize = another.arraySize;
+	containers = new Container*[arraySize];
+
+	for (size_t i = 0; i < arraySize; i++)
 	{
-		containers.push_back(new Container(*x));
+		containers[i] = new Container(*another.containers[i]);
 	}
 }
 
@@ -38,10 +46,12 @@ ContainerSet::ContainerSet(const ContainerSet& another)
  */
 ContainerSet::~ContainerSet()
 {
-	for(auto pointer : containers)
+	for (size_t i = 0; i < arraySize; i++)
 	{
-		delete(pointer);
+		delete(containers[i]);
 	}
+
+	delete[] containers;
 }
 
 /*
@@ -49,9 +59,9 @@ ContainerSet::~ContainerSet()
  */
 void ContainerSet::showInfo()
 {
-	for (Container * x : containers)
+	for (size_t i = 0; i < arraySize; i++)
 	{
-		x->showInfo();
+		containers[i]->showInfo();
 		std::cout << std::endl;
 	}
 }
@@ -65,20 +75,46 @@ unsigned int ContainerSet::getColorsNumber()
 }
 
 /*
- * Pobierz ilosc pojemnikow.
+ * Zwraca rozmiar zbioru pojemników.
  */
-unsigned int ContainerSet::getContainersNumer()
+size_t ContainerSet::size() const
 {
-	return containersNumber;
+	return arraySize;
 }
 
 /*
  * Pobierz ilosc klockow w kolorze color ktore znajduja sie we wszystkich pojemnikach.
  */
-unsigned int ContainerSet::getColorMultiplicity(unsigned int color)
+unsigned int ContainerSet::colorMultiplicity(unsigned int color)
 {
-    for(auto x : this->containers)
-    {
+	unsigned int sum = 0;
+	for (size_t i = 0; i < arraySize; i++)
+	{
+		sum += containers[i]->getColorMultiplicity(color);
+	}
+	return sum;
+}
 
-    }
+/*
+ * Zwraca iterator na pierwszy pojemnik.
+ */
+ContainerSet::iterator ContainerSet::begin()
+{
+	return ContainerSet::iterator(0, containers, arraySize);
+}
+
+/*
+ * Zwraca const_iterator na pierwszy pojemnik.
+ */
+ContainerSet::const_iterator ContainerSet::begin() const
+{
+	return ContainerSet::const_iterator(0, containers, arraySize);
+}
+
+/*
+ * Zwraca sume pojemnosci wszystkich pojemników.
+ */
+size_t ContainerSet::getCapacitySum() const
+{
+	return capacitySum;
 }

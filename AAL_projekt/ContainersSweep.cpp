@@ -30,8 +30,11 @@ ContainersSweep::~ContainersSweep()
  */
 bool ContainersSweep::checkPreconditions()
 {
+	unsigned int allColorSum = 0;
+	unsigned int allCapacitySum = 0;
+
 	//liczba kolorow musi byc mniejsza badz rowna liczbe dostepnych pojemnikow.
-	if (this->containerSet->getColorsNumber() > this->containerSet->getContainersNumer())
+	if (this->containerSet->getColorsNumber() > this->containerSet->size())
 	{
 		return false;
 	}
@@ -39,11 +42,22 @@ bool ContainersSweep::checkPreconditions()
     //lacznie we wszystkich pojemnikach jest nie wiecej niz n klockow danego koloru.
 	for(int i = 0 ; i < containerSet->getColorsNumber() ; i++)
 	{
+		allColorSum += containerSet->colorMultiplicity(i);
+		if (containerSet->colorMultiplicity(i) > containerSet->size())
+		{
+			return false;
+		}
 
 	}
 
-	return true;
+	//zapewnienie aby wszystkie klocki miescily sie w pojemnikach, oraz ¿eby da³o
+	//siê wykonaæ ruch.
+	if (allColorSum >= containerSet->getCapacitySum())
+	{
+		return true;
+	}
 
+	return true;
 }
 
 /*
@@ -51,5 +65,8 @@ bool ContainersSweep::checkPreconditions()
  */
 void ContainersSweep::solveProblem()
 {
-	std::cout << "Solving problem with ContainersSweep" << std::endl << std::endl;
+	std::cout << "Solving problem with ContainersSweep" << std::endl;
+	std::cout << "Preconditions ... " << std::boolalpha << checkPreconditions() << std::noboolalpha << std::endl;
+
+
 }
