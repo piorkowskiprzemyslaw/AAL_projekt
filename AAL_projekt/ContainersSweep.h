@@ -5,8 +5,8 @@
 #include "ContainerSet.h"
 
 /*
- * Klasa realizuj¹ca podejœcie do rozwiazania problemu za pomoc¹ omiatania pojemników z klocków
- * o kolorach ktore ju¿ nie mog¹ siê w tym pojemniku znajdowaæ.
+ * Klasa realizujaca podejscie do rozwiazania problemu za pomoca omiatania pojemnikow z klockow
+ * o kolorach ktore juz nie moga sie w tym pojemniku znajdowac.
  */
 template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int)>
 class ContainersSweep
@@ -15,6 +15,7 @@ private:
 	ContainerSet * containerSet;
 	size_t * colorMultiplicity;
 	bool checkPreconditions();
+	void organizeColor(std::pair<unsigned int, unsigned int> * table, unsigned int colorNo);
 public:
 	ContainersSweep();
 	ContainersSweep(const ContainerSet & containerSet);
@@ -34,7 +35,7 @@ ContainersSweep<T>::ContainersSweep()
 
 
 /*
-* Konstrutkor pobierajacy konkretny zbiór pojemników.
+* Konstrutkor pobierajacy konkretny zbior pojemnikow.
 */
 template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
 ContainersSweep<T>::ContainersSweep(const ContainerSet & containerSet)
@@ -59,8 +60,7 @@ ContainersSweep<T>::~ContainersSweep()
 template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
 bool ContainersSweep<T>::checkPreconditions()
 {
-	unsigned int allColorSum = 0;
-	unsigned int allCapacitySum = 0;
+    unsigned int allColorSum = 0;
 
 	//liczba kolorow musi byc mniejsza badz rowna liczbe dostepnych pojemnikow.
 	if (this->containerSet->getColorsNumber() > this->containerSet->size())
@@ -81,11 +81,11 @@ bool ContainersSweep<T>::checkPreconditions()
 
 	}
 
-	//zapewnienie aby wszystkie klocki miescily sie w pojemnikach, oraz ¿eby da³o
-	//siê wykonaæ ruch.
+	//zapewnienie aby wszystkie klocki miescily sie w pojemnikach, oraz zeby dalo
+	//sie wykonac ruch.
 	if (allColorSum >= containerSet->getCapacitySum())
 	{
-		return true;
+		return false;
 	}
 
 	return true;
@@ -97,6 +97,8 @@ bool ContainersSweep<T>::checkPreconditions()
 template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
 void ContainersSweep<T>::solveProblem()
 {
+    //talibca z parami <kolor, ilosc wystapien> potrzebna do zrealizowania algorytmu.
+    std::pair<unsigned int, unsigned int > * table = new std::pair<unsigned int, unsigned int>[containerSet->getColorsNumber()];
 	std::cout << "Solving problem with ContainersSweep" << std::endl;
 	std::cout << "Checking preconditions ... ";
 
@@ -106,18 +108,37 @@ void ContainersSweep<T>::solveProblem()
 		std::cout << "End of solving problem" << std::endl;
 		return;
 	}
-
 	std::cout << "[OK]" << std::endl;
-
-	std::cout << "Colors multiplicity  : " << std::endl;
 	for (int i = 0; i < containerSet->getColorsNumber(); ++i)
 	{
-		std::cout << "Color [" << i << "] = " << colorMultiplicity[i] << std::endl;
+        table[i] = std::make_pair(i, colorMultiplicity[i]);
+    }
+
+	T(table, containerSet->getColorsNumber());
+
+	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
+    {
+        std::cout << "Color[" << table[i].first << "] : " << table[i].second << std::endl;
+    }
+
+	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
+	{
+        organizeColor(table,table[i].first);
+        break;
 	}
 
-	T(colorMultiplicity, containerSet->getColorsNumber());
+}
 
-	//zliczanie wystapien poszczególnych kolorów we wszystkich pudełkach.
+/*
+ * Metoda realizujaca sprzatanie konkretnego koloru w pudelkach.
+ */
+template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
+void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * table, unsigned int colorNo)
+{
+    //tablica wartosci logicznych
+    bool * isCleaned[containerSet->size()];
+
+    containerSet->getMaxiumWithColor(colorNo, T);
 
 }
 

@@ -37,7 +37,7 @@ public:
 		const size_t arraySize;
 	public:
 		const_iterator() : arraySize(0) {}
-		const_iterator(const const_iterator & a) : index(a.index), containerWsk(a.containerWsk), containerArrayWsk(a.containerArrayWsk), arraySize(arraySize) {}
+		const_iterator(const const_iterator & a) : index(a.index), containerWsk(a.containerWsk), containerArrayWsk(a.containerArrayWsk), arraySize(a.arraySize) {}
 		const_iterator(const size_t ind, Container * * array, const size_t arraySize) : arraySize(arraySize) { index = ind; containerArrayWsk = array; containerWsk = containerArrayWsk[index]; }
 		const_iterator(Container * wsk, size_t ind, Container * * array, const size_t arraySize) : index(ind), containerWsk(wsk), containerArrayWsk(array), arraySize(arraySize) {}
 
@@ -87,6 +87,7 @@ public:
 
 		inline Container* operator*()  const { return this->containerWsk; }
 		inline Container* operator->() const { return this->containerWsk; }
+		inline size_t operator() (void) { return index; }
 
 		iterator& operator++()
 		{
@@ -113,6 +114,7 @@ public:
 			--*this;
 			return temp;
 		}
+
 	};
 
 	void showInfo();
@@ -120,6 +122,7 @@ public:
 	unsigned int colorMultiplicity(unsigned int color);
 	size_t size() const;
 	size_t getCapacitySum() const;
+	iterator getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int)) const;
 
 	iterator begin();
 	const_iterator begin() const;

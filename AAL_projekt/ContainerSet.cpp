@@ -1,7 +1,7 @@
 #include "ContainerSet.h"
 
 /*
- * Konstruktor który przyjmuje pojemnosci pojemnikow, listy zawierania oraz ilosc roznych kolorów.
+ * Konstruktor ktory przyjmuje pojemnosci pojemnikow, listy zawierania oraz ilosc roznych kolorow.
  */
 ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 						   const std::vector<std::vector<unsigned int> > & includingList,
@@ -27,7 +27,7 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 }
 
 /*
- * Konstruktor kopiuj¹cy wykonuj¹cy g³êbok¹ kopie danych.
+ * Konstruktor kopiujacy wykonujacy gleboka kopie danych.
  */
 ContainerSet::ContainerSet(const ContainerSet& another)
 {
@@ -112,9 +112,31 @@ ContainerSet::const_iterator ContainerSet::begin() const
 }
 
 /*
- * Zwraca sume pojemnosci wszystkich pojemników.
+ * Zwraca sume pojemnosci wszystkich pojemnikow.
  */
 size_t ContainerSet::getCapacitySum() const
 {
 	return capacitySum;
+}
+
+/*
+ * Metoda zwracajaca iterator na pojemnik z najwieksza iloscia klockow koloru color.
+ */
+ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int)) const
+{
+    std::pair<unsigned int, unsigned int> * table = new std::pair<unsigned int, unsigned int>[arraySize];
+
+    for(int i = 0 ; i < arraySize ; ++i)
+    {
+        table[i] = std::make_pair(i, this->containers[i]->getColorMultiplicity(color));
+    }
+
+    T(table, arraySize);
+
+    std::cout << "Color number = " << color << std::endl;
+
+    for(int i = 0 ; i < arraySize ; ++i)
+    {
+        std::cout << "Container[" << table[i].first << "] : " << table[i].second << std::endl;
+    }
 }

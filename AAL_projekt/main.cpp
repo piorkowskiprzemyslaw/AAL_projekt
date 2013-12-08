@@ -16,6 +16,11 @@
 #include "SearchTree.h"
 #include "InsertionSort.h"
 
+/*
+TODO:
+- operator przypisania dla iteratora w ContainerSet.
+- dalsza czesc algorytmu.
+*/
 
 /*
  * Wejscie do programu.
@@ -23,7 +28,7 @@
 int main(int argc, char* argv[])
 {
 	Interpreter interpreter(argv[1]);
-	DataGenerator generator(6, 3, 6, 0.80, 6);
+	DataGenerator generator(6, 3, 6, 0.85, 6);
 	generator.generateData();
 	CycleCounter cycleCounter;
 
@@ -37,9 +42,12 @@ int main(int argc, char* argv[])
 	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	containerSet1.showInfo();
 
-	//insertionSort(nullptr, 0);
+	ContainersSweep<selectionSort> sweep(containerSet1);
+	cycleCounter.startCounting();
+    sweep.solveProblem();
+    cycleCounter.startCounting();
 
-	ContainersSweep<insertionSort> contSweep;
+    std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;
 
     #ifdef _WIN32
 	system("PAUSE");

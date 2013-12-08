@@ -21,5 +21,5 @@ public:
 	void resetCounter();
 };
 
-#endif CYCLECOUNTER_H
+#endif
 

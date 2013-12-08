@@ -29,10 +29,10 @@ Container::Container(const Container& another) : capacity(another.capacity), lef
 
 /*
  * Przeniesienie klocka o kolorze blockColor do pojemnika destiny.
- * False zwracany jeœli : 
+ * False zwracany jeœli :
  * - klocka o danym kolorze nie ma w pojemniku this.
  * - klocek nie moze zostac przeniesiony do destiny, poniewa¿ nie ma tam miejsca.
- * 
+ *
  */
 bool Container::moveBlock(unsigned int blockColor, Container& destiny)
 {

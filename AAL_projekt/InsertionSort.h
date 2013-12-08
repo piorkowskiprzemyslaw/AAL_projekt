@@ -6,9 +6,28 @@
 /*
  * Funkcja stosująca sortowanie przez wstawienie.
  */
-int insertionSort(std::pair<unsigned int, unsigned int> * table, unsigned int size)
+int selectionSort(std::pair<unsigned int, unsigned int> * table, unsigned int N)
 {
-	std::cout << "troll" << std::endl;
+    std::pair<unsigned int, unsigned int> tmp;
+    unsigned int minimum;
+
+	for(unsigned int i = 0 ; i < N ; ++i)
+	{
+        minimum = i;
+
+        for(unsigned int j = i + 1; j < N ; ++j)
+        {
+            if(table[j].second > table[minimum].second)
+            {
+                minimum = j;
+            }
+        }
+
+        tmp = table[i];
+        table[i] = table[minimum];
+        table[minimum] = tmp;
+	}
+
 	return 0;
 }
 
