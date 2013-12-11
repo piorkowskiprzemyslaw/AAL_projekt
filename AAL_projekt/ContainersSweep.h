@@ -137,8 +137,9 @@ void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * t
 {
     //tablica wartosci logicznych
     bool * isCleaned[containerSet->size()];
+    ContainerSet::iterator iter = containerSet->getMaxiumWithColor(colorNo, T);
 
-    containerSet->getMaxiumWithColor(colorNo, T);
+    std::cout << "Indeks : " << iter() << std::endl;
 
 }
 

@@ -139,4 +139,6 @@ ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color, int(
     {
         std::cout << "Container[" << table[i].first << "] : " << table[i].second << std::endl;
     }
+
+    return iterator(table[0].first, containers, arraySize);
 }
