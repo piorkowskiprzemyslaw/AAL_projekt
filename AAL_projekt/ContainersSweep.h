@@ -2,6 +2,7 @@
 #define CONTAINERSSWEEP_H
 
 #include <iostream>
+#include <cstring>
 #include "ContainerSet.h"
 
 /*
@@ -94,7 +95,7 @@ bool ContainersSweep<T>::checkPreconditions()
 /*
 * Metoda rozwiazujaca problem implementowanym algorytmem.
 */
-template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
+template <int (*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
 void ContainersSweep<T>::solveProblem()
 {
     //talibca z parami <kolor, ilosc wystapien> potrzebna do zrealizowania algorytmu.
@@ -102,6 +103,7 @@ void ContainersSweep<T>::solveProblem()
 	std::cout << "Solving problem with ContainersSweep" << std::endl;
 	std::cout << "Checking preconditions ... ";
 
+	//sprawdzanie warunkow poczatkowych umozliwiajacych rozwiazanie zadania.
 	if (!checkPreconditions())
 	{
 		std::cout << "[FALSE]" << std::endl;
@@ -109,18 +111,23 @@ void ContainersSweep<T>::solveProblem()
 		return;
 	}
 	std::cout << "[OK]" << std::endl;
+
+	//zapelnianie tablicy parami <kolor, licznosc>
 	for (int i = 0; i < containerSet->getColorsNumber(); ++i)
 	{
         table[i] = std::make_pair(i, colorMultiplicity[i]);
     }
 
+	//posortowanie tableli <kolor, licznosc> po licznosciach
 	T(table, containerSet->getColorsNumber());
 
+	//testowe wypisanie tabeli
 	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
     {
         std::cout << "Color[" << table[i].first << "] : " << table[i].second << std::endl;
     }
 
+	//organizowanie kolorów, od najbardziej licznego do najmniej.
 	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
 	{
         organizeColor(table,table[i].first);
@@ -135,11 +142,32 @@ void ContainersSweep<T>::solveProblem()
 template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
 void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * table, unsigned int colorNo)
 {
-    //tablica wartosci logicznych
-    bool * isCleaned[containerSet->size()];
     ContainerSet::iterator iter = containerSet->getMaxiumWithColor(colorNo, T);
+    ContainerSet::iterator tmpIter(iter);
+    //tablica wartosci logicznych
+    bool isCleaned[containerSet->size()];
+    //wszystkie wartosci ustawiam na zero
+    memset(isCleaned, 0, sizeof(isCleaned));
 
-    std::cout << "Indeks : " << iter() << std::endl;
+    std::cout << "Indeks : " << iter();
+    ++tmpIter;
+
+    while(iter->getColorMultiplicity(colorNo) >= 1)
+    {
+    	std::cout << " liczbnosc koloru " << colorNo << " = " << iter->getColorMultiplicity(colorNo) << std::endl;
+
+    	//Przekladamy wszystkie nadmiarowe kulki do prawego sasiada.
+    	for(int i = 1 ; i < iter->getColorMultiplicity(colorNo) ; ++i)
+    	{
+    		iter->moveBlock(colorNo, *tmpIter);
+    	}
+
+    	iter = containerSet->getMaxiumWithColor(colorNo, T);
+
+    	break;
+    }
+
+
 
 }
 

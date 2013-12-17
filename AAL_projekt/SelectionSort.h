@@ -1,5 +1,5 @@
-#ifndef INSERTIONSORT_H
-#define INSERTIONSORT_H
+#ifndef SELECTIONSORT_H
+#define SELECTIONSORT_H
 
 #include <iostream>
 
@@ -31,4 +31,4 @@ int selectionSort(std::pair<unsigned int, unsigned int> * table, unsigned int N)
 	return 0;
 }
 
-#endif // INSERTIONSORT_H
+#endif // SELECTIONSORT_H

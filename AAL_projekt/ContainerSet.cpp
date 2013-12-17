@@ -34,6 +34,7 @@ ContainerSet::ContainerSet(const ContainerSet& another)
 	colorsNumber = another.colorsNumber;
 	arraySize = another.arraySize;
 	containers = new Container*[arraySize];
+	capacitySum = another.capacitySum;
 
 	for (size_t i = 0; i < arraySize; i++)
 	{
@@ -55,7 +56,7 @@ ContainerSet::~ContainerSet()
 }
 
 /*
- * Wyswietl informacje na temat tego zbioru kontenerów.
+ * Wyswietl informacje na temat tego zbioru kontenerï¿½w.
  */
 void ContainerSet::showInfo()
 {
@@ -75,7 +76,7 @@ unsigned int ContainerSet::getColorsNumber()
 }
 
 /*
- * Zwraca rozmiar zbioru pojemników.
+ * Zwraca rozmiar zbioru pojemnikï¿½w.
  */
 size_t ContainerSet::size() const
 {
@@ -103,7 +104,7 @@ ContainerSet::iterator ContainerSet::begin()
 	return ContainerSet::iterator(0, containers, arraySize);
 }
 
-/*
+/**
  * Zwraca const_iterator na pierwszy pojemnik.
  */
 ContainerSet::const_iterator ContainerSet::begin() const
@@ -111,7 +112,7 @@ ContainerSet::const_iterator ContainerSet::begin() const
 	return ContainerSet::const_iterator(0, containers, arraySize);
 }
 
-/*
+/**
  * Zwraca sume pojemnosci wszystkich pojemnikow.
  */
 size_t ContainerSet::getCapacitySum() const
@@ -119,26 +120,28 @@ size_t ContainerSet::getCapacitySum() const
 	return capacitySum;
 }
 
-/*
+/**
  * Metoda zwracajaca iterator na pojemnik z najwieksza iloscia klockow koloru color.
  */
 ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int)) const
 {
     std::pair<unsigned int, unsigned int> * table = new std::pair<unsigned int, unsigned int>[arraySize];
 
-    for(int i = 0 ; i < arraySize ; ++i)
+    for(unsigned int i = 0 ; i < arraySize ; ++i)
     {
         table[i] = std::make_pair(i, this->containers[i]->getColorMultiplicity(color));
     }
 
     T(table, arraySize);
 
+
     std::cout << "Color number = " << color << std::endl;
 
-    for(int i = 0 ; i < arraySize ; ++i)
+    for(unsigned int i = 0 ; i < arraySize ; ++i)
     {
         std::cout << "Container[" << table[i].first << "] : " << table[i].second << std::endl;
     }
+
 
     return iterator(table[0].first, containers, arraySize);
 }

@@ -5,19 +5,19 @@
 #include <vector>
 #include "Container.h"
 
-/*
- * Zbiór pojemników.
+/**
+ * Zbior pojemnikow.
  */
 class ContainerSet
 {
 private:
-	// Tablica kontenerów.
+	// Tablica kontenerow.
 	Container * * containers;
-	//liczba pojemników.
+	//liczba pojemnikow.
 	size_t arraySize;
-	//liczba kolorów
+	//liczba kolorow
 	unsigned int colorsNumber;
-	//suma pojemnosci wszystkich pojemników.
+	//suma pojemnosci wszystkich pojemnikow.
 	size_t capacitySum;
 
 public:
@@ -27,23 +27,36 @@ public:
 	~ContainerSet();
 	explicit ContainerSet(const ContainerSet& another);
 
-	//Klasa iteratora do przechodzenia po zbiorze pude³ek
+	//Klasa iteratora do przechodzenia po zbiorze pudelek
 	class const_iterator
 	{
 	protected:
-		size_t index;
-		Container * containerWsk;
+		size_t arraySize;
 		Container * * containerArrayWsk;
-		const size_t arraySize;
+		Container * containerWsk;
+		size_t index;
 	public:
-		const_iterator() : arraySize(0) {}
-		const_iterator(const const_iterator & a) : index(a.index), containerWsk(a.containerWsk), containerArrayWsk(a.containerArrayWsk), arraySize(a.arraySize) {}
+		const_iterator() : arraySize(0), containerArrayWsk(NULL), containerWsk(NULL), index(0) {}
+		const_iterator(const const_iterator & a) :arraySize(a.arraySize), containerArrayWsk(a.containerArrayWsk),  containerWsk(a.containerWsk), index(a.index) {}
 		const_iterator(const size_t ind, Container * * array, const size_t arraySize) : arraySize(arraySize) { index = ind; containerArrayWsk = array; containerWsk = containerArrayWsk[index]; }
-		const_iterator(Container * wsk, size_t ind, Container * * array, const size_t arraySize) : index(ind), containerWsk(wsk), containerArrayWsk(array), arraySize(arraySize) {}
+		const_iterator(Container * wsk, size_t ind, Container * * array, const size_t arraySize) : arraySize(arraySize), containerArrayWsk(array), containerWsk(wsk), index(ind) {}
 
 		inline const Container * operator->() const { return containerWsk; }
-		inline const Container * operator*()  const { return containerWsk; }
+		inline const Container& operator*()  const { return *(containerWsk); }
+		inline size_t operator()(void) const { return index;}
+		const_iterator& operator=(const const_iterator& another)
+		{
+			if(this != &another)
+			{
+				arraySize = another.arraySize;
+				containerArrayWsk = another.containerArrayWsk;
+				containerWsk = another.containerWsk;
+				index = another.index;
+			}
+			return *this;
+		}
 
+		// przejscie w prawo
 		const_iterator& operator++()
 		{
 			if (++index >= arraySize)
@@ -52,6 +65,7 @@ public:
 			return *this;
 		}
 
+		//przejscie w lewo
 		const_iterator operator++(int)
 		{
 			const_iterator backup(*this);
@@ -76,7 +90,7 @@ public:
 		}
 	};
 
-	//Klasa zwyk³ego iteratora.
+	//Klasa zwyklego iteratora.
 	class iterator : public const_iterator
 	{
 	public:
@@ -85,9 +99,17 @@ public:
 		iterator(const size_t ind, Container * * array, const size_t arraySize) : const_iterator(ind, array, arraySize) { }
 		iterator(Container * wsk, size_t ind, Container * * array, const size_t arraySize) : const_iterator(wsk, ind, array, arraySize) {}
 
-		inline Container* operator*()  const { return this->containerWsk; }
+		inline Container& operator*()  const { return *(this->containerWsk); }
 		inline Container* operator->() const { return this->containerWsk; }
-		inline size_t operator() (void) { return index; }
+		inline size_t operator() (void) { return ((const_iterator*)this)->operator ()(); }
+		iterator& operator=(const iterator & another)
+		{
+			index = another.index;
+			containerArrayWsk = another.containerArrayWsk;
+			containerWsk = another.containerWsk;
+			arraySize = another.arraySize;
+			return *this;
+		}
 
 		iterator& operator++()
 		{

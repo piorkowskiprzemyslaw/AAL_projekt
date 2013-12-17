@@ -1,15 +1,17 @@
 #include "Container.h"
 
+
+
 /*
- * Konstruktor przyjmuj¹cy wektor z zawieranymi kolorami w tym pojemniku.
+ * Konstruktor przyjmujacy wektor z zawieranymi kolorami w tym pojemniku.
  */
 Container::Container(const std::vector<unsigned int> & included,
 	                 const unsigned int capacity,
-					 const unsigned int colorsNumber) : capacity(capacity), leftPlace(capacity)
+					 const unsigned int colorsNumber) : capacity{capacity}, leftPlace{capacity}
 {
 	for (unsigned int i = 0; i < colorsNumber; i++)
 	{
-		content.insert({ i, 0 });
+		content.emplace( i, 0 );
 	}
 
 	for (size_t i = 0; i < included.size(); i++)
@@ -20,7 +22,7 @@ Container::Container(const std::vector<unsigned int> & included,
 }
 
 /*
- * Konstruktor kopiuj¹cy wykonuj¹cy g³êbok¹ kopie danych.
+ * Konstruktor kopiujacy wykonujacy gleboka kopie danych.
  */
 Container::Container(const Container& another) : capacity(another.capacity), leftPlace(another.leftPlace)
 {
@@ -29,14 +31,20 @@ Container::Container(const Container& another) : capacity(another.capacity), lef
 
 /*
  * Przeniesienie klocka o kolorze blockColor do pojemnika destiny.
- * False zwracany jeœli :
+ * False zwracany jesli :
  * - klocka o danym kolorze nie ma w pojemniku this.
- * - klocek nie moze zostac przeniesiony do destiny, poniewa¿ nie ma tam miejsca.
+ * - klocek nie moze zostac przeniesiony do destiny, poniewaz nie ma tam miejsca.
  *
  */
 bool Container::moveBlock(unsigned int blockColor, Container& destiny)
 {
-	return false;
+	// nie ma co przelozyc.
+	if(getColorMultiplicity(blockColor) == 0)
+		return false;
+
+
+
+	return true;
 }
 
 /*
@@ -45,7 +53,7 @@ bool Container::moveBlock(unsigned int blockColor, Container& destiny)
 Container::~Container(){ }
 
 /*
- * Wyœwietl informacje na temat tego pojemnika.
+ * Wyswietl informacje na temat tego pojemnika.
  */
 void Container::showInfo() const
 {
@@ -57,7 +65,7 @@ void Container::showInfo() const
 }
 
 /*
- * Sprawdza czy pojemnik spe³nia warunki zadania.
+ * Sprawdza czy pojemnik spelnia warunki zadania.
  */
 bool Container::checkState() const
 {
@@ -72,7 +80,7 @@ bool Container::checkState() const
 }
 
 /*
- * Pobranie pojemnoœci pojemnika.
+ * Pobranie pojemnosci pojemnika.
  */
 unsigned int Container::getCapacity() const
 {
@@ -80,9 +88,17 @@ unsigned int Container::getCapacity() const
 }
 
 /*
- * Pobranie ilosci klocków koloru color znajdujacych sie w pojemniku.
+ * Pobranie ilosci klockow koloru color znajdujacych sie w pojemniku.
  */
 unsigned int Container::getColorMultiplicity(unsigned int color) const
 {
 	return content.at(color);
+}
+
+/**
+ * Pobranie pozostalego wolnego miejsca w kontenerach.
+ */
+unsigned int Container::getLeftPlace() const
+{
+	return leftPlace;
 }

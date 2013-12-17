@@ -13,9 +13,9 @@ class Container
 private:
 	//Mapuje kolor na ilosc przechowywanych klockow w tym kolorze.
 	std::unordered_map<unsigned int, unsigned int> content;
-	//Pojemnoœæ pojmenika.
+	//Pojemnosc pojmenika.
 	const unsigned int capacity;
-	//Pozosta³e miejsce do zajêcia.
+	//Pozostale miejsce do zajecia.
 	unsigned int leftPlace;
 public:
 	Container(const std::vector<unsigned int> & included,
@@ -27,6 +27,7 @@ public:
 	void showInfo() const;
 	bool checkState() const;
 	unsigned int getCapacity() const;
+	unsigned int getLeftPlace() const;
 	unsigned int getColorMultiplicity(unsigned int color) const;
 };
 

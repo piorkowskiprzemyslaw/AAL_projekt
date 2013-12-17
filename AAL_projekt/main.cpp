@@ -14,7 +14,7 @@
 /* Naglowki plikow z algorytmami rozwiazan */
 #include "ContainersSweep.h"
 #include "SearchTree.h"
-#include "InsertionSort.h"
+#include "SelectionSort.h"
 
 /*
 TODO:
