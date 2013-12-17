@@ -157,18 +157,70 @@ void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * t
     	std::cout << " liczbnosc koloru " << colorNo << " = " << iter->getColorMultiplicity(colorNo) << std::endl;
 
     	//Przekladamy wszystkie nadmiarowe kulki do prawego sasiada.
+    	//tutaj nastepuje rozpatrzenie przypadkow.
     	for(int i = 1 ; i < iter->getColorMultiplicity(colorNo) ; ++i)
     	{
-    		iter->moveBlock(colorNo, *tmpIter);
+
+    		// Przypadki kiedy prawy sasiad ma miejsce wolne
+    		if(isCleaned[tmpIter()] == false)
+    		{
+				//Prawy sasiad ma falge flase i ma wolne miejsce
+				if(tmpIter->getLeftPlace() != 0)
+				{
+					std::cout << "Prawy sasiad ma falge flase i ma wolne miejsce"<< std::endl;
+					iter->moveBlock(colorNo, *tmpIter);
+					continue;
+				}
+
+				//Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce
+				if(tmpIter->getLeftPlace() == 0 && iter->getLeftPlace() != 0)
+				{
+					std::cout << "Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce" << std::endl;
+					continue;
+				}
+
+				//Prawy sasaiad ma flage flase, nie ma wolnego miejsca, w akualnie rozpatrywanym
+				//pojemniku tez nie ma wolnego miejsca.
+				if(tmpIter->getLeftPlace() == 0 && iter->getLeftPlace() == 0)
+				{
+					std::cout << "Prawy sasaiad ma flage flase, nie ma wolnego miejsca, w akualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca." << std::endl;
+					continue;
+				}
+    		} else /* (isCleaned[tmpIter()] == true) */ {
+
+    			// Prawy sasiad ma flage true i ma wolone miejsce.
+    			if(tmpIter->getLeftPlace() != 0)
+    			{
+    				std::cout << "Prawy sasiad ma flage true i ma wolone miejsce." <<std::endl;
+    				continue;
+    			}
+
+    			// Prawy sąsiad ma flage true i nie ma wolnego miejsca, ale w aktualnie rozpatrywanym
+    			// pojemniku jest wolne miejsce.
+    			if(tmpIter->getLeftPlace() == 0 && iter->getLeftPlace() != 0)
+    			{
+    				std::cout << "Prawy sąsiad ma flage true i nie ma wolnego miejsca, ale w aktualnie rozpatrywanym pojemniku jest wolne miejsce." << std::endl;
+    				continue;
+    			}
+
+    			// Prawy sasiad ma flage true i nie ma wolnego miejsca, w aktualnie rozpatrywanym
+    			// pojemniku tez nie ma wolnego miejsca.
+    			if(tmpIter->getLeftPlace() == 0 && iter->getLeftPlace() == 0)
+    			{
+    				std::cout << "Prawy sasiad ma flage true i nie ma wolnego miejsca, w aktualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca." << std::endl;
+    				continue;
+    			}
+
+    		}
+
     	}
 
     	iter = containerSet->getMaxiumWithColor(colorNo, T);
+    	tmpIter = iter;
+    	tmpIter++;
 
     	break;
     }
-
-
-
 }
 
 

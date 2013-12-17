@@ -42,7 +42,12 @@ bool Container::moveBlock(unsigned int blockColor, Container& destiny)
 	if(getColorMultiplicity(blockColor) == 0)
 		return false;
 
+	// nie ma miejsca w destiny
+	if(destiny.leftPlace == 0)
+		return false;
 
+	this->content[blockColor]--;
+	destiny.content[blockColor]++;
 
 	return true;
 }
