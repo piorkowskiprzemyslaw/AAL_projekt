@@ -34,7 +34,6 @@ ContainersSweep<T>::ContainersSweep()
 	colorMultiplicity = nullptr;
 }
 
-
 /*
 * Konstrutkor pobierajacy konkretny zbior pojemnikow.
 */
@@ -251,6 +250,5 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
     	tmpIter++;
     }
 }
-
 
 #endif

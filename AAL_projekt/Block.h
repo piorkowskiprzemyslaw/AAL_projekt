@@ -2,6 +2,8 @@
 #define BLOCK_H
 
 #include <iostream>
+#include <memory>
+#include "Color.h"
 
 /*
  * Blok o zadanym w konstruktorze kolorze.
@@ -9,11 +11,13 @@
 class Block
 {
 private:
-	const unsigned int color;
+	std::unique_ptr<Color> color;
 public:
-	Block(unsigned int color);
+	Block(unsigned int colorNo);
+	Block(std::unique_ptr<Color> color);
 	~Block();
-	unsigned int getColor();
+	bool operator==(const Block & rhs);
+	Color* getColor() const;
 };
 
 #endif BLOCK_H
