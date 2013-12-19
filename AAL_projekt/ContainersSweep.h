@@ -16,7 +16,7 @@ private:
 	ContainerSet * containerSet;
 	size_t * colorMultiplicity;
 	bool checkPreconditions();
-	void organizeColor(std::pair<unsigned int, unsigned int> * table, unsigned int colorNo);
+	void organizeColor(std::vector<bool> & table, unsigned int colorNo);
 public:
 	ContainersSweep();
 	ContainersSweep(const ContainerSet & containerSet);
@@ -98,6 +98,7 @@ bool ContainersSweep<T>::checkPreconditions()
 template <int (*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
 void ContainersSweep<T>::solveProblem()
 {
+	std::vector<bool> isColorOrganised(containerSet->getColorsNumber(),false);
     //talibca z parami <kolor, ilosc wystapien> potrzebna do zrealizowania algorytmu.
     std::pair<unsigned int, unsigned int > * table = new std::pair<unsigned int, unsigned int>[containerSet->getColorsNumber()];
 	std::cout << "Solving problem with ContainersSweep" << std::endl;
@@ -130,7 +131,8 @@ void ContainersSweep<T>::solveProblem()
 	//organizowanie kolorów, od najbardziej licznego do najmniej.
 	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
 	{
-        organizeColor(table,table[i].first);
+		isColorOrganised[table[i].first] = true;
+        organizeColor(isColorOrganised,table[i].first);
         break;
 	}
 
@@ -138,27 +140,35 @@ void ContainersSweep<T>::solveProblem()
 
 /*
  * Metoda realizujaca sprzatanie konkretnego koloru w pudelkach.
+ * Table to vector wartosci logicznych mowiacy czy kolor byl juz rozpatrywany.
  */
 template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
-void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * table, unsigned int colorNo)
+void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int colorNo)
 {
+	//itearator na pojemnik z najwieksza liczba klockow koloru colorNo
     ContainerSet::iterator iter = containerSet->getMaxiumWithColor(colorNo, T);
+	//pomocniczy iterator na prawego sasiada
     ContainerSet::iterator tmpIter(iter);
-    //tablica wartosci logicznych
-    bool isCleaned[containerSet->size()];
+	//liczba klockow koloru colorNo w iter
+	unsigned int blocksNumer = 0;
+	//tablica wartosci logicznych
+    bool * isCleaned = new bool[containerSet->size()];
     //wszystkie wartosci ustawiam na zero
     memset(isCleaned, 0, sizeof(isCleaned));
 
-    std::cout << "Indeks : " << iter();
+
     ++tmpIter;
 
     while(iter->getColorMultiplicity(colorNo) >= 1)
     {
-    	std::cout << " liczbnosc koloru " << colorNo << " = " << iter->getColorMultiplicity(colorNo) << std::endl;
+		blocksNumer = iter->getColorMultiplicity(colorNo);
+    
+		std::cout << "Indeks : " << iter();
+		std::cout << " licznosc koloru " << colorNo << " = " << blocksNumer << std::endl;
 
     	//Przekladamy wszystkie nadmiarowe kulki do prawego sasiada.
     	//tutaj nastepuje rozpatrzenie przypadkow.
-    	for(int i = 1 ; i < iter->getColorMultiplicity(colorNo) ; ++i)
+    	for(int i = 1 ; i < blocksNumer ; ++i)
     	{
 
     		// Przypadki kiedy prawy sasiad ma miejsce wolne
@@ -176,6 +186,24 @@ void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * t
 				if(tmpIter->getLeftPlace() == 0 && iter->getLeftPlace() != 0)
 				{
 					std::cout << "Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce" << std::endl;
+					
+					if (tmpIter->checkIsColorPresent(table) >= 0)
+					{
+						// Nie rozpatrywany kolor znajduje sie u sąsiada.
+						std::cout << "Prawy sasiad ma kolor jeszcze nie rozpatrywany." << std::endl;
+					}
+					else {
+						int colorFound = 0;
+						// Nie rozpatrywany kolor nie znadjuje sie u sąsiada, szukamy na prawo
+						std::cout << "Prawy sasiad nie ma koloru jeszcze nie rozpatrywanego, szukam w prawych sasiadach." << std::endl;
+						while (true)
+						{
+							++tmpIter;
+							if (tmpIter->checkIsColorPresent(table) >= 0)
+								break;
+						}
+						std::cout << "Znaleziono nierozpatrywany kolor nr : " << colorFound << " w kubelku numer " << tmpIter() << std::endl;
+					}
 					continue;
 				}
 
@@ -184,6 +212,8 @@ void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * t
 				if(tmpIter->getLeftPlace() == 0 && iter->getLeftPlace() == 0)
 				{
 					std::cout << "Prawy sasaiad ma flage flase, nie ma wolnego miejsca, w akualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca." << std::endl;
+
+
 					continue;
 				}
     		} else /* (isCleaned[tmpIter()] == true) */ {
@@ -215,11 +245,10 @@ void ContainersSweep<T>::organizeColor(std::pair<unsigned int, unsigned int> * t
 
     	}
 
+		isCleaned[iter()] = true;
     	iter = containerSet->getMaxiumWithColor(colorNo, T);
     	tmpIter = iter;
     	tmpIter++;
-
-    	break;
     }
 }
 

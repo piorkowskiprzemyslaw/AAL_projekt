@@ -1,7 +1,5 @@
 #include "Container.h"
 
-
-
 /*
  * Konstruktor przyjmujacy wektor z zawieranymi kolorami w tym pojemniku.
  */
@@ -106,4 +104,21 @@ unsigned int Container::getColorMultiplicity(unsigned int color) const
 unsigned int Container::getLeftPlace() const
 {
 	return leftPlace;
+}
+
+/**
+ * Sprawdza któryœ z nierozpatrywanych kolorow znajduje sie w kontenerze.
+ * Jesli taki kolor istnieje to zwracany jest jego numer, jesli nie
+ * to zwracane jest -1.
+ */
+long Container::checkIsColorPresent(std::vector<bool> & table) const
+{
+	for (int i = 0; i < content.size(); ++i)
+	{
+		if (content.at(i) != 0 && table[i] == false)
+		{
+			return i;
+		}
+	}
+	return -1;
 }

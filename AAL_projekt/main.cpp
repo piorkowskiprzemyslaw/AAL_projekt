@@ -3,7 +3,6 @@
  *
  * Przemys³aw Piórkowski.
  */
-
 #include <iostream>
 #include <stdlib.h>
 #include "Interpreter.h"
@@ -15,6 +14,7 @@
 #include "ContainersSweep.h"
 #include "SearchTree.h"
 #include "SelectionSort.h"
+
 
 /*
 TODO:
@@ -32,17 +32,18 @@ int main(int argc, char* argv[])
 	generator.generateData();
 	CycleCounter cycleCounter;
 
+
 	if (interpreter.verifyGatheredInfo())
 	{
 		//interpreter.showGatheredInfo();
 	}
 
 	ContainerSet containerSet(interpreter.getConatinersCapacity(), interpreter.getIncludingList(), interpreter.getColorsNumber());
-	//containerSet.showInfo();
+	containerSet.showInfo();
 	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
-	containerSet1.showInfo();
+	//containerSet1.showInfo();
 
-	ContainersSweep<selectionSort> sweep(containerSet1);
+	ContainersSweep<selectionSort> sweep(containerSet);
 	cycleCounter.startCounting();
     sweep.solveProblem();
     cycleCounter.startCounting();
