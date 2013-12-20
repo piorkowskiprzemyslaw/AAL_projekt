@@ -7,21 +7,21 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 						   const std::vector<std::vector<unsigned int> > & includingList,
 						   const unsigned int colorsNumber)
 {
+	std::vector<Container>::iterator emplaceIterator = containers.begin();
 	if (containersCapacity.size() != includingList.size())
 	{
 		std::cout << "Internal error!" << std::endl;
 		exit(1);
 	}
 
-	containers = new Container*[containersCapacity.size()];
-	this->colorsNumber = colorsNumber;
-	arraySize = includingList.size();
+	containers = std::vector<Container>(0);
+	Color::setNumberOfAllColors(colorsNumber);
 	capacitySum = 0;
 
-	for (size_t i = 0; i < containersCapacity.size(); i++)
+	for (size_t i = 0; i < containersCapacity.size(); ++i)
 	{
 		capacitySum += containersCapacity[i];
-		containers[i] = new Container(includingList[i], containersCapacity[i], colorsNumber);
+		containers.emplace_back(includingList[i], containersCapacity[i]);
 	}
 
 }
@@ -31,39 +31,23 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
  */
 ContainerSet::ContainerSet(const ContainerSet& another)
 {
-	colorsNumber = another.colorsNumber;
-	arraySize = another.arraySize;
-	containers = new Container*[arraySize];
+	containers = another.containers;
 	capacitySum = another.capacitySum;
-
-	for (size_t i = 0; i < arraySize; i++)
-	{
-		containers[i] = new Container(*another.containers[i]);
-	}
 }
 
 /*
  * Destruktor niszczy obiekty stworzone w konstruktorze.
  */
-ContainerSet::~ContainerSet()
-{
-	for (size_t i = 0; i < arraySize; i++)
-	{
-		delete(containers[i]);
-	}
-
-	delete[] containers;
-}
+ContainerSet::~ContainerSet() { }
 
 /*
- * Wyswietl informacje na temat tego zbioru kontener�w.
+ * Wyswietl informacje na temat tego zbioru kontenerow.
  */
 void ContainerSet::showInfo()
 {
-	for (size_t i = 0; i < arraySize; i++)
+	for(auto container : containers)
 	{
-		containers[i]->showInfo();
-		std::cout << std::endl;
+		container.showInfo();
 	}
 }
 
@@ -72,15 +56,15 @@ void ContainerSet::showInfo()
  */
 unsigned int ContainerSet::getColorsNumber()
 {
-	return colorsNumber;
+	return Color::getNumberOfAllColors();
 }
 
 /*
- * Zwraca rozmiar zbioru pojemnik�w.
+ * Zwraca rozmiar zbioru pojemnikow.
  */
 size_t ContainerSet::size() const
 {
-	return arraySize;
+	return containers.size();
 }
 
 /*
@@ -89,9 +73,9 @@ size_t ContainerSet::size() const
 unsigned int ContainerSet::colorMultiplicity(unsigned int color)
 {
 	unsigned int sum = 0;
-	for (size_t i = 0; i < arraySize; i++)
+	for(auto container : containers)
 	{
-		sum += containers[i]->getColorMultiplicity(color);
+		sum += container.getColorMultiplicity(color);
 	}
 	return sum;
 }
@@ -101,15 +85,7 @@ unsigned int ContainerSet::colorMultiplicity(unsigned int color)
  */
 ContainerSet::iterator ContainerSet::begin()
 {
-	return ContainerSet::iterator(0, containers, arraySize);
-}
-
-/**
- * Zwraca const_iterator na pierwszy pojemnik.
- */
-ContainerSet::const_iterator ContainerSet::begin() const
-{
-	return ContainerSet::const_iterator(0, containers, arraySize);
+	return ContainerSet::iterator(containers, 0);
 }
 
 /**
@@ -123,25 +99,25 @@ size_t ContainerSet::getCapacitySum() const
 /**
  * Metoda zwracajaca iterator na pojemnik z najwieksza iloscia klockow koloru color.
  */
-ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int)) const
+ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int))
 {
-    std::pair<unsigned int, unsigned int> * table = new std::pair<unsigned int, unsigned int>[arraySize];
+    std::pair<unsigned int, unsigned int> * table = new std::pair<unsigned int, unsigned int>[containers.size()];
 
-    for(unsigned int i = 0 ; i < arraySize ; ++i)
+    for(unsigned int i = 0 ; i < containers.size() ; ++i)
     {
-        table[i] = std::make_pair(i, this->containers[i]->getColorMultiplicity(color));
+        table[i] = std::make_pair(i, containers[i].getColorMultiplicity(color));
     }
 
-    T(table, arraySize);
+    T(table, containers.size());
 
 
     std::cout << "Color number = " << color << std::endl;
 
-    for(unsigned int i = 0 ; i < arraySize ; ++i)
+    for(unsigned int i = 0 ; i < containers.size() ; ++i)
     {
         std::cout << "Container[" << table[i].first << "] : " << table[i].second << std::endl;
     }
 
 
-    return iterator(table[0].first, containers, arraySize);
+    return ContainerSet::iterator(containers, 0);
 }

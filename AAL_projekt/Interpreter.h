@@ -12,15 +12,15 @@
 class Interpreter
 {
 private:
-	//Liczba pojemników.
+	//Liczba pojemnikow.
 	unsigned int containersNumber;
-	//Pojemnosci kazdego z pojemników.
+	//Pojemnosci kazdego z pojemnikow.
 	std::vector<unsigned int> containersCapacity;
-	//Wektor rozró¿nialnych kolorów.
+	//Wektor rozronialnych kolorow.
 	unsigned int colorsNumber;
-	//Liczba kloców w ka¿dym kolorze.
+	//Liczba klocow w kazdym kolorze.
 	std::vector<unsigned int> colorsMultiplicity;
-	//Wektor wektorów z zawieranymi kolorami w ramach ka¿dego pojemnika.
+	//Wektor wektorow z zawieranymi kolorami w ramach kazdego pojemnika.
 	std::vector<std::vector<unsigned int>> includingList;
 public:
 	Interpreter(char* fileName);

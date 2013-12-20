@@ -16,6 +16,9 @@ Block::Block(std::unique_ptr<Color> color)
 	this->color = std::move(color);
 }
 
+/**
+ * Konstruktor kopiujący.
+ */
 Block::Block(const Block & another)
 {
 	if( *this == another)
@@ -29,6 +32,20 @@ Block::Block(const Block & another)
  * Dekstrutkor.
  */
 Block::~Block() { }
+
+/**
+ * Operator przypisania
+ */
+Block& Block::operator=(const Block & rhs)
+{
+	if( *this == rhs)
+		return *this;
+
+	unsigned int rhsColor = rhs.getColor()->getColor();
+	this->color = std::unique_ptr<Color>(new Color(rhsColor));
+
+	return *this;
+}
 
 /*
  * Operator porownania dwoch klockow. Sa takie same jesli maja takie same kolory.

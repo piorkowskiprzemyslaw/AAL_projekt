@@ -1,11 +1,19 @@
 #include "Container.h"
 
 /*
+ * Konstruktor domyslny
+ */
+Container::Container()
+{
+	capacity = 0;
+	blockSet = std::multiset<Block,BlockCompare>();
+}
+
+/*
  * Konstruktor przyjmujacy wektor z zawieranymi kolorami w tym pojemniku.
  */
 Container::Container(const std::vector<unsigned int> & included,
-	                 const unsigned int capacity,
-					 const unsigned int colorsNumber) : capacity{capacity}
+	                 const unsigned int capacity) : capacity{capacity}
 {
 	for(unsigned int colorNo : included)
 	{
@@ -19,6 +27,16 @@ Container::Container(const std::vector<unsigned int> & included,
 Container::Container(const Container& another) : capacity{another.capacity}
 {
 	blockSet = another.blockSet;
+}
+
+/**
+ * Operator przypisania.
+ */
+Container& Container::operator=(const Container & rhs)
+{
+	this->blockSet = rhs.blockSet;
+	this->capacity = rhs.capacity;
+	return *this;
 }
 
 /*

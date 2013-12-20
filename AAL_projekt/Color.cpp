@@ -14,6 +14,19 @@ Color::~Color()
 {
 }
 
+/**
+ * Operator przypisania.
+ */
+Color& Color::operator=(const Color& rhs)
+{
+	if(*this == rhs)
+		return *this;
+
+	thisColorNo = rhs.thisColorNo;
+
+	return *this;
+}
+
 /*
  * Pobiera ilosc kolorow definiowanych dla tego przypadku.
  */

@@ -161,9 +161,8 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
     while(iter->getColorMultiplicity(colorNo) >= 1)
     {
 		blocksNumer = iter->getColorMultiplicity(colorNo);
-    
-		std::cout << "Indeks : " << iter();
-		std::cout << " licznosc koloru " << colorNo << " = " << blocksNumer << std::endl;
+
+		std::cout << "Licznosc koloru " << colorNo << " = " << blocksNumer << std::endl;
 
     	//Przekladamy wszystkie nadmiarowe kulki do prawego sasiada.
     	//tutaj nastepuje rozpatrzenie przypadkow.
@@ -171,7 +170,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
     	{
 
     		// Przypadki kiedy prawy sasiad ma miejsce wolne
-    		if(isCleaned[tmpIter()] == false)
+    		if(/*isCleaned[tmpIter()] == false*/ true)
     		{
 				//Prawy sasiad ma falge flase i ma wolne miejsce
 				if(tmpIter->getLeftPlace() != 0)
@@ -185,7 +184,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
 				if(tmpIter->getLeftPlace() == 0 && iter->getLeftPlace() != 0)
 				{
 					std::cout << "Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce" << std::endl;
-					
+
 					if (tmpIter->checkIsColorPresent(table) >= 0)
 					{
 						// Nie rozpatrywany kolor znajduje sie u sąsiada.
@@ -201,7 +200,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
 							if (tmpIter->checkIsColorPresent(table) >= 0)
 								break;
 						}
-						std::cout << "Znaleziono nierozpatrywany kolor nr : " << colorFound << " w kubelku numer " << tmpIter() << std::endl;
+						//std::cout << "Znaleziono nierozpatrywany kolor nr : " << colorFound << " w kubelku numer " << tmpIter() << std::endl;
 					}
 					continue;
 				}
@@ -244,7 +243,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
 
     	}
 
-		isCleaned[iter()] = true;
+//		isCleaned[iter()] = true;
     	iter = containerSet->getMaxiumWithColor(colorNo, T);
     	tmpIter = iter;
     	tmpIter++;

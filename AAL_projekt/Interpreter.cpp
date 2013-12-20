@@ -1,12 +1,14 @@
 #include "Interpreter.h"
 
 /*
- * Konsturktor przyjmuj¹cy nazwe pliku z którego ma czytaæ.
+ * Konsturktor przyjmujacy nazwe pliku z ktorego ma czytac.
  */
 Interpreter::Interpreter(char* fileName)
 {
 	int tmpVal;
 	int actualIndex;
+	containersNumber = 0;
+	colorsNumber = 0;
 	std::ifstream inputFile;
 	inputFile.open(fileName);
 	if (!inputFile.good())
@@ -51,12 +53,10 @@ Interpreter::Interpreter(char* fileName)
 /*
  * Destruktor
  */
-Interpreter::~Interpreter()
-{
-}
+Interpreter::~Interpreter() { }
 
 /*
- * Pobranie liczby pojemników.
+ * Pobranie liczby pojemnikow.
  */
 unsigned int Interpreter::getContainersNumber()
 {
@@ -64,7 +64,7 @@ unsigned int Interpreter::getContainersNumber()
 }
 
 /*
- * Pobranie pojemnoœci pojemników.
+ * Pobranie pojemnosci pojemnikow.
  */
 std::vector<unsigned int> & Interpreter::getConatinersCapacity()
 {
@@ -72,7 +72,7 @@ std::vector<unsigned int> & Interpreter::getConatinersCapacity()
 }
 
 /*
- * Pobranie iloœci kolorów.
+ * Pobranie ilosci kolorow.
  */
 unsigned int Interpreter::getColorsNumber()
 {
@@ -80,7 +80,7 @@ unsigned int Interpreter::getColorsNumber()
 }
 
 /*
- * Pobranie licznoœci ka¿dego z kolorów.
+ * Pobranie licznosci kazdego z kolorow.
  */
 std::vector<unsigned int> & Interpreter::getColorsMultiplicity()
 {

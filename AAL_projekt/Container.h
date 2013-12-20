@@ -6,6 +6,7 @@
 #include <set>
 #include <vector>
 #include <cassert>
+#include <iterator>
 #include "Block.h"
 #include "BlockCompare.h"
 #include "Color.h"
@@ -16,16 +17,17 @@
 class Container
 {
 private:
-	//Mapuje kolor na ilosc przechowywanych klockow w tym kolorze.
+	//Zbior przechowywanych klcokow.
 	std::multiset<Block,BlockCompare> blockSet;
 	//Pojemnosc pojmenika.
-	const unsigned int capacity;
+	unsigned int capacity;
 public:
+	Container();
 	Container(const std::vector<unsigned int> & included,
-		      const unsigned int capacity,
-			  const unsigned int colorsNumber);
+		      const unsigned int capacity);
 	~Container();
 	Container(const Container & another);
+	Container& operator=(const Container & rhs);
 	bool moveBlock(unsigned int blockColor, Container& destiny);
 	void showInfo() const;
 	bool checkState() const;

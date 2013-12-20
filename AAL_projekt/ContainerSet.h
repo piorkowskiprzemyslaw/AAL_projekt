@@ -4,19 +4,16 @@
 #include <iostream>
 #include <vector>
 #include "Container.h"
+#include "Color.h"
 
 /**
- * Zbior pojemnikow.
+ * Zbior pojemnikow z wazna relacja sasiedztwa konkretnrych pojemnikow.
  */
 class ContainerSet
 {
 private:
 	// Tablica kontenerow.
-	Container * * containers;
-	//liczba pojemnikow.
-	size_t arraySize;
-	//liczba kolorow
-	unsigned int colorsNumber;
+	std::vector<Container> containers;
 	//suma pojemnosci wszystkich pojemnikow.
 	size_t capacitySum;
 
@@ -31,41 +28,28 @@ public:
 	class const_iterator
 	{
 	protected:
-		size_t arraySize;
-		Container * * containerArrayWsk;
-		Container * containerWsk;
-		size_t index;
+		std::vector<Container> & container;
+		std::vector<Container>::iterator iter;
 	public:
-		const_iterator() : arraySize(0), containerArrayWsk(NULL), containerWsk(NULL), index(0) {}
-		const_iterator(const const_iterator & a) :arraySize(a.arraySize), containerArrayWsk(a.containerArrayWsk),  containerWsk(a.containerWsk), index(a.index) {}
-		const_iterator(const size_t ind, Container * * array, const size_t arraySize) : arraySize(arraySize) { index = ind; containerArrayWsk = array; containerWsk = containerArrayWsk[index]; }
-		const_iterator(Container * wsk, size_t ind, Container * * array, const size_t arraySize) : arraySize(arraySize), containerArrayWsk(array), containerWsk(wsk), index(ind) {}
-
-		inline const Container * operator->() const { return containerWsk; }
-		inline const Container& operator*()  const { return *(containerWsk); }
-		inline size_t operator()(void) const { return index;}
-		const_iterator& operator=(const const_iterator& another)
+		const_iterator(const const_iterator & a) : container(a.container) , iter(a.iter) {}
+		const_iterator(std::vector<Container> & cont, const size_t pos) : container(cont)
 		{
-			if(this != &another)
-			{
-				arraySize = another.arraySize;
-				containerArrayWsk = another.containerArrayWsk;
-				containerWsk = another.containerWsk;
-				index = another.index;
-			}
-			return *this;
+			iter = cont.begin() + pos;
+			container = cont;
 		}
+
+		inline const Container * operator->() const { return iter.operator ->(); }
+		inline const Container& operator*()  const { return iter.operator *(); }
 
 		// przejscie w prawo
 		const_iterator& operator++()
 		{
-			if (++index >= arraySize)
-				index = 0;
-			containerWsk = containerArrayWsk[index];
+			++iter;
+			if ( iter == container.end())
+				iter = container.begin();
 			return *this;
 		}
 
-		//przejscie w lewo
 		const_iterator operator++(int)
 		{
 			const_iterator backup(*this);
@@ -73,11 +57,16 @@ public:
 			return backup;
 		}
 
+		// przejscie w lewo
 		const_iterator& operator--()
 		{
-			if (--index < 0)
-				index = arraySize - 1;
-			containerWsk = containerArrayWsk[index];
+			if(iter == container.begin())
+			{
+				iter = container.end();
+				--iter;
+			} else {
+				--iter;
+			}
 			return *this;
 
 		}
@@ -94,20 +83,16 @@ public:
 	class iterator : public const_iterator
 	{
 	public:
-		iterator() : const_iterator() {}
 		iterator(const const_iterator & a) : const_iterator(a) {}
-		iterator(const size_t ind, Container * * array, const size_t arraySize) : const_iterator(ind, array, arraySize) { }
-		iterator(Container * wsk, size_t ind, Container * * array, const size_t arraySize) : const_iterator(wsk, ind, array, arraySize) {}
+		iterator(std::vector<Container> & cont, const size_t pos) : const_iterator(cont,pos) {}
 
-		inline Container& operator*()  const { return *(this->containerWsk); }
-		inline Container* operator->() const { return this->containerWsk; }
-		inline size_t operator() (void) { return ((const_iterator*)this)->operator ()(); }
+		inline Container& operator*()  const { return this->iter.operator *(); }
+		inline Container* operator->() const { return this->iter.operator ->(); }
+
 		iterator& operator=(const iterator & another)
 		{
-			index = another.index;
-			containerArrayWsk = another.containerArrayWsk;
-			containerWsk = another.containerWsk;
-			arraySize = another.arraySize;
+			this->iter = another.iter;
+			this->container = another.container;
 			return *this;
 		}
 
@@ -144,10 +129,10 @@ public:
 	unsigned int colorMultiplicity(unsigned int color);
 	size_t size() const;
 	size_t getCapacitySum() const;
-	iterator getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int)) const;
+	iterator getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int));
 
 	iterator begin();
-	const_iterator begin() const;
+	//const_iterator begin() const;
 	//iterator end();
 	//const_iterator end() const;
 };
