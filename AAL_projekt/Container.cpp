@@ -5,26 +5,20 @@
  */
 Container::Container(const std::vector<unsigned int> & included,
 	                 const unsigned int capacity,
-					 const unsigned int colorsNumber) : capacity{capacity}, leftPlace{capacity}
+					 const unsigned int colorsNumber) : capacity{capacity}
 {
-	for (unsigned int i = 0; i < colorsNumber; i++)
+	for(unsigned int colorNo : included)
 	{
-		content.emplace( i, 0 );
-	}
-
-	for (size_t i = 0; i < included.size(); i++)
-	{
-		leftPlace--;
-		content[included[i]]++;
+		blockSet.emplace(colorNo);
 	}
 }
 
 /*
  * Konstruktor kopiujacy wykonujacy gleboka kopie danych.
  */
-Container::Container(const Container& another) : capacity(another.capacity), leftPlace(another.leftPlace)
+Container::Container(const Container& another) : capacity{another.capacity}
 {
-	content = another.content;
+	blockSet = another.blockSet;
 }
 
 /*
@@ -41,11 +35,13 @@ bool Container::moveBlock(unsigned int blockColor, Container& destiny)
 		return false;
 
 	// nie ma miejsca w destiny
-	if(destiny.leftPlace == 0)
+	if(destiny.getLeftPlace() == 0)
 		return false;
 
-	this->content[blockColor]--;
-	destiny.content[blockColor]++;
+	Block block(blockColor);
+
+	assert(0 != blockSet.erase(block));
+	destiny.blockSet.emplace(block);
 
 	return true;
 }
@@ -60,10 +56,10 @@ Container::~Container(){ }
  */
 void Container::showInfo() const
 {
-	std::cout << "Capacity : " << capacity << " leftPlace : " << leftPlace << " state : " << this->checkState() << std::endl;
-	for (auto x : content)
+	std::cout << "Capacity : " << capacity << " leftPlace : " << getLeftPlace() << " state : " << this->checkState() << std::endl;
+	for(unsigned int i = 0 ; i < Color::getNumberOfAllColors() ; ++i)
 	{
-		std::cout << x.first << " : " << x.second << std::endl;
+		std::cout << i << " : " << blockSet.count(Block(i)) << std::endl;
 	}
 }
 
@@ -72,12 +68,10 @@ void Container::showInfo() const
  */
 bool Container::checkState() const
 {
-	for (auto x : content)
+	for(unsigned int i = 0 ; i < Color::getNumberOfAllColors() ; ++i)
 	{
-		if (x.second > 1)
-		{
+		if(blockSet.count(Block(i)) > 1)
 			return false;
-		}
 	}
 	return true;
 }
@@ -95,7 +89,7 @@ unsigned int Container::getCapacity() const
  */
 unsigned int Container::getColorMultiplicity(unsigned int color) const
 {
-	return content.at(color);
+	return blockSet.count(Block(color));
 }
 
 /**
@@ -103,22 +97,15 @@ unsigned int Container::getColorMultiplicity(unsigned int color) const
  */
 unsigned int Container::getLeftPlace() const
 {
-	return leftPlace;
+	return (capacity - blockSet.size());
 }
 
 /**
- * Sprawdza któryœ z nierozpatrywanych kolorow znajduje sie w kontenerze.
+ * Sprawdza ktory z nierozpatrywanych kolorow znajduje sie w kontenerze.
  * Jesli taki kolor istnieje to zwracany jest jego numer, jesli nie
  * to zwracane jest -1.
  */
 long Container::checkIsColorPresent(std::vector<bool> & table) const
 {
-	for (int i = 0; i < content.size(); ++i)
-	{
-		if (content.at(i) != 0 && table[i] == false)
-		{
-			return i;
-		}
-	}
-	return -1;
+	return 0;
 }

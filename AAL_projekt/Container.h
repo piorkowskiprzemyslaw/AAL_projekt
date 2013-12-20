@@ -3,7 +3,12 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <set>
 #include <vector>
+#include <cassert>
+#include "Block.h"
+#include "BlockCompare.h"
+#include "Color.h"
 
 /*
  * Klasa pojemnika.
@@ -12,11 +17,9 @@ class Container
 {
 private:
 	//Mapuje kolor na ilosc przechowywanych klockow w tym kolorze.
-	std::unordered_map<unsigned int, unsigned int> content;
+	std::multiset<Block,BlockCompare> blockSet;
 	//Pojemnosc pojmenika.
 	const unsigned int capacity;
-	//Pozostale miejsce do zajecia.
-	unsigned int leftPlace;
 public:
 	Container(const std::vector<unsigned int> & included,
 		      const unsigned int capacity,
@@ -32,4 +35,4 @@ public:
 	long checkIsColorPresent(std::vector<bool> & table) const;
 };
 
-#endif 
+#endif

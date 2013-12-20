@@ -3,17 +3,26 @@
 /*
  * Konstruktor pobierajacy kolor tworzonego klocka.
  */
-Block::Block(unsigned int color) 
+Block::Block(unsigned int color)
 {
 	this->color = std::unique_ptr<Color>(new Color(color));
 }
 
 /*
- * Zainicjalizowanie istniejacym unique_ptr'em 
+ * Zainicjalizowanie istniejacym unique_ptr'em
  */
 Block::Block(std::unique_ptr<Color> color)
 {
 	this->color = std::move(color);
+}
+
+Block::Block(const Block & another)
+{
+	if( *this == another)
+		return;
+
+	unsigned int anotherColor = another.getColor()->getColor();
+	this->color = std::unique_ptr<Color>(new Color(anotherColor));
 }
 
 /*
@@ -24,9 +33,17 @@ Block::~Block() { }
 /*
  * Operator porownania dwoch klockow. Sa takie same jesli maja takie same kolory.
  */
-bool Block::operator==(const Block & rhs)
+bool Block::operator==(const Block & rhs) const
 {
 	return *(color.get()) == *(rhs.color.get());
+}
+
+/*
+ * Operator porownania dwoch klockow.
+ */
+bool Block::operator <(const Block & rhs) const
+{
+	return *(color.get()) < *(rhs.color.get());
 }
 
 /*
@@ -36,3 +53,4 @@ Color* Block::getColor() const
 {
 	return this->color.get();
 }
+

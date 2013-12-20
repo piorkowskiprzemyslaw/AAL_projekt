@@ -13,9 +13,10 @@ public:
 	Color(unsigned int thisColor);
 	~Color();
 	static unsigned int getNumberOfAllColors();
-	static void setNumberOfAllColors(unsigned int number);
+	static void setNumberOfAllColors(const unsigned int number);
 	unsigned int getColor() const;
 	bool operator==(const Color & rhs);
+	bool operator<(const Color & rhs);
 };
 
 #endif
