@@ -48,17 +48,17 @@ Container& Container::operator=(const Container & rhs)
  * - klocek nie moze zostac przeniesiony do destiny, poniewaz nie ma tam miejsca.
  *
  */
-bool Container::moveBlock(unsigned int blockColor, Container& destiny)
+bool Container::moveBlock(Color & color, Container& destiny)
 {
 	// nie ma co przelozyc.
-	if(getColorMultiplicity(blockColor) == 0)
+	if(getColorMultiplicity(color) == 0)
 		return false;
 
 	// nie ma miejsca w destiny
 	if(destiny.getLeftPlace() == 0)
 		return false;
 
-	Block block(blockColor);
+	Block block(color);
 
 	assert(0 != blockSet.erase(block));
 	destiny.blockSet.emplace(block);
@@ -112,6 +112,14 @@ unsigned int Container::getColorMultiplicity(unsigned int color) const
 	return blockSet.count(Block(color));
 }
 
+/*
+ * Pobranie ilosci klockow koloru color znajdujacych sie w pojemniku.
+ */
+unsigned int Container::getColorMultiplicity(Color & color) const
+{
+	return blockSet.count(Block(color));
+}
+
 /**
  * Pobranie pozostalego wolnego miejsca w kontenerach.
  */
@@ -122,12 +130,24 @@ unsigned int Container::getLeftPlace() const
 
 /**
  * Sprawdza ktory z nierozpatrywanych kolorow znajduje sie w kontenerze.
- * Jesli taki kolor istnieje to zwracany jest jego numer, jesli nie
- * to zwracane jest -1.
+ * Zwracany jest wskaznik na obiekt Color koloru zawieranego.
  */
-long Container::checkIsColorPresent(std::vector<bool> & table) const
+Color* Container::checkIsColorPresent(std::map<Color, bool, ColorCompare> & colorOrganizeMap) const
 {
-	return 0;
+	std::multiset<Block>::iterator tmpIter;
+
+	for(auto element : colorOrganizeMap)
+	{
+		if(element.second == false)
+		{
+			tmpIter = blockSet.find(Block(element.first));
+			if(blockSet.end() != tmpIter)
+			{
+				return tmpIter->getColor();
+			}
+		}
+	}
+	return nullptr;
 }
 
 /**

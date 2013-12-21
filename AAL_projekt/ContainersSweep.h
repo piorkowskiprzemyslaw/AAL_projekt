@@ -4,19 +4,21 @@
 #include <iostream>
 #include <cstring>
 #include "ContainerSet.h"
+#include "ColorCompare.h"
 
 /*
  * Klasa realizujaca podejscie do rozwiazania problemu za pomoca omiatania pojemnikow z klockow
  * o kolorach ktore juz nie moga sie w tym pojemniku znajdowac.
  */
-template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int)>
+template <typename T>
 class ContainersSweep
 {
 private:
 	ContainerSet * containerSet;
 	size_t * colorMultiplicity;
 	bool checkPreconditions();
-	void organizeColor(std::vector<bool> & table, unsigned int colorNo);
+	void organizeColor(std::map<Color, bool, ColorCompare> & table, Color & color);
+	T sort;
 public:
 	ContainersSweep();
 	ContainersSweep(const ContainerSet & containerSet);
@@ -27,7 +29,7 @@ public:
 /*
 * Domyslny konstruktor.
 */
-template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
+template <typename T >
 ContainersSweep<T>::ContainersSweep()
 {
 	containerSet = nullptr;
@@ -37,7 +39,7 @@ ContainersSweep<T>::ContainersSweep()
 /*
 * Konstrutkor pobierajacy konkretny zbior pojemnikow.
 */
-template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
+template <typename T>
 ContainersSweep<T>::ContainersSweep(const ContainerSet & containerSet)
 {
 	this->containerSet = new ContainerSet(containerSet);
@@ -47,7 +49,7 @@ ContainersSweep<T>::ContainersSweep(const ContainerSet & containerSet)
 /*
 * Destruktor.
 */
-template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
+template <typename T>
 ContainersSweep<T>::~ContainersSweep()
 {
 	delete(containerSet);
@@ -57,13 +59,13 @@ ContainersSweep<T>::~ContainersSweep()
 /*
 * Sprawdz warunki poczatkowe.
 */
-template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
+template <typename T>
 bool ContainersSweep<T>::checkPreconditions()
 {
     unsigned int allColorSum = 0;
 
 	//liczba kolorow musi byc mniejsza badz rowna liczbe dostepnych pojemnikow.
-	if (this->containerSet->getColorsNumber() > this->containerSet->size())
+	if (Color::getNumberOfAllColors() > this->containerSet->size())
 	{
 		return false;
 	}
@@ -94,12 +96,26 @@ bool ContainersSweep<T>::checkPreconditions()
 /*
 * Metoda rozwiazujaca problem implementowanym algorytmem.
 */
-template <int (*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
+template <typename T>
 void ContainersSweep<T>::solveProblem()
 {
-	std::vector<bool> isColorOrganised(containerSet->getColorsNumber(),false);
+	// mapowanie koloru na stan uporzadkowania.
+	std::map<Color, bool , ColorCompare> colorOrganizeMap;
     //talibca z parami <kolor, ilosc wystapien> potrzebna do zrealizowania algorytmu.
-    std::pair<unsigned int, unsigned int > * table = new std::pair<unsigned int, unsigned int>[containerSet->getColorsNumber()];
+    std::vector<std::pair<Color, unsigned int> > table(0);
+
+    // Inicjalizowanie mapy, na poczatku zaden kolor nie jest uporzadkowany.
+    for(int i = 0 ; i < Color::getNumberOfAllColors() ; ++i)
+    {
+    	colorOrganizeMap.emplace(i , false);
+    }
+
+    // Inicjalizowanie vectora.
+    for(int i = 0 ; i < Color::getNumberOfAllColors() ; ++i)
+    {
+    	table.emplace_back(i , containerSet->colorMultiplicity(i));
+    }
+
 	std::cout << "Solving problem with ContainersSweep" << std::endl;
 	std::cout << "Checking preconditions ... ";
 
@@ -112,57 +128,45 @@ void ContainersSweep<T>::solveProblem()
 	}
 	std::cout << "[OK]" << std::endl;
 
-	//zapelnianie tablicy parami <kolor, licznosc>
-	for (int i = 0; i < containerSet->getColorsNumber(); ++i)
-	{
-        table[i] = std::make_pair(i, colorMultiplicity[i]);
-    }
-
-	//posortowanie tableli <kolor, licznosc> po licznosciach
-	T(table, containerSet->getColorsNumber());
+	sort(table);
 
 	//testowe wypisanie tabeli
 	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
     {
-        std::cout << "Color[" << table[i].first << "] : " << table[i].second << std::endl;
+        std::cout << "Color[" << table[i].first.getColor() << "] : " << table[i].second << std::endl;
     }
 
+
 	//organizowanie kolorów, od najbardziej licznego do najmniej.
-	for(int i = 0 ; i < containerSet->getColorsNumber() ; ++i)
+	for(int i = 0 ; i < table.size() ; ++i)
 	{
-		isColorOrganised[table[i].first] = true;
-        organizeColor(isColorOrganised,table[i].first);
+		colorOrganizeMap[table[i].first] = true;
+        organizeColor(colorOrganizeMap ,table[i].first);
         break;
 	}
-
 }
 
 /*
  * Metoda realizujaca sprzatanie konkretnego koloru w pudelkach.
  * Table to vector wartosci logicznych mowiacy czy kolor byl juz rozpatrywany.
  */
-template <int(*T)(std::pair<unsigned int, unsigned int> *, unsigned int) >
-void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int colorNo)
+template <typename T>
+void ContainersSweep<T>::organizeColor(std::map<Color, bool, ColorCompare> & colorOrganizeMap, Color & color)
 {
 	//itearator na pojemnik z najwieksza liczba klockow koloru colorNo
-    ContainerSet::iterator iter = containerSet->getMaxiumWithColor(colorNo, T);
+    ContainerSet::iterator iter = containerSet->getMaxiumWithColor(color);
 	//pomocniczy iterator na prawego sasiada
     ContainerSet::iterator tmpIter(iter);
 	//liczba klockow koloru colorNo w iter
 	unsigned int blocksNumer = 0;
-	//tablica wartosci logicznych
-    bool * isCleaned = new bool[containerSet->size()];
-    //wszystkie wartosci ustawiam na zero
-    memset(isCleaned, 0, sizeof(isCleaned));
-
 
     ++tmpIter;
 
-    while(iter->getColorMultiplicity(colorNo) >= 1)
+    while(iter->getColorMultiplicity(color) >= 1)
     {
-		blocksNumer = iter->getColorMultiplicity(colorNo);
+		blocksNumer = iter->getColorMultiplicity(color);
 
-		std::cout << "Licznosc koloru " << colorNo << " = " << blocksNumer << std::endl;
+		std::cout << "Licznosc koloru " << color.getColor() << " = " << blocksNumer << std::endl;
 
     	//Przekladamy wszystkie nadmiarowe kulki do prawego sasiada.
     	//tutaj nastepuje rozpatrzenie przypadkow.
@@ -176,7 +180,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
 				if(tmpIter->getLeftPlace() != 0)
 				{
 					std::cout << "Prawy sasiad ma falge flase i ma wolne miejsce"<< std::endl;
-					iter->moveBlock(colorNo, *tmpIter);
+					iter->moveBlock(color, *tmpIter);
 					continue;
 				}
 
@@ -185,7 +189,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
 				{
 					std::cout << "Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce" << std::endl;
 
-					if (tmpIter->checkIsColorPresent(table) >= 0)
+					if (tmpIter->checkIsColorPresent(colorOrganizeMap) != nullptr)
 					{
 						// Nie rozpatrywany kolor znajduje sie u sąsiada.
 						std::cout << "Prawy sasiad ma kolor jeszcze nie rozpatrywany." << std::endl;
@@ -197,7 +201,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
 						while (true)
 						{
 							++tmpIter;
-							if (tmpIter->checkIsColorPresent(table) >= 0)
+							if (tmpIter->checkIsColorPresent(colorOrganizeMap) != nullptr)
 								break;
 						}
 						//std::cout << "Znaleziono nierozpatrywany kolor nr : " << colorFound << " w kubelku numer " << tmpIter() << std::endl;
@@ -244,7 +248,7 @@ void ContainersSweep<T>::organizeColor(std::vector<bool> & table, unsigned int c
     	}
 
 //		isCleaned[iter()] = true;
-    	iter = containerSet->getMaxiumWithColor(colorNo, T);
+    	iter = containerSet->getMaxiumWithColor(color);
     	tmpIter = iter;
     	tmpIter++;
     }

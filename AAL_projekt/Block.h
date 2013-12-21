@@ -16,6 +16,7 @@ public:
 	Block(unsigned int colorNo);
 	Block(std::unique_ptr<Color> color);
 	Block(const Block & another);
+	Block(const Color & color);
 	~Block();
 	Block& operator=(const Block& rhs);
 	bool operator==(const Block & rhs) const;

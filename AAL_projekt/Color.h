@@ -10,6 +10,7 @@ private:
 	unsigned int thisColorNo;
 	static unsigned int numberOfAllColors;
 public:
+	Color();
 	Color(unsigned int thisColor);
 	~Color();
 	Color& operator=(const Color & rhs);

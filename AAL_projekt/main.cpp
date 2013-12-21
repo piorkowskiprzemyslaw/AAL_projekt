@@ -18,7 +18,6 @@
 
 /*
 TODO:
-- operator przypisania dla iteratora w ContainerSet.
 - dalsza czesc algorytmu.
 */
 
@@ -32,7 +31,6 @@ int main(int argc, char* argv[])
 	generator.generateData();
 	CycleCounter cycleCounter;
 
-
 	if (interpreter.verifyGatheredInfo())
 	{
 		interpreter.showGatheredInfo();
@@ -40,14 +38,15 @@ int main(int argc, char* argv[])
 
 	ContainerSet containerSet(interpreter.getConatinersCapacity(), interpreter.getIncludingList(), interpreter.getColorsNumber());
 	containerSet.showInfo();
-	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
-	//containerSet1.showInfo();
-
-	//ContainersSweep<selectionSort> sweep(containerSet);
+	ContainersSweep<SelectionSort> sweep(containerSet);
 
 	cycleCounter.startCounting();
-    //sweep.solveProblem();
+    sweep.solveProblem();
     cycleCounter.startCounting();
+
+    //ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
+	//containerSet1.showInfo();
+
 
     std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;
 

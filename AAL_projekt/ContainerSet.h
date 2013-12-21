@@ -129,7 +129,8 @@ public:
 	unsigned int colorMultiplicity(unsigned int color);
 	size_t size() const;
 	size_t getCapacitySum() const;
-	iterator getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int));
+	iterator getMaxiumWithColor(unsigned int color);
+	iterator getMaxiumWithColor(Color & color);
 
 	iterator begin();
 	//const_iterator begin() const;

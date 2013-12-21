@@ -2,6 +2,12 @@
 
 unsigned int Color::numberOfAllColors;
 
+/**
+ * Konstruktor domyslny, tworzy kolor o numerze zero
+ */
+Color::Color() : thisColorNo(0) {}
+
+
 /*
  * Konstruktor przyjmujacy jako argument numer koloru.
  */

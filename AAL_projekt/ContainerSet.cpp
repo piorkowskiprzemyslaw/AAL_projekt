@@ -98,26 +98,38 @@ size_t ContainerSet::getCapacitySum() const
 
 /**
  * Metoda zwracajaca iterator na pojemnik z najwieksza iloscia klockow koloru color.
+ * Dziala w czasie liniowym w stosunku do pojemnosci kontenera.
  */
-ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color, int(*T)(std::pair<unsigned int, unsigned int> * , unsigned int))
+ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color)
 {
-    std::pair<unsigned int, unsigned int> * table = new std::pair<unsigned int, unsigned int>[containers.size()];
+	std::vector<Container>::iterator maxWithColor = containers.begin();
 
-    for(unsigned int i = 0 ; i < containers.size() ; ++i)
-    {
-        table[i] = std::make_pair(i, containers[i].getColorMultiplicity(color));
-    }
+	for(std::vector<Container>::iterator iter = containers.begin() + 1 ; iter != containers.end(); ++iter)
+	{
+		if(iter->getColorMultiplicity(color) > maxWithColor->getColorMultiplicity(color))
+		{
+			maxWithColor = iter;
+		}
+	}
 
-    T(table, containers.size());
+    return ContainerSet::iterator(containers, maxWithColor->getIndex());
+}
 
+/**
+ * Metoda zwracajaca iterator na pojemnik z najwieksza iloscia klockow koloru color.
+ * Dziala w czasie liniowym w stosunku do pojemnosci kontenera.
+ */
+ContainerSet::iterator ContainerSet::getMaxiumWithColor(Color & color)
+{
+	std::vector<Container>::iterator maxWithColor = containers.begin();
 
-    std::cout << "Color number = " << color << std::endl;
+	for(std::vector<Container>::iterator iter = containers.begin() + 1 ; iter != containers.end(); ++iter)
+	{
+		if(iter->getColorMultiplicity(color) > maxWithColor->getColorMultiplicity(color))
+		{
+			maxWithColor = iter;
+		}
+	}
 
-    for(unsigned int i = 0 ; i < containers.size() ; ++i)
-    {
-        std::cout << "Container[" << table[i].first << "] : " << table[i].second << std::endl;
-    }
-
-
-    return ContainerSet::iterator(containers, 0);
+    return ContainerSet::iterator(containers, maxWithColor->getIndex());
 }

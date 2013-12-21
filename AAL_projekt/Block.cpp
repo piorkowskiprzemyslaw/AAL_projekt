@@ -25,6 +25,14 @@ Block::Block(const Block & another)
 	this->color = std::unique_ptr<Color>(new Color(anotherColor));
 }
 
+/**
+ * Konstrutkor w oparciu o przeslany kolor.
+ */
+Block::Block(const Color & color)
+{
+	this->color = std::unique_ptr<Color>(new Color(color.getColor()));
+}
+
 /*
  * Dekstrutkor.
  */

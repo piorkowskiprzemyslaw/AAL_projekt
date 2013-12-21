@@ -2,7 +2,7 @@
 #define CONTAINER_H
 
 #include <iostream>
-#include <unordered_map>
+#include <map>
 #include <set>
 #include <vector>
 #include <cassert>
@@ -10,6 +10,7 @@
 #include "Block.h"
 #include "BlockCompare.h"
 #include "Color.h"
+#include "ColorCompare.h"
 
 /*
  * Klasa pojemnika.
@@ -30,13 +31,14 @@ public:
 	~Container();
 	Container(const Container & another);
 	Container& operator=(const Container & rhs);
-	bool moveBlock(unsigned int blockColor, Container& destiny);
+	bool moveBlock(Color & color, Container& destiny);
 	void showInfo() const;
 	bool checkState() const;
 	unsigned int getCapacity() const;
 	unsigned int getLeftPlace() const;
 	unsigned int getColorMultiplicity(unsigned int color) const;
-	long checkIsColorPresent(std::vector<bool> & table) const;
+	unsigned int getColorMultiplicity(Color & color) const;
+	Color * checkIsColorPresent(std::map<Color, bool, ColorCompare> & colorOrganizeMap) const;
 	unsigned int getIndex() const;
 };
 
