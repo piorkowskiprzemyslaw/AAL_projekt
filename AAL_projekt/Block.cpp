@@ -21,9 +21,6 @@ Block::Block(std::unique_ptr<Color> color)
  */
 Block::Block(const Block & another)
 {
-	if( *this == another)
-		return;
-
 	unsigned int anotherColor = another.getColor()->getColor();
 	this->color = std::unique_ptr<Color>(new Color(anotherColor));
 }

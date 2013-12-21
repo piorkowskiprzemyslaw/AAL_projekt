@@ -7,13 +7,14 @@ Container::Container()
 {
 	capacity = 0;
 	blockSet = std::multiset<Block,BlockCompare>();
+	index = 0;
 }
 
 /*
  * Konstruktor przyjmujacy wektor z zawieranymi kolorami w tym pojemniku.
  */
 Container::Container(const std::vector<unsigned int> & included,
-	                 const unsigned int capacity) : capacity{capacity}
+	                 const unsigned int capacity, const unsigned int index) : capacity(capacity), index(index)
 {
 	for(unsigned int colorNo : included)
 	{
@@ -22,9 +23,9 @@ Container::Container(const std::vector<unsigned int> & included,
 }
 
 /*
- * Konstruktor kopiujacy wykonujacy gleboka kopie danych.
+ * Konstruktor kopiujacy.
  */
-Container::Container(const Container& another) : capacity{another.capacity}
+Container::Container(const Container& another) : capacity(another.capacity) , index(another.index)
 {
 	blockSet = another.blockSet;
 }
@@ -36,6 +37,7 @@ Container& Container::operator=(const Container & rhs)
 {
 	this->blockSet = rhs.blockSet;
 	this->capacity = rhs.capacity;
+	this->index = rhs.index;
 	return *this;
 }
 
@@ -74,7 +76,7 @@ Container::~Container(){ }
  */
 void Container::showInfo() const
 {
-	std::cout << "Capacity : " << capacity << " leftPlace : " << getLeftPlace() << " state : " << this->checkState() << std::endl;
+	std::cout << "Index : " << index << " capacity : " << capacity << " leftPlace : " << getLeftPlace() << " state : " << this->checkState() << std::endl;
 	for(unsigned int i = 0 ; i < Color::getNumberOfAllColors() ; ++i)
 	{
 		std::cout << i << " : " << blockSet.count(Block(i)) << std::endl;
@@ -126,4 +128,12 @@ unsigned int Container::getLeftPlace() const
 long Container::checkIsColorPresent(std::vector<bool> & table) const
 {
 	return 0;
+}
+
+/**
+ * Pobiera index aktualnego pojemnika
+ */
+unsigned int Container::getIndex() const
+{
+	return index;
 }

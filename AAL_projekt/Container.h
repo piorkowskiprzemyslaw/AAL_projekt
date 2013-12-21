@@ -21,10 +21,12 @@ private:
 	std::multiset<Block,BlockCompare> blockSet;
 	//Pojemnosc pojmenika.
 	unsigned int capacity;
+	//Numer pojemnika
+	unsigned int index;
 public:
 	Container();
 	Container(const std::vector<unsigned int> & included,
-		      const unsigned int capacity);
+		      const unsigned int capacity, const unsigned int index);
 	~Container();
 	Container(const Container & another);
 	Container& operator=(const Container & rhs);
@@ -35,6 +37,7 @@ public:
 	unsigned int getLeftPlace() const;
 	unsigned int getColorMultiplicity(unsigned int color) const;
 	long checkIsColorPresent(std::vector<bool> & table) const;
+	unsigned int getIndex() const;
 };
 
 #endif

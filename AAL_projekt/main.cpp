@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 
 	if (interpreter.verifyGatheredInfo())
 	{
-		//interpreter.showGatheredInfo();
+		interpreter.showGatheredInfo();
 	}
 
 	ContainerSet containerSet(interpreter.getConatinersCapacity(), interpreter.getIncludingList(), interpreter.getColorsNumber());
@@ -43,9 +43,10 @@ int main(int argc, char* argv[])
 	ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	//containerSet1.showInfo();
 
-	ContainersSweep<selectionSort> sweep(containerSet);
+	//ContainersSweep<selectionSort> sweep(containerSet);
+
 	cycleCounter.startCounting();
-    sweep.solveProblem();
+    //sweep.solveProblem();
     cycleCounter.startCounting();
 
     std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;

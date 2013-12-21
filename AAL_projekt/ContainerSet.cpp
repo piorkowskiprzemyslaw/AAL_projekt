@@ -21,7 +21,7 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
 	for (size_t i = 0; i < containersCapacity.size(); ++i)
 	{
 		capacitySum += containersCapacity[i];
-		containers.emplace_back(includingList[i], containersCapacity[i]);
+		containers.emplace_back(includingList[i], containersCapacity[i], i);
 	}
 
 }
