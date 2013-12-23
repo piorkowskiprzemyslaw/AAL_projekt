@@ -5,6 +5,12 @@
 #include <vector>
 #include "Container.h"
 #include "Color.h"
+#include "cmath"
+
+enum Direction {
+	left = 0,
+	right = 1
+};
 
 /**
  * Zbior pojemnikow z wazna relacja sasiedztwa konkretnrych pojemnikow.
@@ -88,6 +94,8 @@ public:
 
 		inline Container& operator*()  const { return this->iter.operator *(); }
 		inline Container* operator->() const { return this->iter.operator ->(); }
+		inline bool operator==(const iterator & another) { return this->iter == another.iter; }
+		inline bool operator!=(const iterator & another) { return this->iter != another.iter; }
 
 		iterator& operator=(const iterator & another)
 		{
@@ -131,11 +139,10 @@ public:
 	size_t getCapacitySum() const;
 	iterator getMaxiumWithColor(unsigned int color);
 	iterator getMaxiumWithColor(Color & color);
-
 	iterator begin();
-	//const_iterator begin() const;
-	//iterator end();
-	//const_iterator end() const;
+	unsigned int swapBlocksWithFreeSpace(iterator & freeSpace, iterator & firstBlockLocation, Color & firstColor, iterator & secondBlockLocation, Color & secondColor);
+	unsigned int getDistance(Direction dir, iterator & first, iterator & second) const;
 };
+
 
 #endif

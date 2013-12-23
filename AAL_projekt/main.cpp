@@ -38,11 +38,24 @@ int main(int argc, char* argv[])
 
 	ContainerSet containerSet(interpreter.getConatinersCapacity(), interpreter.getIncludingList(), interpreter.getColorsNumber());
 	containerSet.showInfo();
-	ContainersSweep<SelectionSort> sweep(containerSet);
 
-	cycleCounter.startCounting();
-    sweep.solveProblem();
-    cycleCounter.startCounting();
+	ContainerSet::iterator firstBlock = containerSet.begin();
+	firstBlock++;
+	ContainerSet::iterator secondBlock = containerSet.begin();
+	secondBlock++;
+	secondBlock++;
+	secondBlock++;
+	secondBlock++;
+	Color col1(1);
+	Color col2(4);
+
+	containerSet.swapBlocksWithFreeSpace(firstBlock, firstBlock, col1, secondBlock, col2);
+
+	//ContainersSweep<SelectionSort> sweep(containerSet);
+
+	//cycleCounter.startCounting();
+    //sweep.solveProblem();
+    //cycleCounter.startCounting();
 
     //ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	//containerSet1.showInfo();
