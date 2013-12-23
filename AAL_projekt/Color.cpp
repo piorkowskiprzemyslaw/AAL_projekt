@@ -33,6 +33,14 @@ Color& Color::operator=(const Color& rhs)
 	return *this;
 }
 
+/**
+ * Operator wyluskania
+ */
+Color* Color::operator *()
+{
+	return this;
+}
+
 /*
  * Pobiera ilosc kolorow definiowanych dla tego przypadku.
  */

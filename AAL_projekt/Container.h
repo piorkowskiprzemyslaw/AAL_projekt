@@ -40,6 +40,7 @@ public:
 	unsigned int getColorMultiplicity(Color & color) const;
 	Color * checkIsColorPresent(std::map<Color, bool, ColorCompare> & colorOrganizeMap) const;
 	unsigned int getIndex() const;
+	Color* getTopColor() const;
 };
 
 #endif

@@ -169,6 +169,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		Direction dir;
 		unsigned int distance = 0;
 		iterator tmpIter(firstBlockLocation);
+		std::vector<Color * > shiftVector(containers.size(), nullptr);
 
 		// Okreslenie optymalnego kierunku obrotow.
 		if(getDistance(left, firstBlockLocation, secondBlockLocation) < getDistance(right, firstBlockLocation, secondBlockLocation))
@@ -184,6 +185,24 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 			distance = getDistance(right, firstBlockLocation, secondBlockLocation);
 		else
 			distance = getDistance(left, firstBlockLocation, secondBlockLocation);
+
+		//przygotowanie vectora przesuniecia.
+
+		shiftVector[firstBlockLocation->getIndex()] = *firstColor;
+		shiftVector[secondBlockLocation->getIndex()] = *secondColor;
+
+		for(size_t i = 0 ; i < containers.size() ; ++i)
+		{
+			if(freeSpace->getIndex() != i && shiftVector[i] == nullptr)
+			{
+				shiftVector[i] = containers[i].getTopColor();
+			}
+		}
+
+		for(size_t i = 0 ; i < shiftVector.size() ; ++i)
+		{
+			std::cout << "shiftVector[" << i << "] = " << shiftVector[i] << std::endl;
+		}
 
 		// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
 		for(unsigned int i = 0 ; i < distance ; ++i)

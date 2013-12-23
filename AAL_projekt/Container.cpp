@@ -157,3 +157,14 @@ unsigned int Container::getIndex() const
 {
 	return index;
 }
+
+/*
+ * Pobiera kolor pierwszego z brzegu klocka.
+ */
+Color* Container::getTopColor() const
+{
+	std::multiset<Block, BlockCompare>::iterator iter = blockSet.begin();
+	if(iter == blockSet.end())
+		return nullptr;
+	return iter->getColor();
+}

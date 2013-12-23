@@ -14,6 +14,7 @@ public:
 	Color(unsigned int thisColor);
 	~Color();
 	Color& operator=(const Color & rhs);
+	Color* operator*();
 	static unsigned int getNumberOfAllColors();
 	static void setNumberOfAllColors(const unsigned int number);
 	unsigned int getColor() const;
