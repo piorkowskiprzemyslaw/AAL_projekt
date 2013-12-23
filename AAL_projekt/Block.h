@@ -11,10 +11,10 @@
 class Block
 {
 private:
-	std::unique_ptr<Color> color;
+	Color * color;
 public:
 	Block(unsigned int colorNo);
-	Block(std::unique_ptr<Color> color);
+	Block(Color * color);
 	Block(const Block & another);
 	Block(const Color & color);
 	~Block();

@@ -5,15 +5,15 @@
  */
 Block::Block(unsigned int color)
 {
-	this->color = std::unique_ptr<Color>(new Color(color));
+	this->color = new Color(color);
 }
 
 /*
  * Zainicjalizowanie istniejacym unique_ptr'em
  */
-Block::Block(std::unique_ptr<Color> color)
+Block::Block(Color * color)
 {
-	this->color = std::move(color);
+	this->color = color;
 }
 
 /**
@@ -21,8 +21,8 @@ Block::Block(std::unique_ptr<Color> color)
  */
 Block::Block(const Block & another)
 {
-	unsigned int anotherColor = another.getColor()->getColor();
-	this->color = std::unique_ptr<Color>(new Color(anotherColor));
+	unsigned int anotherColor = another.color->getColor();
+	this->color = new Color(anotherColor);
 }
 
 /**
@@ -30,13 +30,16 @@ Block::Block(const Block & another)
  */
 Block::Block(const Color & color)
 {
-	this->color = std::unique_ptr<Color>(new Color(color.getColor()));
+	this->color = new Color(color.getColor());
 }
 
 /*
  * Dekstrutkor.
  */
-Block::~Block() { }
+Block::~Block()
+{
+	delete(color);
+}
 
 /**
  * Operator przypisania
@@ -46,8 +49,9 @@ Block& Block::operator=(const Block & rhs)
 	if( *this == rhs)
 		return *this;
 
+	delete(color);
 	unsigned int rhsColor = rhs.getColor()->getColor();
-	this->color = std::unique_ptr<Color>(new Color(rhsColor));
+	this->color = new Color(rhsColor);
 
 	return *this;
 }
@@ -57,7 +61,7 @@ Block& Block::operator=(const Block & rhs)
  */
 bool Block::operator==(const Block & rhs) const
 {
-	return *(color.get()) == *(rhs.color.get());
+	return *(color) == *(rhs.color);
 }
 
 /*
@@ -65,7 +69,7 @@ bool Block::operator==(const Block & rhs) const
  */
 bool Block::operator <(const Block & rhs) const
 {
-	return *(color.get()) < *(rhs.color.get());
+	return *(color) < *(rhs.color);
 }
 
 /*
@@ -73,6 +77,6 @@ bool Block::operator <(const Block & rhs) const
  */
 Color* Block::getColor() const
 {
-	return this->color.get();
+	return color;
 }
 

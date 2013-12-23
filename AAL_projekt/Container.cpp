@@ -55,13 +55,15 @@ bool Container::moveBlock(Color & color, Container& destiny)
 		return false;
 
 	// nie ma miejsca w destiny
-	if(destiny.getLeftPlace() == 0)
+ 	if(destiny.getLeftPlace() == 0)
 		return false;
-
-	Block block(color);
+	
+	Block block(color.getColor());
 
 	assert(0 != blockSet.erase(block));
-	destiny.blockSet.emplace(block);
+	destiny.blockSet.emplace(block.getColor());
+
+	color.setColor(block.getColor()->getColor());
 
 	return true;
 }
@@ -115,9 +117,9 @@ unsigned int Container::getColorMultiplicity(unsigned int color) const
 /*
  * Pobranie ilosci klockow koloru color znajdujacych sie w pojemniku.
  */
-unsigned int Container::getColorMultiplicity(Color & color) const
+unsigned int Container::getColorMultiplicity(const Color & color) const
 {
-	return blockSet.count(Block(color));
+	return blockSet.count(Block(color.getColor()));
 }
 
 /**

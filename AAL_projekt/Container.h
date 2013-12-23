@@ -37,7 +37,7 @@ public:
 	unsigned int getCapacity() const;
 	unsigned int getLeftPlace() const;
 	unsigned int getColorMultiplicity(unsigned int color) const;
-	unsigned int getColorMultiplicity(Color & color) const;
+	unsigned int getColorMultiplicity(const Color & color) const;
 	Color * checkIsColorPresent(std::map<Color, bool, ColorCompare> & colorOrganizeMap) const;
 	unsigned int getIndex() const;
 	Color* getTopColor() const;

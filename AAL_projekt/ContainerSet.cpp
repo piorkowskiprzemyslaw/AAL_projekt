@@ -188,7 +188,6 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 
 		//przygotowanie vectora przesuniecia.
 
-		shiftVector[firstBlockLocation->getIndex()] = *firstColor;
 		shiftVector[secondBlockLocation->getIndex()] = *secondColor;
 
 		for(size_t i = 0 ; i < containers.size() ; ++i)
@@ -205,10 +204,11 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		}
 
 		// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
-		for(unsigned int i = 0 ; i < distance ; ++i)
-		{
-			// metoda przesuwająca.
-		}
+		shiftBlocks(shiftVector, freeSpace, distance, dir);
+
+		std::cout << "After shiftBlocks with distance = " << distance << " and direction = " << dir << std::endl;
+
+		showInfo();
 
 		// jesli przekrecalismy w prawo, to interesujacy klocek do zmianay bedzie znajdowal sie po lewej stronie firstBlockLocation.
 		if(dir == right)
@@ -264,12 +264,12 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
 		for(unsigned int i = 0 ; i < distance ; ++i)
 		{
-			// metoda przesuwająca.
+			// metoda przesuwajaca.
 		}
 
 		// jesli przekrecalismy w prawo, to interesujacy klocek do zmianay bedzie znajdowal sie po lewej stronie firstBlockLocation.
 		if(dir == right)
-		{ // TODO : do sprawdzenia, czy na pewno w tym przypadku, to lewy sąsiad bedzie okej!!!!
+		{ // TODO : do sprawdzenia, czy na pewno w tym przypadku, to lewy sasiad bedzie okej!!!!
 			--tmpIter;
 		}
 		// jesli przekrecalismy w lewo, to interesujacy klocek do zmianay bedzie znajdowal sie po prawej stronie firstBlockLocation.
@@ -416,19 +416,74 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
  */
 unsigned int ContainerSet::getDistance(Direction dir, iterator & first, iterator & second) const
 {
+	iterator it = first;
 	unsigned int count = 0;
 	if(dir == left)
 	{
-		for(iterator it = --first ; it != second ; --it)
+		--it;
+		for(; it != second ; --it)
 		{
 			++count;
 		}
 	} else /* (dir == right) */ {
-
-		for(iterator it = ++first ; it != second ; ++it)
+		++it;
+		for(; it != second ; ++it)
 		{
 			++count;
 		}
 	}
 	return count;
+}
+
+/*
+ * Metoda przsuwajaca klocki o kolorach podanych w vectorze distance razy, przy uzyciu 
+ */
+unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const iterator & freeSpace, unsigned int distance, Direction dir)
+{
+	unsigned int counter = 0;
+	iterator sourceIter = freeSpace;
+	iterator destinationIter = sourceIter;
+	std::vector<Color *> vector(shiftVector);
+	Color * tmp;
+
+	if (dir == right)
+	{
+		sourceIter--;
+		for (auto i = 0; i < distance; i++)
+		{
+			for (; sourceIter != freeSpace; --sourceIter)
+			{
+				tmp = vector[sourceIter->getIndex()];
+				if (tmp != nullptr)
+				{
+					destinationIter = sourceIter;
+					destinationIter++;
+					sourceIter->moveBlock(*tmp, *destinationIter);
+				}
+			}
+
+			--sourceIter;
+			tmp = vector[sourceIter->getIndex()];
+			++sourceIter;
+			destinationIter = sourceIter;
+			destinationIter++;
+			sourceIter->moveBlock(*tmp, *destinationIter);
+
+			tmp = vector[vector.size() - 1];
+			for (int i = vector.size() - 2; i >= 0; --i)
+			{
+				vector[i + 1] = vector[i];
+			}
+			vector[0] = tmp;
+
+		}
+	}
+	else /* (dir == left) */{
+		for (auto i = 0; i < distance; i++)
+		{
+
+		}
+	}
+
+	return counter;
 }

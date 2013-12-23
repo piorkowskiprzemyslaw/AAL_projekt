@@ -80,3 +80,11 @@ bool Color::operator<(const Color & rhs)
 {
 	return thisColorNo < rhs.thisColorNo;
 }
+
+/**
+ * Przypisanie koloru.
+ */
+void Color::setColor(unsigned int newColor)
+{
+	thisColorNo = newColor;
+}

@@ -18,6 +18,7 @@ public:
 	static unsigned int getNumberOfAllColors();
 	static void setNumberOfAllColors(const unsigned int number);
 	unsigned int getColor() const;
+	void setColor(unsigned int newColor);
 	bool operator==(const Color & rhs);
 	bool operator<(const Color & rhs);
 };
