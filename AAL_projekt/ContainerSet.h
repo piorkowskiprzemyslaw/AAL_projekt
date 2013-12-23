@@ -17,11 +17,6 @@ enum Direction {
  */
 class ContainerSet
 {
-private:
-	// Tablica kontenerow.
-	std::vector<Container> containers;
-	//suma pojemnosci wszystkich pojemnikow.
-	size_t capacitySum;
 
 public:
 	ContainerSet(const std::vector<unsigned int> & containersCapacity,
@@ -143,6 +138,13 @@ public:
 	unsigned int swapBlocksWithFreeSpace(iterator & freeSpace, iterator & firstBlockLocation, Color & firstColor, iterator & secondBlockLocation, Color & secondColor);
 	unsigned int getDistance(Direction dir, iterator & first, iterator & second) const;
 	unsigned int shiftBlocks(std::vector<Color *> & shfitVector, const iterator & freeSpace, unsigned int distance, Direction dir);
+
+private:
+	// Tablica kontenerow.
+	std::vector<Container> containers;
+	//suma pojemnosci wszystkich pojemnikow.
+	size_t capacitySum;
+	void updateShiftVector(std::vector<Color *> & vector, const iterator & freeSpace, const Direction & dir);
 };
 
 

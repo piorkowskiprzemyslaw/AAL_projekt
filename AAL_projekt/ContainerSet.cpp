@@ -204,7 +204,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		}
 
 		// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
-		shiftBlocks(shiftVector, freeSpace, distance, dir);
+		counter += shiftBlocks(shiftVector, freeSpace, distance, dir);
 
 		std::cout << "After shiftBlocks with distance = " << distance << " and direction = " << dir << std::endl;
 
@@ -222,6 +222,9 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 
 		tmpIter->moveBlock(secondColor,*firstBlockLocation);
 		firstBlockLocation->moveBlock(firstColor,*tmpIter);
+
+		std::cout << std::endl << "After swap " << std::endl;
+		showInfo();
 
 		// wykonaj przesuniecie wszystkich klockow o jeden w kierunku przeciwnym do dir distance razy.
 		if(dir == right)
@@ -436,7 +439,7 @@ unsigned int ContainerSet::getDistance(Direction dir, iterator & first, iterator
 }
 
 /*
- * Metoda przsuwajaca klocki o kolorach podanych w vectorze distance razy, przy uzyciu 
+ * Metoda przsuwajaca klocki o kolorach podanych w vectorze distance razy, przy uzyciu
  */
 unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const iterator & freeSpace, unsigned int distance, Direction dir)
 {
@@ -449,7 +452,7 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 	if (dir == right)
 	{
 		sourceIter--;
-		for (auto i = 0; i < distance; i++)
+		for (size_t i = 0; i < distance; i++)
 		{
 			for (; sourceIter != freeSpace; --sourceIter)
 			{
@@ -459,6 +462,7 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 					destinationIter = sourceIter;
 					destinationIter++;
 					sourceIter->moveBlock(*tmp, *destinationIter);
+					++counter;
 				}
 			}
 
@@ -469,21 +473,69 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 			destinationIter++;
 			sourceIter->moveBlock(*tmp, *destinationIter);
 
-			tmp = vector[vector.size() - 1];
-			for (int i = vector.size() - 2; i >= 0; --i)
-			{
-				vector[i + 1] = vector[i];
-			}
-			vector[0] = tmp;
-
+			updateShiftVector(vector, freeSpace, dir);
 		}
 	}
 	else /* (dir == left) */{
-		for (auto i = 0; i < distance; i++)
-		{
 
+		++sourceIter;
+		for (size_t i = 0; i < distance; i++)
+		{
+			for(; sourceIter != freeSpace ; --sourceIter)
+			{
+				tmp = vector[sourceIter->getIndex()];
+				if(tmp != nullptr)
+				{
+					destinationIter = sourceIter;
+					--destinationIter;
+					sourceIter->moveBlock(*tmp, *destinationIter);
+					++counter;
+				}
+			}
+
+			++sourceIter;
+			tmp = vector[sourceIter->getIndex()];
+			--sourceIter;
+			destinationIter = sourceIter;
+			--destinationIter;
+			sourceIter->moveBlock(*tmp, *destinationIter);
+
+			updateShiftVector(vector,freeSpace, dir);
 		}
 	}
 
+	shiftVector = vector;
 	return counter;
+}
+
+void ContainerSet::updateShiftVector(std::vector<Color *> & vector, const iterator & freeSpace, const Direction & dir)
+{
+	Color * tmp;
+
+	if(dir == right)
+	{
+		tmp = vector[vector.size() - 1];
+		for (int i = vector.size() - 2; i >= 0; --i)
+		{
+			vector[i + 1] = vector[i];
+		}
+		vector[0] = tmp;
+
+		tmp = vector[freeSpace->getIndex()];
+		vector[freeSpace->getIndex()] = nullptr;
+		vector[freeSpace->getIndex() + 1] = tmp;
+
+	} else /* (dir == left) */ {
+
+		tmp = vector[0];
+		for(size_t i = 0 ; i < vector.size() - 2 ; ++i)
+		{
+			vector[i] = vector[i+1];
+		}
+		vector[vector.size() - 1] = tmp;
+
+		tmp = vector[freeSpace->getIndex()];
+		vector[freeSpace->getIndex()] = nullptr;
+		vector[freeSpace->getIndex() - 1] = tmp;
+	}
 }

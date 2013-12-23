@@ -13,7 +13,7 @@ Block::Block(unsigned int color)
  */
 Block::Block(Color * color)
 {
-	this->color = color;
+	this->color = new Color(color->getColor());
 }
 
 /**
