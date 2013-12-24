@@ -11,16 +11,16 @@ private:
 	static unsigned int numberOfAllColors;
 public:
 	Color();
-	Color(unsigned int thisColor);
+	Color(const unsigned int thisColor);
 	~Color();
 	Color& operator=(const Color & rhs);
-	Color* operator*();
+	const Color* operator*() const;
+	unsigned int getColor() const;
+	bool operator==(const Color & rhs) const;
+	bool operator<(const Color & rhs) const;
+
 	static unsigned int getNumberOfAllColors();
 	static void setNumberOfAllColors(const unsigned int number);
-	unsigned int getColor() const;
-	void setColor(unsigned int newColor);
-	bool operator==(const Color & rhs);
-	bool operator<(const Color & rhs);
 };
 
 #endif

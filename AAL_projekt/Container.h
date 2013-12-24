@@ -26,21 +26,19 @@ private:
 	unsigned int index;
 public:
 	Container();
-	Container(const std::vector<unsigned int> & included,
-		      const unsigned int capacity, const unsigned int index);
+	Container(const std::vector<unsigned int> & included, const unsigned int capacity, const unsigned int index);
 	~Container();
 	Container(const Container & another);
 	Container& operator=(const Container & rhs);
-	bool moveBlock(Color & color, Container& destiny);
-	void showInfo() const;
-	bool checkState() const;
+	bool moveBlock(const Color & color, Container& destiny);
+	unsigned int getColorMultiplicity(const Color & color) const;
+	Color* checkIsColorPresent(const std::map<Color, bool, ColorCompare> & colorOrganizeMap) const;
 	unsigned int getCapacity() const;
 	unsigned int getLeftPlace() const;
-	unsigned int getColorMultiplicity(unsigned int color) const;
-	unsigned int getColorMultiplicity(const Color & color) const;
-	Color * checkIsColorPresent(std::map<Color, bool, ColorCompare> & colorOrganizeMap) const;
-	unsigned int getIndex() const;
+	void showInfo() const;
+	bool checkState() const;
 	Color* getTopColor() const;
+	unsigned int getIndex() const;
 };
 
 #endif

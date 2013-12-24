@@ -17,11 +17,14 @@ enum Direction {
  */
 class ContainerSet
 {
+private:
+	// Tablica kontenerow.
+	std::vector<Container> containers;
+	//suma pojemnosci wszystkich pojemnikow.
+	size_t capacitySum;
 
 public:
-	ContainerSet(const std::vector<unsigned int> & containersCapacity,
-		         const std::vector<std::vector<unsigned int> > & includingList,
-				 const unsigned int colorsNumber);
+	ContainerSet(const std::vector<unsigned int> & containersCapacity, const std::vector<std::vector<unsigned int> > & includingList, const unsigned int colorsNumber);
 	~ContainerSet();
 	explicit ContainerSet(const ContainerSet& another);
 
@@ -87,13 +90,15 @@ public:
 		iterator(const const_iterator & a) : const_iterator(a) {}
 		iterator(std::vector<Container> & cont, const size_t pos) : const_iterator(cont,pos) {}
 
-		inline Container& operator*()  const { return this->iter.operator *(); }
+		inline Container& operator*() const { return this->iter.operator *(); }
 		inline Container* operator->() const { return this->iter.operator ->(); }
 		inline bool operator==(const iterator & another) { return this->iter == another.iter; }
 		inline bool operator!=(const iterator & another) { return this->iter != another.iter; }
 
 		iterator& operator=(const iterator & another)
 		{
+			if(*this == another)
+				return *this;
 			this->iter = another.iter;
 			this->container = another.container;
 			return *this;
@@ -127,24 +132,20 @@ public:
 
 	};
 
-	void showInfo();
-	unsigned int getColorsNumber();
-	unsigned int colorMultiplicity(unsigned int color);
+	void showInfo() const;
+	unsigned int getColorsNumber() const;
+	unsigned int colorMultiplicity(const Color & color) const;
 	size_t size() const;
 	size_t getCapacitySum() const;
-	iterator getMaxiumWithColor(unsigned int color);
-	iterator getMaxiumWithColor(Color & color);
+	iterator getMaxiumWithColor(const Color & color);
 	iterator begin();
 	unsigned int swapBlocksWithFreeSpace(iterator & freeSpace, iterator & firstBlockLocation, Color & firstColor, iterator & secondBlockLocation, Color & secondColor);
+
+private:
+	void updateShiftVector(std::vector<Color *> & vector, const iterator & freeSpace, const Direction & dir);
 	unsigned int getDistance(Direction dir, iterator & first, iterator & second) const;
 	unsigned int shiftBlocks(std::vector<Color *> & shfitVector, const iterator & freeSpace, unsigned int distance, Direction dir);
 
-private:
-	// Tablica kontenerow.
-	std::vector<Container> containers;
-	//suma pojemnosci wszystkich pojemnikow.
-	size_t capacitySum;
-	void updateShiftVector(std::vector<Color *> & vector, const iterator & freeSpace, const Direction & dir);
 };
 
 

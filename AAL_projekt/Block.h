@@ -13,8 +13,8 @@ class Block
 private:
 	Color * color;
 public:
-	Block(unsigned int colorNo);
-	Block(Color * color);
+	Block(const unsigned int colorNo);
+	Block(const Color * color);
 	Block(const Block & another);
 	Block(const Color & color);
 	~Block();

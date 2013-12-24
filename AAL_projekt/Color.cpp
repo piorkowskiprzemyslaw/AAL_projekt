@@ -11,14 +11,12 @@ Color::Color() : thisColorNo(0) {}
 /*
  * Konstruktor przyjmujacy jako argument numer koloru.
  */
-Color::Color(unsigned int thisColor) : thisColorNo(thisColor) {}
+Color::Color(const unsigned int thisColor) : thisColorNo(thisColor) {}
 
 /*
  * Destruktor.
  */
-Color::~Color()
-{
-}
+Color::~Color() {}
 
 /**
  * Operator przypisania.
@@ -27,16 +25,14 @@ Color& Color::operator=(const Color& rhs)
 {
 	if(*this == rhs)
 		return *this;
-
 	thisColorNo = rhs.thisColorNo;
-
 	return *this;
 }
 
 /**
  * Operator wyluskania
  */
-Color* Color::operator *()
+const Color* Color::operator *() const
 {
 	return this;
 }
@@ -68,7 +64,7 @@ unsigned int Color::getColor() const
 /*
  * Operator porownania czy dwa kolory sa identyczne.
  */
-bool Color::operator==(const Color & rhs)
+bool Color::operator==(const Color & rhs) const
 {
 	return thisColorNo == rhs.getColor();
 }
@@ -76,15 +72,7 @@ bool Color::operator==(const Color & rhs)
 /*
  * Opeator mniejszosci.
  */
-bool Color::operator<(const Color & rhs)
+bool Color::operator<(const Color & rhs) const
 {
 	return thisColorNo < rhs.thisColorNo;
-}
-
-/**
- * Przypisanie koloru.
- */
-void Color::setColor(unsigned int newColor)
-{
-	thisColorNo = newColor;
 }

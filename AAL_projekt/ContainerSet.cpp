@@ -3,27 +3,21 @@
 /*
  * Konstruktor ktory przyjmuje pojemnosci pojemnikow, listy zawierania oraz ilosc roznych kolorow.
  */
-ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
-						   const std::vector<std::vector<unsigned int> > & includingList,
-						   const unsigned int colorsNumber)
+ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity, const std::vector<std::vector<unsigned int> > & includingList, const unsigned int colorsNumber)
 {
-	std::vector<Container>::iterator emplaceIterator = containers.begin();
 	if (containersCapacity.size() != includingList.size())
 	{
-		std::cout << "Internal error!" << std::endl;
+		std::cerr << "Internal error!" << std::endl;
 		exit(1);
 	}
-
-	containers = std::vector<Container>(0);
+	containers.clear();
 	Color::setNumberOfAllColors(colorsNumber);
 	capacitySum = 0;
-
 	for (size_t i = 0; i < containersCapacity.size(); ++i)
 	{
 		capacitySum += containersCapacity[i];
 		containers.emplace_back(includingList[i], containersCapacity[i], i);
 	}
-
 }
 
 /*
@@ -31,19 +25,24 @@ ContainerSet::ContainerSet(const std::vector<unsigned int> & containersCapacity,
  */
 ContainerSet::ContainerSet(const ContainerSet& another)
 {
-	containers = another.containers;
 	capacitySum = another.capacitySum;
+	containers.clear();
+	Color::setNumberOfAllColors(another.getColorsNumber());
+	for(auto container : another.containers)
+	{
+		containers.emplace_back(container);
+	}
 }
 
 /*
- * Destruktor niszczy obiekty stworzone w konstruktorze.
+ * Destruktor nie ma potrzeby niszczenia niczego, poniewaz nie przydzielamy dynamicznie pamieci.
  */
 ContainerSet::~ContainerSet() { }
 
 /*
  * Wyswietl informacje na temat tego zbioru kontenerow.
  */
-void ContainerSet::showInfo()
+void ContainerSet::showInfo() const
 {
 	for(auto container : containers)
 	{
@@ -54,7 +53,7 @@ void ContainerSet::showInfo()
 /*
  * Pobierz ilosc roznych kolorow.
  */
-unsigned int ContainerSet::getColorsNumber()
+unsigned int ContainerSet::getColorsNumber() const
 {
 	return Color::getNumberOfAllColors();
 }
@@ -70,7 +69,7 @@ size_t ContainerSet::size() const
 /*
  * Pobierz ilosc klockow w kolorze color ktore znajduja sie we wszystkich pojemnikach.
  */
-unsigned int ContainerSet::colorMultiplicity(unsigned int color)
+unsigned int ContainerSet::colorMultiplicity(const Color & color) const
 {
 	unsigned int sum = 0;
 	for(auto container : containers)
@@ -100,10 +99,9 @@ size_t ContainerSet::getCapacitySum() const
  * Metoda zwracajaca iterator na pojemnik z najwieksza iloscia klockow koloru color.
  * Dziala w czasie liniowym w stosunku do pojemnosci kontenera.
  */
-ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color)
+ContainerSet::iterator ContainerSet::getMaxiumWithColor(const Color & color)
 {
 	std::vector<Container>::iterator maxWithColor = containers.begin();
-
 	for(std::vector<Container>::iterator iter = containers.begin() + 1 ; iter != containers.end(); ++iter)
 	{
 		if(iter->getColorMultiplicity(color) > maxWithColor->getColorMultiplicity(color))
@@ -111,26 +109,6 @@ ContainerSet::iterator ContainerSet::getMaxiumWithColor(unsigned int color)
 			maxWithColor = iter;
 		}
 	}
-
-    return ContainerSet::iterator(containers, maxWithColor->getIndex());
-}
-
-/**
- * Metoda zwracajaca iterator na pojemnik z najwieksza iloscia klockow koloru color.
- * Dziala w czasie liniowym w stosunku do pojemnosci kontenera.
- */
-ContainerSet::iterator ContainerSet::getMaxiumWithColor(Color & color)
-{
-	std::vector<Container>::iterator maxWithColor = containers.begin();
-
-	for(std::vector<Container>::iterator iter = containers.begin() + 1 ; iter != containers.end(); ++iter)
-	{
-		if(iter->getColorMultiplicity(color) > maxWithColor->getColorMultiplicity(color))
-		{
-			maxWithColor = iter;
-		}
-	}
-
     return ContainerSet::iterator(containers, maxWithColor->getIndex());
 }
 
@@ -150,26 +128,23 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 	{
 		return counter;
 	}
-
 	// Nie ma koloru secondColor w pojemniku secondBlockLocation
 	if(secondBlockLocation->getColorMultiplicity(secondColor) == 0)
 	{
 		return counter;
 	}
-
 	// Nie ma wolnego miejsca w pojemniku freeSpace
 	if(freeSpace->getLeftPlace() == 0)
 	{
 		return counter;
 	}
-
 	// Wolne miejsce znajduje sie w pojemniku zawierajacym pierwszy klocek
 	if(freeSpace->getIndex() == firstBlockLocation->getIndex())
 	{
 		Direction dir;
 		unsigned int distance = 0;
 		iterator tmpIter(firstBlockLocation);
-		std::vector<Color * > shiftVector(containers.size(), nullptr);
+		std::vector<Color *> shiftVector(containers.size(), nullptr);
 
 		// Okreslenie optymalnego kierunku obrotow.
 		if(getDistance(left, firstBlockLocation, secondBlockLocation) < getDistance(right, firstBlockLocation, secondBlockLocation))
@@ -187,29 +162,24 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 			distance = getDistance(left, firstBlockLocation, secondBlockLocation);
 
 		//przygotowanie vectora przesuniecia.
-
-		shiftVector[secondBlockLocation->getIndex()] = *secondColor;
+		shiftVector[secondBlockLocation->getIndex()] = new Color(secondColor.getColor());
 
 		for(size_t i = 0 ; i < containers.size() ; ++i)
 		{
 			if(freeSpace->getIndex() != i && shiftVector[i] == nullptr)
 			{
-				shiftVector[i] = containers[i].getTopColor();
+				shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
 			}
 		}
-
+		//testowe wypisanie wszystkich wskaznikow w tablicy.
 		for(size_t i = 0 ; i < shiftVector.size() ; ++i)
 		{
 			std::cout << "shiftVector[" << i << "] = " << shiftVector[i] << std::endl;
 		}
-
 		// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
 		counter += shiftBlocks(shiftVector, freeSpace, distance, dir);
-
 		std::cout << "After shiftBlocks with distance = " << distance << " and direction = " << dir << std::endl;
-
 		showInfo();
-
 		// jesli przekrecalismy w prawo, to interesujacy klocek do zmianay bedzie znajdowal sie po lewej stronie firstBlockLocation.
 		if(dir == right)
 		{
@@ -225,7 +195,6 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 
 		std::cout << std::endl << "After swap " << std::endl;
 		showInfo();
-
 		// wykonaj przesuniecie wszystkich klockow o jeden w kierunku przeciwnym do dir distance razy.
 		if(dir == right)
 		{
@@ -481,7 +450,7 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 		++sourceIter;
 		for (size_t i = 0; i < distance; i++)
 		{
-			for(; sourceIter != freeSpace ; --sourceIter)
+			for(; sourceIter != freeSpace ; ++sourceIter)
 			{
 				tmp = vector[sourceIter->getIndex()];
 				if(tmp != nullptr)
