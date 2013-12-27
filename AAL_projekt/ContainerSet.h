@@ -142,7 +142,6 @@ public:
 	unsigned int swapBlocksWithFreeSpace(iterator & freeSpace, iterator & firstBlockLocation, Color & firstColor, iterator & secondBlockLocation, Color & secondColor);
 
 private:
-	void updateShiftVector(std::vector<Color *> & vector, const iterator & freeSpace, const Direction & dir);
 	unsigned int getDistance(Direction dir, iterator & first, iterator & second) const;
 	unsigned int shiftBlocks(std::vector<Color *> & shfitVector, const iterator & freeSpace, unsigned int distance, Direction dir);
 

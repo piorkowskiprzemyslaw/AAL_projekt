@@ -168,3 +168,31 @@ Color* Container::getTopColor() const
 		return nullptr;
 	return iter->getColor();
 }
+
+/**
+ * Pobiera pierszy kolor z brzegu, ale z wyjatkiem klocka o kolorze anotherColor.
+ * Jesli w pojemniku jest >1 klockow o kolorze another Color, to moze zostac zwrocony anotherColor.
+ */
+Color* Container::getTopColor(const Color * anotherColor) const
+{
+	for (auto iter = blockSet.begin(); iter != blockSet.end(); ++iter)
+	{
+		if (iter->getColor()->getColor() != anotherColor->getColor())
+		{
+			return iter->getColor();
+		}
+	}
+
+	if (getColorMultiplicity(*anotherColor) > 1)
+	{
+		for (auto iter = blockSet.begin(); iter != blockSet.end(); ++iter)
+		{
+			if (iter->getColor()->getColor() == anotherColor->getColor())
+			{
+				return iter->getColor();
+			}
+		}
+	}
+
+	return nullptr;
+}

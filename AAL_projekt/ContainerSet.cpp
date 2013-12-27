@@ -145,14 +145,11 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		unsigned int distance = 0;
 		iterator tmpIter(firstBlockLocation);
 		std::vector<Color *> shiftVector(containers.size(), nullptr);
-
 		// Okreslenie optymalnego kierunku obrotow.
 		if(getDistance(left, firstBlockLocation, secondBlockLocation) < getDistance(right, firstBlockLocation, secondBlockLocation))
-		{
-			// blizej jest patrzac w lewa strone, wiec musimy przekrecac w prawo.
+		{// blizej jest patrzac w lewa strone, wiec musimy przekrecac w prawo.
 			dir = right;
-		} else {
-			// blizej jest patrzac w prawa strone, wiec musimy przekrecac w lewo.
+		} else { // blizej jest patrzac w prawa strone, wiec musimy przekrecac w lewo.
 			dir = left;
 		}
 
@@ -161,69 +158,69 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		else
 			distance = getDistance(left, firstBlockLocation, secondBlockLocation);
 
-		//przygotowanie vectora przesuniecia.
-		shiftVector[secondBlockLocation->getIndex()] = new Color(secondColor.getColor());
+		if (distance > 0)
+		{
+			shiftVector[secondBlockLocation->getIndex()] = new Color(secondColor.getColor());
 
-		for(size_t i = 0 ; i < containers.size() ; ++i)
-		{
-			if(freeSpace->getIndex() != i && shiftVector[i] == nullptr)
+			for(size_t i = 0 ; i < containers.size() ; ++i)
 			{
-				shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
+				if(freeSpace->getIndex() != i && shiftVector[i] == nullptr)
+				{
+					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
+				}
 			}
-		}
-		//testowe wypisanie wszystkich wskaznikow w tablicy.
-		for(size_t i = 0 ; i < shiftVector.size() ; ++i)
-		{
-			std::cout << "shiftVector[" << i << "] = " << shiftVector[i] << std::endl;
-		}
-		// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
-		counter += shiftBlocks(shiftVector, freeSpace, distance, dir);
-		std::cout << "After shiftBlocks with distance = " << distance << " and direction = " << dir << std::endl;
-		showInfo();
-		// jesli przekrecalismy w prawo, to interesujacy klocek do zmianay bedzie znajdowal sie po lewej stronie firstBlockLocation.
-		if(dir == right)
-		{
-			--tmpIter;
-		}
-		// jesli przekrecalismy w lewo, to interesujacy klocek do zmianay bedzie znajdowal sie po prawej stronie firstBlockLocation.
-		else /* (dir == left) */ {
-			++tmpIter;
+			//testowe wypisanie wszystkich wskaznikow w tablicy.
+			//for(size_t i = 0 ; i < shiftVector.size() ; ++i)
+			//{
+			//	std::cout << "shiftVector[" << i << "] = " << shiftVector[i] << std::endl;
+			//}
+
+			// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
+			counter += shiftBlocks(shiftVector, freeSpace, distance * containers.size(), dir);
+
+			// jesli przekrecalismy w prawo, to interesujacy klocek do zmianay bedzie znajdowal sie po lewej stronie firstBlockLocation.
+			if(dir == right)
+			{
+				--tmpIter;
+			}
+			// jesli przekrecalismy w lewo, to interesujacy klocek do zmianay bedzie znajdowal sie po prawej stronie firstBlockLocation.
+			else /* (dir == left) */ {
+				++tmpIter;
+			}
 		}
 
 		tmpIter->moveBlock(secondColor,*firstBlockLocation);
 		firstBlockLocation->moveBlock(firstColor,*tmpIter);
-
-		std::cout << std::endl << "After swap " << std::endl;
-		showInfo();
-		// wykonaj przesuniecie wszystkich klockow o jeden w kierunku przeciwnym do dir distance razy.
-		if(dir == right)
+		counter += 2;
+		
+		if (distance != 0)
 		{
-			for(unsigned int i = 0 ; i < distance ; ++i)
+			delete(shiftVector[tmpIter->getIndex()]);
+			shiftVector[tmpIter->getIndex()] = new Color(firstColor.getColor());
+
+			// wykonaj przesuniecie wszystkich klockow o jeden w kierunku przeciwnym do dir distance razy.
+			if(dir == right)
 			{
-				// przesuwanie w kierunku left.
+				counter += shiftBlocks(shiftVector, freeSpace, distance * containers.size(), left);
+			} else /* (dir == left) */ {
+				counter += shiftBlocks(shiftVector, freeSpace, distance * containers.size(), right);
 			}
-		} else /* (dir == left) */ {
-			for(unsigned int i = 0 ; i < distance ; ++i)
+
+			for (auto i = 0; i < shiftVector.size(); ++i)
 			{
-				// przesuwanie w kierunku right.
+				delete(shiftVector[i]);
 			}
 		}
-
-
-	} else if (freeSpace->getIndex() == secondBlockLocation->getIndex())
-	// wolne miejsce znajduje sie w pojemniku zawierajacym drugi klocek.
-	{
+	} else if (freeSpace->getIndex() == secondBlockLocation->getIndex()){
 		Direction dir;
 		unsigned int distance = 0;
 		iterator tmpIter(secondBlockLocation);
-
+		std::vector<Color *> shiftVector(containers.size(), nullptr);
 		// Okreslenie optymalnego kierunku obrotow.
 		if(getDistance(left, secondBlockLocation, firstBlockLocation) < getDistance(right, secondBlockLocation, firstBlockLocation))
-		{
-			// blizej jest patrzac w lewa strone, wiec musimy przekrecac w prawo.
+		{// blizej jest patrzac w lewa strone, wiec musimy przekrecac w prawo.
 			dir = right;
-		} else {
-			// blizej jest patrzac w prawa strone, wiec musimy przekrecac w lewo.
+		} else {// blizej jest patrzac w prawa strone, wiec musimy przekrecac w lewo.
 			dir = left;
 		}
 
@@ -232,37 +229,54 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		else
 			distance = getDistance(left, secondBlockLocation, firstBlockLocation);
 
-
-		// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
-		for(unsigned int i = 0 ; i < distance ; ++i)
+		if (distance != 0)
 		{
-			// metoda przesuwajaca.
+			shiftVector[firstBlockLocation->getIndex()] = new Color(firstColor.getColor());
+
+			for (size_t i = 0; i < containers.size(); ++i)
+			{
+				if (freeSpace->getIndex() != i && shiftVector[i] == nullptr)
+				{
+					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
+				}
+			}
+
+			// wykonaj distance razy przesuniecie wszystkich klockow o jeden w kierunku dir.
+			counter += shiftBlocks(shiftVector, freeSpace, distance * containers.size(), dir);
+			std::cout << "After shiftBlocks with distance = " << distance << " and direction = " << dir << std::endl;
+			showInfo();
+		
+			// jesli przekrecalismy w prawo, to interesujacy klocek do zmianay bedzie znajdowal sie po lewej stronie firstBlockLocation.
+			if(dir == right)
+			{ // TODO : do sprawdzenia, czy na pewno w tym przypadku, to lewy sasiad bedzie okej!!!!
+				--tmpIter;
+			}
+			// jesli przekrecalismy w lewo, to interesujacy klocek do zmianay bedzie znajdowal sie po prawej stronie firstBlockLocation.
+			else /* (dir == left) */ {
+				++tmpIter;
+			}
 		}
 
-		// jesli przekrecalismy w prawo, to interesujacy klocek do zmianay bedzie znajdowal sie po lewej stronie firstBlockLocation.
-		if(dir == right)
-		{ // TODO : do sprawdzenia, czy na pewno w tym przypadku, to lewy sasiad bedzie okej!!!!
-			--tmpIter;
-		}
-		// jesli przekrecalismy w lewo, to interesujacy klocek do zmianay bedzie znajdowal sie po prawej stronie firstBlockLocation.
-		else /* (dir == left) */ {
-			++tmpIter;
-		}
 
 		tmpIter->moveBlock(firstColor,*secondBlockLocation);
 		secondBlockLocation->moveBlock(secondColor,*tmpIter);
+		counter += 2;
 
-		// wykonaj przesuniecie wszystkich klockow o jeden w kierunku przeciwnym do dir distance razy.
-		if(dir == right)
+		if (distance != 0)
 		{
-			for(unsigned int i = 0 ; i < distance ; ++i)
+			delete(shiftVector[tmpIter->getIndex()]);
+			shiftVector[tmpIter->getIndex()] = new Color(secondColor.getColor());
+			// wykonaj przesuniecie wszystkich klockow o jeden w kierunku przeciwnym do dir distance razy.
+			if(dir == right)
 			{
-				// przesuwanie w kierunku left.
+				counter += shiftBlocks(shiftVector, freeSpace, distance * containers.size(), left);
+			} else /* (dir == left) */ {
+				counter += shiftBlocks(shiftVector, freeSpace, distance * containers.size(), right);
 			}
-		} else /* (dir == left) */ {
-			for(unsigned int i = 0 ; i < distance ; ++i)
+			
+			for (auto i = 0; i < shiftVector.size(); ++i)
 			{
-				// przesuwanie w kierunku right.
+				delete(shiftVector[i]);
 			}
 		}
 
@@ -274,113 +288,349 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(iterator & freeSpace, iterato
 		{
 			Direction dir;
 			unsigned int distance = 0;
-
+			std::vector<Color *> shiftVector(containers.size(), nullptr);
+			iterator tmpSecondBlockLocation(secondBlockLocation);
+			Color * tmpColor;
 
 			if(getDistance(left, firstBlockLocation, freeSpace) < getDistance(right, firstBlockLocation, freeSpace))
 			{
-				// Blizej jest patrzac w lewa strone, dlatego bedziemy musieli przesunac w prawa.
-				dir = right;
-			} else {
-				//Blizej jest patrzac w prawa strone, dlatego bedziemy musieli przesunac w lewo.
 				dir = left;
+			} else {
+				dir = right;
 			}
 
-			if(dir == left)
-				distance = getDistance(right, firstBlockLocation, freeSpace);
-			else
-				distance = getDistance(left, firstBlockLocation, freeSpace);
+			distance = getDistance(dir, firstBlockLocation, freeSpace);
+			if (getDistance(dir, firstBlockLocation, tmpSecondBlockLocation) < distance)
+			{
+				if (dir == left)
+					--tmpSecondBlockLocation;
+				else
+					++tmpSecondBlockLocation;
+			}
+
+			shiftVector[firstBlockLocation->getIndex()] = new Color(firstBlockLocation->getTopColor(&firstColor)->getColor());
+
+			for (auto i = 0; i < containers.size(); ++i)
+			{
+				if (freeSpace->getIndex() != i && shiftVector[i] == nullptr)
+					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
+			}
 
 			// teraz nalezy wykonac distance przesuniec w kierunku dir. dzieki temu
 			// wolne miejsce znajdzie sie w pojemniku firstBlockLocation
+			counter += shiftBlocks(shiftVector, freeSpace, distance + 1, dir);
+
+			std::cout << "Po przygotowujacym shifcie..." << std::endl;
+			showInfo();
 
 			// Dalej mozemy postepowac tak jak w jednym z dwoch poprzednich wypadkow.
-			counter += swapBlocksWithFreeSpace(firstBlockLocation, firstBlockLocation, firstColor, secondBlockLocation, secondColor);
+			counter += swapBlocksWithFreeSpace(firstBlockLocation, firstBlockLocation, firstColor, tmpSecondBlockLocation, secondColor);
+
+			std::cout << std::endl << "Po zamianie miejsc za pomoca swapBlocksWithFreeSpace ..." << std::endl;
+			showInfo();
 
 			// teraz nalzey wykonac distance przesuniec w kierunku przeciwnym do dir.
 			// dzieki temu wrocimy do stanu poczatkowego.
+			tmpColor = shiftVector[tmpSecondBlockLocation->getIndex()];
+			delete(tmpColor);
+			shiftVector[tmpSecondBlockLocation->getIndex()] = new Color(firstColor.getColor());
+
+			if (dir == left)
+				counter += shiftBlocks(shiftVector, firstBlockLocation, distance + 1, right);
+			else
+				counter += shiftBlocks(shiftVector, firstBlockLocation, distance + 1, left);
+
+			for (auto i = 0; i < shiftVector.size(); ++i)
+			{
+				delete(shiftVector[i]);
+			}	
+
+			std::cout << std::endl << "Po doprowadzeniu do poczatkowego stanu... " << std::endl;
+			showInfo();
 		}
 		// secondBlockLocation jest pojemnikiem o pojemnosci wiekszej od 1, za pomoca jego mozna wykonanac zaimane.
 		else if (secondBlockLocation->getCapacity() > 1)
 		{
 			Direction dir;
 			unsigned int distance = 0;
-
+			std::vector<Color *> shiftVector(containers.size(), nullptr);
+			iterator tmpFirstBlockLocation(firstBlockLocation);
+			Color * tmpColor;
 
 			if(getDistance(left, secondBlockLocation, freeSpace) < getDistance(right, secondBlockLocation, freeSpace))
 			{
-				// Blizej jest patrzac w lewa strone, dlatego bedziemy musieli przesunac w prawa.
-				dir = right;
-			} else {
-				//Blizej jest patrzac w prawa strone, dlatego bedziemy musieli przesunac w lewo.
 				dir = left;
+			} else {
+				dir = right;
 			}
 
-			if(dir == left)
-				distance = getDistance(right, secondBlockLocation, freeSpace);
-			else
-				distance = getDistance(left, secondBlockLocation, freeSpace);
+			distance = getDistance(dir, secondBlockLocation, freeSpace);
+			if (getDistance(dir, secondBlockLocation, tmpFirstBlockLocation) < distance)
+			{
+				if (dir == left)
+					--tmpFirstBlockLocation;
+				else
+					++tmpFirstBlockLocation;
+			}
 
+			shiftVector[secondBlockLocation->getIndex()] = new Color(secondBlockLocation->getTopColor(&secondColor)->getColor());
+			for (auto i = 0; i < containers.size(); ++i)
+			{
+				if (freeSpace->getIndex() != i && shiftVector[i] == nullptr)
+					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
+			}
 			// teraz nalezy wykonac distance + 1 przesuniec w kierunku dir. dzieki temu
 			// wolne miejsce znajdzie sie w pojemniku firstBlockLocation
+			counter += shiftBlocks(shiftVector, freeSpace, distance + 1, dir);
+
+			std::cout << "Po przygotowujacym shifcie..." << std::endl;
+			showInfo();
 
 			// Dalej mozemy postepowac tak jak w jednym z dwoch poprzednich wypadkow.
-			counter += swapBlocksWithFreeSpace(secondBlockLocation, firstBlockLocation, firstColor, secondBlockLocation, secondColor);
+			counter += swapBlocksWithFreeSpace(secondBlockLocation, tmpFirstBlockLocation, firstColor, secondBlockLocation, secondColor);
+
+			std::cout << std::endl << "Po zamianie miejsc za pomoca swapBlocksWithFreeSpace ..." << std::endl;
+			showInfo();
 
 			// teraz nalzey wykonac distance + 1 przesuniec w kierunku przeciwnym do dir.
 			// dzieki temu wrocimy do stanu poczatkowego.
+			tmpColor = shiftVector[tmpFirstBlockLocation->getIndex()];
+			delete(tmpColor);
+			shiftVector[tmpFirstBlockLocation->getIndex()] = new Color(secondColor.getColor());
+
+			if (dir == left)
+				counter += shiftBlocks(shiftVector, secondBlockLocation, distance + 1, right);
+			else
+				counter += shiftBlocks(shiftVector, secondBlockLocation, distance + 1, left);
+
+			for (auto i = 0; i < shiftVector.size(); ++i)
+			{
+				delete(shiftVector[i]);
+			}
+
+			std::cout << std::endl << "Po doprowadzeniu do poczatkowego stanu... " << std::endl;
+			showInfo();
 		}
 		// obydwa pojemniki maja niewystarczajace pojemnosci. Trzeba znalezc pojemnik o pojemnosci > 1.
 		else
 		{
 			Direction dir;
-			ContainerSet::iterator iter = begin();
+			iterator iter = begin();
 			unsigned int distance = 0;
+			unsigned int dstFirstR = 0, dstFirstL = 0, dstSecR = 0, dstSecL = 0;
+			std::vector<Color *> shiftVector1(containers.size(), nullptr);
+			iterator tmpFirstBlockLocation(firstBlockLocation);
+			iterator tmpSecondBlockLocation(secondBlockLocation);
+			iterator tmp(freeSpace);
+			Color * tmpIterColor;
 
-			if(iter->getCapacity() == 1)
+			if (freeSpace->getCapacity() <= 1)
 			{
-				++iter;
-				for(; iter != begin() ; ++iter)
+				//szukanie pojemnika o pojemnosci wiekszej od 1.
+				for (auto i = 0; i < containers.size(); ++i, ++iter)
 				{
-					if(iter->getCapacity() > 1)
+					if (iter->getCapacity() > 1)
 						break;
 				}
 			}
+			else {
+				iter = freeSpace;
+			}
 
-			if(getDistance(left, iter, freeSpace) < getDistance(right, iter, freeSpace))
+			if (getDistance(left, iter, freeSpace) < getDistance(right, iter, freeSpace))
 			{
-				// Blizej jest patrzac w lewa strone, dlatego bedziemy musieli przesunac w prawa.
-				dir = right;
-			} else {
-				//Blizej jest patrzac w prawa strone, dlatego bedziemy musieli przesunac w lewo.
 				dir = left;
+			} else {
+				dir = right;
 			}
 
-			if(dir == left)
-				distance = getDistance(right, iter, freeSpace);
-			else
-				distance = getDistance(left, iter, freeSpace);
+			//przemieszczanie wolnego miejsca do tego pojemnika.
+			distance = getDistance(dir, iter, freeSpace);
 
-			//jesli distance == 0 to nic wiecej nie msuismy robic.
-			if(distance != 0 )
+			if (distance != 0)
 			{
-				// wykoanianie distance + 1 przesuniec w kierunku dir.
+
+				shiftVector1[tmpFirstBlockLocation->getIndex()] = new Color(firstColor.getColor());
+				shiftVector1[tmpSecondBlockLocation->getIndex()] = new Color(secondColor.getColor());
+
+				for (auto i = 0; i < containers.size(); ++i)
+				{
+					if (freeSpace->getIndex() != i && shiftVector1[i] == nullptr)
+						shiftVector1[i] = new Color(containers[i].getTopColor()->getColor());
+				}
+
+				if (getDistance(dir, iter, tmpFirstBlockLocation) < distance)
+				{
+					if (dir == left)
+						--tmpFirstBlockLocation;
+					else
+						++tmpFirstBlockLocation;
+				}
+
+				if (getDistance(dir, iter, tmpSecondBlockLocation) < distance)
+				{
+					if (dir == left)
+						--tmpSecondBlockLocation;
+					else
+						++tmpSecondBlockLocation;
+				}
+
+				counter += shiftBlocks(shiftVector1, freeSpace, distance + 1, dir);
+				std::cout << "Need to shift blocks at the beginning, result..." << std::endl;
+				showInfo();
 			}
 
-			// przesunieciecie klockow tak, zeby jeden z tych ktore nalezy zamienic znajdowal sie w iter
 
+			// przesunieciecie klockow tak, zeby jeden z tych ktore nalezy zamienic znajdowal sie w iter.
 			// wywolanie rekurencyjne z blokiem do zamienienia  w tej samej lokalizacji co wolne miejsce.
+			dstFirstR = getDistance(right, iter, tmpFirstBlockLocation);
+			dstFirstL = getDistance(left, iter, tmpFirstBlockLocation);
+			dstSecR = getDistance(right, iter,tmpSecondBlockLocation);
+			dstSecL = getDistance(left, iter, tmpSecondBlockLocation);
+			
+			if (dstFirstR <= dstFirstL && dstFirstR <= dstSecR && dstFirstR <= dstSecL)
+			{
+				tmpIterColor = new Color(iter->getTopColor()->getColor());
+				counter += swapBlocksWithFreeSpace(iter, tmpFirstBlockLocation, firstColor, iter, *tmpIterColor);
+				tmp = iter;
+				iter = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = tmp;
+
+				std::cout << "After helpfull swap with iter..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpFirstBlockLocation, tmpFirstBlockLocation, firstColor, tmpSecondBlockLocation, secondColor);
+				tmp = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = tmp;
+
+				std::cout << "After main swap between colors..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpSecondBlockLocation, tmpSecondBlockLocation, secondColor, iter, *tmpIterColor);
+				tmp = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = iter;
+				iter = tmp;
+
+				delete(tmpIterColor);
+
+				std::cout << "After reverting helpful swap..." << std::endl;
+				showInfo();
+			}
+			else if (dstFirstL <= dstFirstR && dstFirstL <= dstSecR && dstFirstL <= dstSecL)
+			{
+				tmpIterColor = new Color(iter->getTopColor()->getColor());
+				counter += swapBlocksWithFreeSpace(iter, tmpFirstBlockLocation, firstColor, iter, *tmpIterColor);
+				tmp = iter;
+				iter = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = tmp;
+
+				std::cout << "After helpfull swap with iter..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpFirstBlockLocation, tmpFirstBlockLocation, firstColor, tmpSecondBlockLocation, secondColor);
+				tmp = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = tmp;
+
+				std::cout << "After main swap between colors..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpSecondBlockLocation, tmpSecondBlockLocation, secondColor, iter, *tmpIterColor);
+				tmp = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = iter;
+				iter = tmp;
+
+				delete(tmpIterColor);
+
+				std::cout << "After reverting helpful swap..." << std::endl;
+				showInfo();
+			}
+			else if (dstSecR <= dstFirstR && dstSecR <= dstFirstL && dstSecR <= dstSecL)
+			{
+				tmpIterColor = new Color(iter->getTopColor()->getColor());
+				counter += swapBlocksWithFreeSpace(iter, tmpSecondBlockLocation, secondColor, iter, *tmpIterColor);
+				tmp = iter;
+				iter = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = iter;
+
+				std::cout << "After helpfull swap with iter..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpSecondBlockLocation, tmpSecondBlockLocation, secondColor, tmpFirstBlockLocation, firstColor);
+				tmp = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = tmp;
+
+				std::cout << "After main swap between colors..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpFirstBlockLocation, tmpFirstBlockLocation, firstColor, iter, *tmpIterColor);
+				tmp = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = iter;
+				iter = tmp;
+
+				delete(tmpIterColor);
+
+				std::cout << "After reverting helpful swap..." << std::endl;
+				showInfo();
+			}
+			else if (dstSecL <= dstFirstR && dstSecL <= dstFirstL && dstSecL <= dstSecR)
+			{
+				tmpIterColor = new Color(iter->getTopColor()->getColor());
+				counter += swapBlocksWithFreeSpace(iter, tmpSecondBlockLocation, secondColor, iter, *tmpIterColor);
+				tmp = iter;
+				iter = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = iter;
+
+				std::cout << "After helpfull swap with iter..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpSecondBlockLocation, tmpSecondBlockLocation, secondColor, tmpFirstBlockLocation, firstColor);
+				tmp = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = tmpSecondBlockLocation;
+				tmpSecondBlockLocation = tmp;
+
+				std::cout << "After main swap between colors..." << std::endl;
+				showInfo();
+
+				counter += swapBlocksWithFreeSpace(tmpFirstBlockLocation, tmpFirstBlockLocation, firstColor, iter, *tmpIterColor);
+				tmp = tmpFirstBlockLocation;
+				tmpFirstBlockLocation = iter;
+				iter = tmp;
+
+				delete(tmpIterColor);
+
+				std::cout << "After reverting helpful swap..." << std::endl;
+				showInfo();
+			}
+
 
 			// cofniecie przesuniecia klockow
-
 			if(distance != 0)
 			{
-				// wykonanie distance + 1 przesuniec w kierunku przeciwnym do dir.
+				tmpIterColor = shiftVector1[tmpFirstBlockLocation->getIndex()];
+				shiftVector1[tmpFirstBlockLocation->getIndex()] = shiftVector1[tmpSecondBlockLocation->getIndex()];
+				shiftVector1[tmpSecondBlockLocation->getIndex()] = tmpIterColor;
+				
+				if (dir == left)
+					counter += shiftBlocks(shiftVector1, iter, distance + 1, right);
+				else
+					counter += shiftBlocks(shiftVector1, iter, distance + 1, left);
+
+				std::cout << "Final shift ... " << std::endl;
+				showInfo();
+
+				for (auto i = 0; i < shiftVector1.size(); ++i)
+				{
+					delete(shiftVector1[i]);
+				}
 			}
 
 		}
 	}
 
-	return true;
+	return counter;
 }
 
 /**
@@ -423,26 +673,21 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 		sourceIter--;
 		for (size_t i = 0; i < distance; i++)
 		{
-			for (; sourceIter != freeSpace; --sourceIter)
-			{
-				tmp = vector[sourceIter->getIndex()];
-				if (tmp != nullptr)
-				{
-					destinationIter = sourceIter;
-					destinationIter++;
-					sourceIter->moveBlock(*tmp, *destinationIter);
-					++counter;
-				}
-			}
-
-			--sourceIter;
 			tmp = vector[sourceIter->getIndex()];
-			++sourceIter;
 			destinationIter = sourceIter;
 			destinationIter++;
-			sourceIter->moveBlock(*tmp, *destinationIter);
+			
+			if (tmp != nullptr)
+			{
+				sourceIter->moveBlock(*tmp, *destinationIter);
+				++counter;
+			}
 
-			updateShiftVector(vector, freeSpace, dir);
+			tmp = vector[sourceIter->getIndex()];
+			vector[sourceIter->getIndex()] = vector[destinationIter->getIndex()];
+			vector[destinationIter->getIndex()] = tmp;
+			
+			--sourceIter;
 		}
 	}
 	else /* (dir == left) */{
@@ -450,61 +695,23 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 		++sourceIter;
 		for (size_t i = 0; i < distance; i++)
 		{
-			for(; sourceIter != freeSpace ; ++sourceIter)
-			{
-				tmp = vector[sourceIter->getIndex()];
-				if(tmp != nullptr)
-				{
-					destinationIter = sourceIter;
-					--destinationIter;
-					sourceIter->moveBlock(*tmp, *destinationIter);
-					++counter;
-				}
-			}
-
-			++sourceIter;
 			tmp = vector[sourceIter->getIndex()];
-			--sourceIter;
 			destinationIter = sourceIter;
 			--destinationIter;
-			sourceIter->moveBlock(*tmp, *destinationIter);
 
-			updateShiftVector(vector,freeSpace, dir);
+			if (tmp != nullptr)
+			{
+				sourceIter->moveBlock(*tmp, *destinationIter);
+				++counter;
+			}
+
+			tmp = vector[sourceIter->getIndex()];
+			vector[sourceIter->getIndex()] = vector[destinationIter->getIndex()];
+			vector[destinationIter->getIndex()] = tmp;
+			++sourceIter;
 		}
 	}
-
 	shiftVector = vector;
 	return counter;
 }
 
-void ContainerSet::updateShiftVector(std::vector<Color *> & vector, const iterator & freeSpace, const Direction & dir)
-{
-	Color * tmp;
-
-	if(dir == right)
-	{
-		tmp = vector[vector.size() - 1];
-		for (int i = vector.size() - 2; i >= 0; --i)
-		{
-			vector[i + 1] = vector[i];
-		}
-		vector[0] = tmp;
-
-		tmp = vector[freeSpace->getIndex()];
-		vector[freeSpace->getIndex()] = nullptr;
-		vector[freeSpace->getIndex() + 1] = tmp;
-
-	} else /* (dir == left) */ {
-
-		tmp = vector[0];
-		for(size_t i = 0 ; i < vector.size() - 2 ; ++i)
-		{
-			vector[i] = vector[i+1];
-		}
-		vector[vector.size() - 1] = tmp;
-
-		tmp = vector[freeSpace->getIndex()];
-		vector[freeSpace->getIndex()] = nullptr;
-		vector[freeSpace->getIndex() - 1] = tmp;
-	}
-}

@@ -38,6 +38,7 @@ public:
 	void showInfo() const;
 	bool checkState() const;
 	Color* getTopColor() const;
+	Color* getTopColor(const Color * anotherColor) const;
 	unsigned int getIndex() const;
 };
 

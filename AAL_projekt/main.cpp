@@ -25,7 +25,7 @@ TODO:
  * Wejscie do programu.
  */
 int main(int argc, char* argv[])
-{
+ {
 	Interpreter interpreter(argv[1]);
 	DataGenerator generator(6, 3, 6, 0.85, 6);
 	generator.generateData();
@@ -40,16 +40,21 @@ int main(int argc, char* argv[])
 	containerSet.showInfo();
 
 	ContainerSet::iterator firstBlock = containerSet.begin();
-	firstBlock++;
+	//++firstBlock;
 	ContainerSet::iterator secondBlock = containerSet.begin();
-	secondBlock++;
-	secondBlock++;
-	secondBlock++;
-	secondBlock++;
-	Color col1(1);
-	Color col2(4);
+	++secondBlock;
+	++secondBlock;
+	++secondBlock;
+	//secondBlock++;
+	ContainerSet::iterator freeSpace = containerSet.begin();
+	freeSpace++;
+	freeSpace++;
+	freeSpace++;
+	freeSpace++;
+	Color col1(0);
+	Color col2(3);
 
-	containerSet.swapBlocksWithFreeSpace(firstBlock, firstBlock, col1, secondBlock, col2);
+	containerSet.swapBlocksWithFreeSpace(freeSpace, firstBlock, col1, secondBlock, col2);
 
 	//ContainersSweep<SelectionSort> sweep(containerSet);
 
