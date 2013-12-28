@@ -92,8 +92,8 @@ public:
 
 		inline Container& operator*() const { return this->iter.operator *(); }
 		inline Container* operator->() const { return this->iter.operator ->(); }
-		inline bool operator==(const iterator & another) { return this->iter == another.iter; }
-		inline bool operator!=(const iterator & another) { return this->iter != another.iter; }
+		inline bool operator==(const iterator & another) const { return this->iter == another.iter; }
+		inline bool operator!=(const iterator & another) const { return this->iter != another.iter; }
 
 		iterator& operator=(const iterator & another)
 		{
@@ -139,10 +139,11 @@ public:
 	size_t getCapacitySum() const;
 	iterator getMaxiumWithColor(const Color & color);
 	iterator begin();
-	unsigned int swapBlocksWithFreeSpace(iterator & freeSpace, iterator & firstBlockLocation, Color & firstColor, iterator & secondBlockLocation, Color & secondColor);
+	unsigned int swapBlocksWithFreeSpace(const iterator & freeSpace, const iterator & firstBlockLocation, const Color & firstColor, const iterator & secondBlockLocation, const Color & secondColor);
+	unsigned int swapBlockFreeSpace( const iterator & freeSpace, const iterator & blockLocation, const Color & color );
 
 private:
-	unsigned int getDistance(Direction dir, iterator & first, iterator & second) const;
+	unsigned int getDistance(Direction dir, const iterator & first, const iterator & second) const;
 	unsigned int shiftBlocks(std::vector<Color *> & shfitVector, const iterator & freeSpace, unsigned int distance, Direction dir);
 
 };

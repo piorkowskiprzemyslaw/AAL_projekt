@@ -76,4 +76,3 @@ Color* Block::getColor() const
 {
 	return color;
 }
-

@@ -1,7 +1,7 @@
 /*
  * Projekt z AAL.
  *
- * Przemys³aw Piórkowski.
+ * Przemyslaw Piorkowski.
  */
 #include <iostream>
 #include <stdlib.h>
@@ -45,16 +45,16 @@ int main(int argc, char* argv[])
 	++secondBlock;
 	++secondBlock;
 	++secondBlock;
-	//secondBlock++;
+	++secondBlock;
 	ContainerSet::iterator freeSpace = containerSet.begin();
 	freeSpace++;
-	freeSpace++;
-	freeSpace++;
-	freeSpace++;
+	//freeSpace++;
+	//freeSpace++;
+	//freeSpace++;
 	Color col1(0);
-	Color col2(3);
+	Color col2(4);
 
-	containerSet.swapBlocksWithFreeSpace(freeSpace, firstBlock, col1, secondBlock, col2);
+	containerSet.swapBlockFreeSpace( freeSpace, secondBlock, col2 );
 
 	//ContainersSweep<SelectionSort> sweep(containerSet);
 
@@ -65,8 +65,7 @@ int main(int argc, char* argv[])
     //ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	//containerSet1.showInfo();
 
-
-    std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;
+    //std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;
 
     #ifdef _WIN32
 	system("PAUSE");
