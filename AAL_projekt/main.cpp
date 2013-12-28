@@ -27,7 +27,7 @@ TODO:
 int main(int argc, char* argv[])
  {
 	Interpreter interpreter(argv[1]);
-	DataGenerator generator(6, 3, 6, 0.85, 6);
+	DataGenerator generator(6, 3, 6, 0.85f, 6);
 	generator.generateData();
 	CycleCounter cycleCounter;
 
@@ -38,23 +38,34 @@ int main(int argc, char* argv[])
 
 	ContainerSet containerSet(interpreter.getConatinersCapacity(), interpreter.getIncludingList(), interpreter.getColorsNumber());
 	containerSet.showInfo();
+	ContainersSweep<SelectionSort> sweep( containerSet );
 
-	ContainerSet::iterator firstBlock = containerSet.begin();
+	cycleCounter.startCounting( );
+	sweep.solveProblem( );
+	cycleCounter.stopCounting( );
+
+	std::cout << std::endl << "After solving ... " << std::endl;
+	containerSet.showInfo( );
+
+    std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;
+	
+
+	//ContainerSet::iterator firstBlock = containerSet.begin();
 	//++firstBlock;
-	ContainerSet::iterator secondBlock = containerSet.begin();
-	++secondBlock;
-	++secondBlock;
-	++secondBlock;
-	++secondBlock;
-	ContainerSet::iterator freeSpace = containerSet.begin();
-	freeSpace++;
+	//ContainerSet::iterator secondBlock = containerSet.begin();
+	//++secondBlock;
+	//++secondBlock;
+	//++secondBlock;
+	//++secondBlock;
+	//ContainerSet::iterator freeSpace = containerSet.begin();
 	//freeSpace++;
 	//freeSpace++;
 	//freeSpace++;
-	Color col1(0);
-	Color col2(4);
+	//freeSpace++;
+	//Color col1(0);
+	//Color col2(4);
 
-	containerSet.swapBlockFreeSpace( freeSpace, secondBlock, col2 );
+	//containerSet.swapBlockFreeSpace( freeSpace, secondBlock, col2 );
 
 	//ContainersSweep<SelectionSort> sweep(containerSet);
 
@@ -65,7 +76,6 @@ int main(int argc, char* argv[])
     //ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	//containerSet1.showInfo();
 
-    //std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;
 
     #ifdef _WIN32
 	system("PAUSE");

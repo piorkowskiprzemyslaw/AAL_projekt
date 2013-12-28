@@ -519,6 +519,14 @@ unsigned int ContainerSet::swapBlockFreeSpace( const iterator & freeSpace, const
 	Color * tmpColor;
 	Direction dir;
 
+	if ( freeSpace->getLeftPlace( ) == 0 ) {
+		return counter;
+	}
+
+	if ( blockLocation->getColorMultiplicity( color ) == 0 ) {
+		return counter;
+	}
+
 	if ( getDistance( left, tmpBlockLocation, freeSpace ) < getDistance( right, tmpBlockLocation, freeSpace ) ) {
 		--iter;
 		dir = left;
