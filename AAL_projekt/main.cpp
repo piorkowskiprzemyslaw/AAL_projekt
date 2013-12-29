@@ -27,7 +27,7 @@ TODO:
 int main(int argc, char* argv[])
  {
 	Interpreter interpreter(argv[1]);
-	DataGenerator generator(6, 6, 6, 0.99f, 6);
+	DataGenerator generator(7, 5, 7, 0.85f, 7);
 	generator.generateData();
 	CycleCounter cycleCounter;
 
@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
 	std::cout << std::endl << "After solving with "<< sweep.getCounter() << " moves ... " << std::endl;
 	sweep.showContainerSet( );
 
+	std::cout << std::endl << "Moves : " <<sweep.getCounter() << " state : " << sweep.getState() << std::endl;
     std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles() << std::endl;
 
 

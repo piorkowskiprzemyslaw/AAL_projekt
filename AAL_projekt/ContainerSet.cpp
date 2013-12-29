@@ -125,7 +125,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 
 	if(firstBlockLocation->getColorMultiplicity(firstColor) == 0)
 		return counter;
-	
+
 	if(secondBlockLocation->getColorMultiplicity(secondColor) == 0)
 		return counter;
 
@@ -138,7 +138,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 		unsigned int distance = 0;
 		iterator tmpIter(firstBlockLocation);
 		std::vector<Color *> shiftVector(containers.size(), nullptr);
-		
+
 		// Okreslenie optymalnego kierunku obrotow.
 		if ( getDistance( left, firstBlockLocation, secondBlockLocation ) < getDistance( right, firstBlockLocation, secondBlockLocation ) ) {
 		// blizej jest patrzac w lewa strone, wiec musimy przekrecac w prawo.
@@ -177,7 +177,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 		tmpIter->moveBlock(secondColor,*firstBlockLocation);
 		firstBlockLocation->moveBlock(firstColor,*tmpIter);
 		counter += 2;
-		
+
 		if (distance != 0) {
 			delete(shiftVector[tmpIter->getIndex()]);
 			shiftVector[tmpIter->getIndex()] = new Color(firstColor.getColor());
@@ -246,7 +246,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 			} else /* (dir == left) */ {
 				counter += shiftBlocks(shiftVector, freeSpace, distance * containers.size(), right);
 			}
-			
+
 			for (auto i = 0; i < shiftVector.size(); ++i){
 				delete(shiftVector[i]);
 			}
@@ -267,7 +267,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 			} else {
 				dir = right;
 			}
-			
+
 			distance = getDistance(dir, firstBlockLocation, freeSpace);
 
 			shiftVector[firstBlockLocation->getIndex()] = new Color(firstBlockLocation->getTopColor(&firstColor)->getColor());
@@ -412,7 +412,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 			dstFirstL = getDistance(left, iter, tmpFirstBlockLocation);
 			dstSecR = getDistance(right, iter,tmpSecondBlockLocation);
 			dstSecL = getDistance(left, iter, tmpSecondBlockLocation);
-			
+
 			if (dstFirstR <= dstFirstL && dstFirstR <= dstSecR && dstFirstR <= dstSecL) {
 				tmpIterColor = new Color(iter->getTopColor()->getColor());
 
@@ -496,7 +496,7 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 				tmpIterColor = shiftVector1[tmpFirstBlockLocation->getIndex()];
 				shiftVector1[tmpFirstBlockLocation->getIndex()] = shiftVector1[tmpSecondBlockLocation->getIndex()];
 				shiftVector1[tmpSecondBlockLocation->getIndex()] = tmpIterColor;
-				
+
 				if (dir == left)
 					counter += shiftBlocks(shiftVector1, iter, distance + 1, right);
 				else
@@ -548,7 +548,7 @@ unsigned int ContainerSet::swapBlockFreeSpace( const iterator & freeSpace, const
 	while ( distance != 0 ) {
 		tmpColor = new Color(iter->getTopColor( )->getColor());
 		shiftVector[tmpBlockLocation->getIndex( )] = tmpColor;
-		
+
 		if ( tmpColor != nullptr ) {
 			counter += swapBlocksWithFreeSpace( freeSpace, tmpBlockLocation, color, iter, *tmpColor );
 			tmpBlockLocation = iter;
@@ -558,8 +558,8 @@ unsigned int ContainerSet::swapBlockFreeSpace( const iterator & freeSpace, const
 			tmpBlockLocation = iter;
 		}
 
-		std::cout << "Kontrolne sprawdzenie..." << std::endl;
-		showInfo( );
+		//std::cout << "Kontrolne sprawdzenie..." << std::endl;
+		//showInfo( );
 
 		++iter;
 		distance = getDistance( dir, tmpBlockLocation, freeSpace );
@@ -618,7 +618,7 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 			tmp = vector[sourceIter->getIndex()];
 			destinationIter = sourceIter;
 			destinationIter++;
-			
+
 			if (tmp != nullptr)
 			{
 				sourceIter->moveBlock(*tmp, *destinationIter);
@@ -628,7 +628,7 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 			tmp = vector[sourceIter->getIndex()];
 			vector[sourceIter->getIndex()] = vector[destinationIter->getIndex()];
 			vector[destinationIter->getIndex()] = tmp;
-			
+
 			--sourceIter;
 		}
 	}
