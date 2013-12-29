@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include "Container.h"
 #include "Color.h"
 #include "cmath"
@@ -133,6 +134,7 @@ public:
 	};
 
 	void showInfo() const;
+	void showToFile( ) const;
 	unsigned int getColorsNumber() const;
 	unsigned int colorMultiplicity(const Color & color) const;
 	size_t size() const;

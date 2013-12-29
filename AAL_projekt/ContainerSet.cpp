@@ -267,8 +267,18 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 			} else {
 				dir = right;
 			}
-
+			
 			distance = getDistance(dir, firstBlockLocation, freeSpace);
+
+			shiftVector[firstBlockLocation->getIndex()] = new Color(firstBlockLocation->getTopColor(&firstColor)->getColor());
+			shiftVector[tmpSecondBlockLocation->getIndex( )] = new Color( secondColor.getColor( ) );
+
+			for (auto i = 0; i < containers.size(); ++i) {
+				if ( freeSpace->getIndex( ) != i && shiftVector[i] == nullptr ) {
+					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
+				}
+			}
+
 			if (getDistance(dir, firstBlockLocation, tmpSecondBlockLocation) < distance){
 				if (dir == left)
 					--tmpSecondBlockLocation;
@@ -276,13 +286,6 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 					++tmpSecondBlockLocation;
 			}
 
-			shiftVector[firstBlockLocation->getIndex()] = new Color(firstBlockLocation->getTopColor(&firstColor)->getColor());
-
-			for (auto i = 0; i < containers.size(); ++i) {
-				if ( freeSpace->getIndex( ) != i && shiftVector[i] == nullptr ) {
-					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
-				}
-			}
 			// Wykonanie distance + 1 przesuniec aby wolne miejsce znalazlo sie w firstBlockLocation.
 			counter += shiftBlocks(shiftVector, freeSpace, distance + 1, dir);
 
@@ -318,6 +321,16 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 			}
 
 			distance = getDistance(dir, secondBlockLocation, freeSpace);
+
+			shiftVector[secondBlockLocation->getIndex()] = new Color(secondBlockLocation->getTopColor(&secondColor)->getColor());
+			shiftVector[tmpFirstBlockLocation->getIndex( )] = new Color( firstColor.getColor( ) );
+
+			for (auto i = 0; i < containers.size(); ++i){
+				if ( freeSpace->getIndex( ) != i && shiftVector[i] == nullptr ) {
+					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
+				}
+			}
+
 			if (getDistance(dir, secondBlockLocation, tmpFirstBlockLocation) < distance) {
 				if (dir == left)
 					--tmpFirstBlockLocation;
@@ -325,12 +338,6 @@ unsigned int ContainerSet::swapBlocksWithFreeSpace(const iterator & freeSpace, c
 					++tmpFirstBlockLocation;
 			}
 
-			shiftVector[secondBlockLocation->getIndex()] = new Color(secondBlockLocation->getTopColor(&secondColor)->getColor());
-			for (auto i = 0; i < containers.size(); ++i){
-				if ( freeSpace->getIndex( ) != i && shiftVector[i] == nullptr ) {
-					shiftVector[i] = new Color(containers[i].getTopColor()->getColor());
-				}
-			}
 			counter += shiftBlocks(shiftVector, freeSpace, distance + 1, dir);
 			// Dalej mozemy postepowac tak jak w jednym z dwoch poprzednich wypadkow.
 			counter += swapBlocksWithFreeSpace(secondBlockLocation, tmpFirstBlockLocation, firstColor, secondBlockLocation, secondColor);
@@ -648,4 +655,14 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 	}
 	shiftVector = vector;
 	return counter;
+}
+
+void ContainerSet::showToFile( ) const
+{
+	std::ofstream file;
+	file.open( "info.txt" );
+	for ( auto container : containers ) {
+		container.showInfoToFile( file );
+	}
+	file.close( );
 }

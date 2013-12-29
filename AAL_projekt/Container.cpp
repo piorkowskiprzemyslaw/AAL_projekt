@@ -196,3 +196,14 @@ Color* Container::getTopColor(const Color * anotherColor) const
 
 	return nullptr;
 }
+
+/**
+ * Zapisanie informacji o pojemniku do pliku.
+ */
+void Container::showInfoToFile( std::ofstream & os ) const
+{
+	os << "Index : " << index << " capacity : " << capacity << " leftPlace : " << getLeftPlace( ) << " state : " << this->checkState( ) << "\n";
+	for ( unsigned int i = 0; i < Color::getNumberOfAllColors( ); ++i ) {
+		os << i << " : " << blockSet.count( Block( i ) ) << "\n";
+	}
+}

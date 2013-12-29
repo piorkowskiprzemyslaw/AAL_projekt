@@ -2,6 +2,7 @@
 #define CONTAINER_H
 
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <set>
 #include <vector>
@@ -40,6 +41,7 @@ public:
 	Color* getTopColor() const;
 	Color* getTopColor(const Color * anotherColor) const;
 	unsigned int getIndex() const;
+	void showInfoToFile( std::ofstream & os ) const;
 };
 
 #endif
