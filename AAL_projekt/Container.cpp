@@ -70,7 +70,7 @@ bool Container::moveBlock(const Color & color, Container& destiny)
  	{
 		return false;
  	}
- 	blockSet.erase(blockSet.find(block));
+	blockSet.erase(blockSet.find(block));
 	destiny.blockSet.emplace(block.getColor());
 	return true;
 }

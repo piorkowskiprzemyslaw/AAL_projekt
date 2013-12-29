@@ -131,11 +131,6 @@ void ContainersSweep<T>::solveProblem()
 	}
 	std::cout << "[OK]" << std::endl;
 	sort(table);
-	//testowe wypisanie tabeli
-	for( size_t i = 0 ; i < containerSet->getColorsNumber() ; ++i)
-    {
-        std::cout << "Color[" << table[i].first.getColor() << "] : " << table[i].second << std::endl;
-    }
 
 	//organizowanie kolorów, od najbardziej licznego do najmniej.
 	for( size_t i = 0 ; i < table.size() ; ++i)
@@ -176,7 +171,9 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
     {
 		blocksNumer = actual->getColorMultiplicity(color);
 
-		std::cout << "Licznosc koloru " << color.getColor() << " w pojemniku o indeksie " << actual->getIndex() << " = " << blocksNumer << std::endl;
+		if ( VVERBOSE ) {
+			std::cout << "Licznosc koloru " << color.getColor() << " w pojemniku o indeksie " << actual->getIndex() << " = " << blocksNumer << std::endl;
+		}
 
     	// Przekladamy wszystkie nadmiarowe kulki do prawych sasiadow.
     	for(size_t i = 1 ; i < blocksNumer ; ++i) {
@@ -187,28 +184,37 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 				//Prawy sasiad ma falge flase i ma wolne miejsce
 				if(rightNeighbour->getLeftPlace() != 0)
 				{
-					std::cout << "Prawy sasiad ma falge flase i ma wolne miejsce"<< std::endl;
 					actual->moveBlock(color, *rightNeighbour);
 					++counter;
-					containerSet->showInfo( );
+					if ( VVERBOSE ) {
+						std::cout << "Prawy sasiad ma falge flase i ma wolne miejsce"<< std::endl;
+						containerSet->showInfo( );
+					}
 					continue;
 				}
 
 				//Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce
 				if(rightNeighbour->getLeftPlace() == 0 && actual->getLeftPlace() != 0)
 				{
-					std::cout << "Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce" << std::endl;
+					if ( VVERBOSE ) {
+						std::cout << "Prawy sasiad ma flage false i nie ma wolnego miejsca ale u nas jest wolne miejsce" << std::endl;
+					}
 
 					tmpColorPointer = rightNeighbour->checkIsColorPresent(colorOrganizeMap);
 					if (tmpColorPointer != nullptr) {
 						// Nie rozpatrywany kolor znajduje sie u sąsiada. Wykonanie swapa.
-						std::cout << "Prawy sasiad ma kolor jeszcze nie rozpatrywany." << std::endl;
+						if ( VVERBOSE ) {
+							std::cout << "Prawy sasiad ma kolor jeszcze nie rozpatrywany." << std::endl;
+						}
+
 						rightNeighbour->moveBlock(*tmpColorPointer, *actual);
 						actual->moveBlock(color, *rightNeighbour);
 						counter += 2;
 					} else {
 						// Nie rozpatrywany kolor nie znajduje sie u sąsiada, szukamy na prawo
-						std::cout << "Prawy sasiad nie ma koloru jeszcze nie rozpatrywanego, szukam w prawych sasiadach." << std::endl;
+						if ( VVERBOSE ) {
+							std::cout << "Prawy sasiad nie ma koloru jeszcze nie rozpatrywanego, szukam w prawych sasiadach." << std::endl;
+						}
 
 						while ( ++rightNeighbour != actual ) {
 
@@ -241,14 +247,19 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 							}
 						}
 					}
-					containerSet->showInfo( );
+
+					if ( VVERBOSE ) {
+						containerSet->showInfo( );
+					}
 					continue;
 				}
 
 				//Prawy sasaiad ma flage flase, nie ma wolnego miejsca, w akualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca.
 				if(rightNeighbour->getLeftPlace() == 0 && actual->getLeftPlace() == 0)
 				{
-					std::cout << "Prawy sasaiad ma flage flase, nie ma wolnego miejsca, w akualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca." << std::endl;
+					if ( VVERBOSE ) {
+						std::cout << "Prawy sasaiad ma flage flase, nie ma wolnego miejsca, w akualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca." << std::endl;
+					}
 
 					// Znalezienie wolnego miejsca.
 					freeSpace = actual;
@@ -266,11 +277,16 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 
 					tmpColorPointer = rightNeighbour->checkIsColorPresent( colorOrganizeMap );
 					if ( tmpColorPointer != nullptr ) {
-						std::cout << "Prawy sasiad ma kolor jeszcze nie rozpatrywany. Wykonanie zamieniany klockow miejscami." << std::endl;
+						if ( VVERBOSE ) {
+							std::cout << "Prawy sasiad ma kolor jeszcze nie rozpatrywany. Wykonanie zamieniany klockow miejscami." << std::endl;
+						}
+
 						counter += containerSet->swapBlocksWithFreeSpace( freeSpace, actual, color, rightNeighbour, *tmpColorPointer );
 					} else {
 						// Nie rozpatrywany kolor nie znajduje sie u sąsiada, szukamy na prawo
-						std::cout << "Prawy sasiad nie ma koloru jeszcze nie rozpatrywanego, szukam w prawych sasiadach." << std::endl;
+						if ( VVERBOSE ) {
+							std::cout << "Prawy sasiad nie ma koloru jeszcze nie rozpatrywanego, szukam w prawych sasiadach." << std::endl;
+						}
 
 						while ( ++rightNeighbour != actual ) {
 
@@ -302,7 +318,9 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 							}
 						}
 					}
-					containerSet->showInfo( );
+					if ( VVERBOSE ) {
+						containerSet->showInfo( );
+					}
 					continue;
 				}
     		} else /* (true == containerOrganized[rightNeighbour->getIndex()]) */ {
@@ -310,7 +328,9 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
     			// Prawy sasiad ma flage true i ma wolone miejsce.
     			if(rightNeighbour->getLeftPlace() != 0)
     			{
-    				std::cout << "Prawy sasiad ma flage true i ma wolone miejsce." <<std::endl;
+					if ( VVERBOSE ) {
+    					std::cout << "Prawy sasiad ma flage true i ma wolone miejsce." <<std::endl;
+					}
 
 					tmpIter = rightNeighbour;
 
@@ -319,11 +339,15 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 						if ( nullptr != tmpColorPointer && false == containerOrganized[tmpIter->getIndex( )] ) {
 							counter += containerSet->swapBlockFreeSpace( rightNeighbour, tmpIter, *tmpColorPointer );
 							counter += containerSet->swapBlockFreeSpace( tmpIter, actual, color );
-							std::cout << "Znalazlem kandydata do zamiany i wykonalem zamiane." << std::endl;
+							if ( VVERBOSE ) {
+								std::cout << "Znalazlem kandydata do zamiany i wykonalem zamiane." << std::endl;
+							}
 							break;
 						}
 					}
-					containerSet->showInfo( );
+					if ( VVERBOSE ) {
+						containerSet->showInfo( );
+					}
     				continue;
     			}
 
@@ -331,18 +355,24 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
     			// pojemniku jest wolne miejsce.
     			if(rightNeighbour->getLeftPlace() == 0 && actual->getLeftPlace() != 0)
     			{
-    				std::cout << "Prawy sąsiad ma flage true i nie ma wolnego miejsca, ale w aktualnie rozpatrywanym pojemniku jest wolne miejsce." << std::endl;
+					if ( VVERBOSE ) {
+    					std::cout << "Prawy sąsiad ma flage true i nie ma wolnego miejsca, ale w aktualnie rozpatrywanym pojemniku jest wolne miejsce." << std::endl;
+					}
 
 					while ( ++rightNeighbour != actual ) {
 
 						if ( false == containerOrganized[rightNeighbour->getIndex( )] && rightNeighbour->getLeftPlace( ) != 0 ) {
 							counter += containerSet->swapBlockFreeSpace( rightNeighbour, actual, color );
-							std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							if ( VVERBOSE ) {
+								std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							}
 							break;
 						} else if ( false == containerOrganized[rightNeighbour->getIndex( )] && nullptr != rightNeighbour->checkIsColorPresent( colorOrganizeMap ) ) {
 							tmpColorPointer = rightNeighbour->checkIsColorPresent( colorOrganizeMap );
 							counter += containerSet->swapBlocksWithFreeSpace( actual, actual, color, rightNeighbour, *tmpColorPointer );
-							std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							if ( VVERBOSE ) {
+								std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							}
 							break;
 						} else if ( true == containerOrganized[rightNeighbour->getIndex( )] && rightNeighbour->getLeftPlace( ) != 0 ) {
 
@@ -354,7 +384,9 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 									counter += containerSet->swapBlockFreeSpace( rightNeighbour, tmpIter, *tmpColorPointer );
 									counter += containerSet->swapBlockFreeSpace( tmpIter, actual, color );
 									flag = true;
-									std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+									if ( VVERBOSE ) {
+										std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+									}
 									break;
 								}
 							}
@@ -365,7 +397,9 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 							}
 						}
 					}
-					containerSet->showInfo( );
+					if ( VVERBOSE ) {
+						containerSet->showInfo( );
+					}
     				continue;
     			}
 
@@ -373,7 +407,9 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
     			// pojemniku tez nie ma wolnego miejsca.
     			if(rightNeighbour->getLeftPlace() == 0 && actual->getLeftPlace() == 0)
     			{
-    				std::cout << "Prawy sasiad ma flage true i nie ma wolnego miejsca, w aktualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca." << std::endl;
+					if ( VVERBOSE ) {
+    					std::cout << "Prawy sasiad ma flage true i nie ma wolnego miejsca, w aktualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca." << std::endl;
+					}
 
 					// Znalezienie wolnego miejsca.
 					freeSpace = actual;
@@ -393,12 +429,16 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 
 						if ( false == containerOrganized[rightNeighbour->getIndex( )] && rightNeighbour->getLeftPlace( ) != 0 ) {
 							counter += containerSet->swapBlockFreeSpace( rightNeighbour, actual, color );
-							std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							if ( VVERBOSE ) {
+								std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							}
 							break;
 						} else if ( false == containerOrganized[rightNeighbour->getIndex( )] && nullptr != rightNeighbour->checkIsColorPresent( colorOrganizeMap ) ) {
 							tmpColorPointer = rightNeighbour->checkIsColorPresent( colorOrganizeMap );
 							counter += containerSet->swapBlocksWithFreeSpace( freeSpace, actual, color, rightNeighbour, *tmpColorPointer );
-							std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							if ( VVERBOSE ) {
+								std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+							}
 							break;
 						} else if ( true == containerOrganized[rightNeighbour->getIndex( )] && rightNeighbour->getLeftPlace( ) != 0 ) {
 
@@ -409,7 +449,9 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 								if ( false == containerOrganized[tmpIter->getIndex( )] && nullptr != tmpColorPointer ) {
 									counter += containerSet->swapBlockFreeSpace( rightNeighbour, tmpIter, *tmpColorPointer );
 									counter += containerSet->swapBlockFreeSpace( tmpIter, actual, color );
-									std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+									if ( VVERBOSE ) {
+										std::cout << "Znalazlem kandydata do zamiany"<<std::endl;
+									}
 									flag = true;
 									break;
 								}
@@ -421,15 +463,19 @@ void ContainersSweep<T>::organizeColor(const std::map<Color, bool, ColorCompare>
 							}
 						}
 					}
-					containerSet->showInfo( );
+					if ( VVERBOSE ) {
+						containerSet->showInfo( );
+					}
     				continue;
     			}
 
     		}
     	}
 
-		std::cout << std::endl << "Kolor numer "<< color.getColor() << " w pojemniku o indeksie "<< actual->getIndex() << " uporzadkowany..." << std::endl;
-		containerSet->showInfo( );
+		if ( CONTAINERVERBOSE ) {
+			std::cout << std::endl << "Kolor numer "<< color.getColor() << " w pojemniku o indeksie "<< actual->getIndex() << " uporzadkowany..." << std::endl;
+			containerSet->showInfo( );
+		}
 
 		containerOrganized[actual->getIndex( )] = true;
     	actual = containerSet->getMaxiumWithColor(color);

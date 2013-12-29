@@ -134,7 +134,7 @@ public:
 	};
 
 	void showInfo() const;
-	void showToFile( ) const;
+	void showToFile( const char * fileName ) const;
 	unsigned int getColorsNumber() const;
 	unsigned int colorMultiplicity(const Color & color) const;
 	size_t size() const;

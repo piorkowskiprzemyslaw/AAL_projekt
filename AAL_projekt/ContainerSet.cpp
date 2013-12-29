@@ -665,10 +665,10 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 /**
  * Zapisanie wygladu zbioru kontenerow do pliku info.txt
  */
-void ContainerSet::showToFile( ) const
+void ContainerSet::showToFile(const char * fileName ) const
 {
 	std::ofstream file;
-	file.open( "info.txt" );
+	file.open( fileName );
 	for ( auto container : containers ) {
 		container.showInfoToFile( file );
 	}
