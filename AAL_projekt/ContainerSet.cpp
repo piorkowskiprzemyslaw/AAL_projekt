@@ -558,10 +558,15 @@ unsigned int ContainerSet::swapBlockFreeSpace( const iterator & freeSpace, const
 			tmpBlockLocation = iter;
 		}
 
-		//std::cout << "Kontrolne sprawdzenie..." << std::endl;
-		//showInfo( );
+		std::cout << "Kontrolne sprawdzenie..." << std::endl;
+		showInfo( );
 
-		++iter;
+		if ( dir == right ) {
+			++iter;
+		} else {
+			--iter;
+		}
+
 		distance = getDistance( dir, tmpBlockLocation, freeSpace );
 	}
 

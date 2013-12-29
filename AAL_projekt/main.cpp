@@ -27,7 +27,7 @@ TODO:
 int main(int argc, char* argv[])
  {
 	Interpreter interpreter(argv[1]);
-	DataGenerator generator(7, 5, 7, 0.85f, 7);
+	DataGenerator generator(10, 10, 10, 0.98f, 10);
 	generator.generateData();
 	CycleCounter cycleCounter;
 
@@ -36,10 +36,10 @@ int main(int argc, char* argv[])
 		interpreter.showGatheredInfo();
 	}
 
-	//ContainerSet containerSet(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
-	ContainerSet containerSet( interpreter.getConatinersCapacity( ), interpreter.getIncludingList( ), interpreter.getColorsNumber( ) );
-	//containerSet.showToFile();
-	containerSet.showInfo( );
+	ContainerSet containerSet(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
+	//ContainerSet containerSet( interpreter.getConatinersCapacity( ), interpreter.getIncludingList( ), interpreter.getColorsNumber( ) );
+	containerSet.showToFile();
+	//containerSet.showInfo( );
 	ContainersSweep<SelectionSort> sweep( containerSet );
 
 	cycleCounter.startCounting( );
@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
 	//++secondBlock;
 	//++secondBlock;
 	//++secondBlock;
+	//++secondBlock;
 	//ContainerSet::iterator freeSpace = containerSet.begin();
 	//freeSpace++;
 	//freeSpace++;
@@ -68,9 +69,9 @@ int main(int argc, char* argv[])
 	//freeSpace++;
 	//freeSpace++;
 	//Color col1(3);
-	//Color col2(4);
+	//Color col2(1);
 
-	//containerSet.swapBlocksWithFreeSpace( freeSpace, firstBlock, col1, secondBlock, col2 );
+	//containerSet.swapBlockFreeSpace( firstBlock, secondBlock, col2 );
 	///containerSet.showInfo( );
 	//ContainersSweep<SelectionSort> sweep(containerSet);
 
