@@ -657,6 +657,9 @@ unsigned int ContainerSet::shiftBlocks(std::vector<Color *> & shiftVector, const
 	return counter;
 }
 
+/**
+ * Zapisanie wygladu zbioru kontenerow do pliku info.txt
+ */
 void ContainerSet::showToFile( ) const
 {
 	std::ofstream file;
@@ -665,4 +668,16 @@ void ContainerSet::showToFile( ) const
 		container.showInfoToFile( file );
 	}
 	file.close( );
+}
+
+/**
+ * Sprawdzenie czy wszystkie pojemniki sa poprawnie ulozone.
+ */
+bool ContainerSet::checkState( ) const
+{
+	for ( auto container : containers )  {
+		if ( container.checkState( ) == false )
+			return false;
+	}
+	return true;
 }

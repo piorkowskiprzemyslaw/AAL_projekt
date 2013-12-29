@@ -27,7 +27,7 @@ TODO:
 int main(int argc, char* argv[])
  {
 	Interpreter interpreter(argv[1]);
-	DataGenerator generator(6, 6, 6, 0.95f, 6);
+	DataGenerator generator(6, 6, 6, 0.99f, 6);
 	generator.generateData();
 	CycleCounter cycleCounter;
 

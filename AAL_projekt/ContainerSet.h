@@ -143,6 +143,8 @@ public:
 	iterator begin();
 	unsigned int swapBlocksWithFreeSpace(const iterator & freeSpace, const iterator & firstBlockLocation, const Color & firstColor, const iterator & secondBlockLocation, const Color & secondColor);
 	unsigned int swapBlockFreeSpace( const iterator & freeSpace, const iterator & blockLocation, const Color & color );
+	bool checkState( ) const;
+
 
 private:
 	unsigned int getDistance(Direction dir, const iterator & first, const iterator & second) const;

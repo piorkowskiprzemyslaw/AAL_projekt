@@ -136,12 +136,16 @@ void ContainersSweep<T>::solveProblem()
         std::cout << "Color[" << table[i].first.getColor() << "] : " << table[i].second << std::endl;
     }
 
-	//organizowanie kolorów, od najbardziej licznego do najmniej.
-	for( size_t i = 0 ; i < table.size() ; ++i)
-	{
-		colorOrganizeMap[table[i].first] = true;
-        organizeColor(colorOrganizeMap ,table[i].first);
+	while ( containerSet->checkState( ) == false ) {
+		//organizowanie kolorów, od najbardziej licznego do najmniej.
+		for( size_t i = 0 ; i < table.size() ; ++i)
+		{
+			colorOrganizeMap[table[i].first] = true;
+			organizeColor(colorOrganizeMap ,table[i].first);
+		}
+		break;
 	}
+
 }
 
 /*
