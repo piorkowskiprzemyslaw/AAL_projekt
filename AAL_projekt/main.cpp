@@ -20,6 +20,10 @@ bool COLORVERBOSE = false;
 bool FILE_SOURCE = false;
 // zrodlo danych z generatora.
 bool RANDOM_SOURCE = false;
+// mierzenie czasu
+bool TIMEMEASURE = false;
+// mierzenie cykli procesora
+bool CYCLEMEASURE = false;
 // help
 bool HELP = false;
 
@@ -29,6 +33,7 @@ bool HELP = false;
 #include "Container.h"
 #include "ContainerSet.h"
 #include "CycleCounter.h"
+#include "TimeCounter.h"
 #include "DataGenerator.h"
 
 /* Naglowki plikow z algorytmami rozwiazan */
@@ -48,6 +53,8 @@ int main(int argc, char* argv[])
 	unsigned int maxCapacity = 0;
 	float fillingDegree = 0.0;
 	unsigned int colorsNumber = 0;
+	CycleCounter cycleCounter;
+	TimeCounter timeCounter;
 
 
 	for ( int i = 1; i < argc; ++i ) {
@@ -94,6 +101,14 @@ int main(int argc, char* argv[])
 			colorsNumber = atoi( argv[++i] );
 			continue;
 		}
+		if ( strcmp( argv[i], "-mt" ) == 0 ) {
+			TIMEMEASURE = true;
+			continue;
+		}
+		if ( strcmp( argv[i], "-mc" ) == 0 ) {
+			CYCLEMEASURE = true;
+			continue;
+		}
 
 		HELP = true;
 		break;
@@ -115,11 +130,16 @@ int main(int argc, char* argv[])
 		std::cout << " -vvv najdokladniejszy poziom komunikatow - wysiwetlana jest wiadomosc przy" << std::endl;
 		std::cout << "      przenoszeniu kazdego klocka pomiedzy pojemnikami. Wyswietla tez to" << std::endl;
 		std::cout << "      co -vv i -v." << std::endl;
-		std::cout << " -vc  wyswietlanie komuniaktu o wygladzie zbioru pojemnikow po uporzadkowaniu" << std::endl;
+		std::cout << " -cv  wyswietlanie komuniaktu o wygladzie zbioru pojemnikow po uporzadkowaniu" << std::endl;
 		std::cout << "      kazdego pojemnika kolorem." << std::endl;
+		std::cout << " -colv wyswietlenie komunikatu o uporzadkowaniu konretnego koloru oraz" << std::endl;
+		std::cout << "      informacji ile kolorow do uporzadkowania pozostalo." << std::endl;
 		std::cout << " -fv  opcja zapisania wygladu pojemnika do pliku przed rozpoczeciem" << std::endl;
 		std::cout << "      uporzadkowywania zbioru pojemnikow. Po tej opcji powinna znalezc sie " << std::endl;
 		std::cout << "      nazwa pliku w ktorym maja zostac zapisane dane." << std::endl;
+		std::cout << " -mt  mierzenie czasu wykonania algorytmu za pomoca zegara." << std::endl;
+		std::cout << " -mc  mierzenie czasu wykonania algorytmu za pomoca odczytu z licznika" << std::endl;
+		std::cout << "      instrukcji procesora." << std::endl;
 		
 		#ifdef _WIN32
 		system( "PAUSE" );
@@ -129,7 +149,6 @@ int main(int argc, char* argv[])
 
 	if ( FILE_SOURCE ) {
 		Interpreter interpreter( sourceFileName );
-		CycleCounter cycleCounter;
 
 		if ( interpreter.verifyGatheredInfo( ) && VERBOSE ) {
 			interpreter.showGatheredInfo( );
@@ -146,9 +165,21 @@ int main(int argc, char* argv[])
 			containerSet.showToFile( destinyFileName );
 		}
 
-		cycleCounter.startCounting( );
-		sweep.solveProblem( );
-		cycleCounter.stopCounting( );
+		if ( CYCLEMEASURE ) {
+			cycleCounter.startCounting( );
+		}
+		if ( TIMEMEASURE ) {
+			timeCounter.start( );
+		}
+
+		sweep.solveProblem( oneDir );
+		
+		if ( CYCLEMEASURE ) {
+			cycleCounter.stopCounting( );
+		}
+		if ( TIMEMEASURE ) {
+			timeCounter.stop( );
+		}
 
 		if ( VERBOSE ) {
 			std::cout << std::endl << "After solving with " << sweep.getCounter( ) << " moves ... " << std::endl;
@@ -156,13 +187,18 @@ int main(int argc, char* argv[])
 		}
 
 		std::cout << std::endl << "Moves : " << sweep.getCounter( ) << " state : " << sweep.getState( ) << std::endl;
-		std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << std::endl;
+		
+		if ( CYCLEMEASURE ) {
+			std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << " [x10^6]" << std::endl;
+		}
+		if ( TIMEMEASURE ) {
+			std::cout << std::endl << "Elapsed time : " << timeCounter.getMeasuredTime( ) << "[ms]" << std::endl;
+		}
 	}
 
 	if ( RANDOM_SOURCE ) {
 		DataGenerator generator( numberOfContainers, minCapacity, maxCapacity, fillingDegree, colorsNumber );
 		generator.generateData( );
-		CycleCounter cycleCounter;
 		ContainerSet containerSet( generator.getConatinersCapacity( ), generator.getIncludingList( ), generator.getColorsNumber( ) );
 		ContainersSweep<SelectionSort> sweep( containerSet );
 
@@ -174,9 +210,21 @@ int main(int argc, char* argv[])
 			containerSet.showToFile( destinyFileName );
 		}
 
-		cycleCounter.startCounting( );
-		sweep.solveProblem( );
-		cycleCounter.stopCounting( );
+		if ( CYCLEMEASURE ) {
+			cycleCounter.startCounting( );
+		}
+		if ( TIMEMEASURE ) {
+			timeCounter.start( );
+		}
+
+		sweep.solveProblem( oneDir );
+		
+		if ( CYCLEMEASURE ) {
+			cycleCounter.stopCounting( );
+		}
+		if ( TIMEMEASURE ) {
+			timeCounter.stop( );
+		}
 
 		if ( VERBOSE ) {
 			std::cout << std::endl << "After solving with " << sweep.getCounter( ) << " moves ... " << std::endl;
@@ -184,9 +232,14 @@ int main(int argc, char* argv[])
 		}
 
 		std::cout << std::endl << "Moves : " << sweep.getCounter( ) << " state : " << sweep.getState( ) << std::endl;
-		std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << std::endl;
+		
+		if ( CYCLEMEASURE ) {
+			std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << " [x10^6]" << std::endl;
+		}
+		if ( TIMEMEASURE ) {
+			std::cout << std::endl << "Elapsed time : " << timeCounter.getMeasuredTime( ) << "[ms]" << std::endl;
+		}
 	}
-
 
 	//ContainerSet::iterator firstBlock = containerSet.begin();
 	//++firstBlock;
@@ -205,18 +258,14 @@ int main(int argc, char* argv[])
 	//freeSpace++;
 	//Color col1(3);
 	//Color col2(1);
-
 	//containerSet.swapBlockFreeSpace( firstBlock, secondBlock, col2 );
-	///containerSet.showInfo( );
+	//containerSet.showInfo( );
 	//ContainersSweep<SelectionSort> sweep(containerSet);
-
 	//cycleCounter.startCounting();
     //sweep.solveProblem();
     //cycleCounter.startCounting();
-
     //ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
 	//containerSet1.showInfo();
-
 
     #ifdef _WIN32
 	system("PAUSE");

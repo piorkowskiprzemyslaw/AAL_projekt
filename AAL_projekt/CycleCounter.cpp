@@ -30,7 +30,7 @@ CycleCounter::~CycleCounter() { }
  */
 void CycleCounter::startCounting()
 {
-	startTime = getCounter();
+	startTime = getCounter( ) / 100000;
 }
 
 /*
@@ -38,7 +38,7 @@ void CycleCounter::startCounting()
  */
 void CycleCounter::stopCounting()
 {
-	stopTime = getCounter();
+	stopTime = getCounter( ) / 100000;
 }
 
 /*
