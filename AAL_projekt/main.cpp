@@ -14,6 +14,8 @@ bool VVVERBOSE = false;
 bool CONTAINERVERBOSE = false;
 // zapisanie wygladu pojemnika do pliku.
 bool FILEVERBOSE = false;
+// komunikowanie tylko o ukonczeniu porzadkowania jakiegos koloru.
+bool COLORVERBOSE = false;
 // zrodlo danych w pliku.
 bool FILE_SOURCE = false;
 // zrodlo danych z generatora.
@@ -72,6 +74,10 @@ int main(int argc, char* argv[])
 		}
 		if ( strcmp( argv[i], "-cv" ) == 0 ) {
 			CONTAINERVERBOSE = true;
+			continue;
+		}
+		if ( strcmp( argv[i], "-colv" ) == 0 ) {
+			COLORVERBOSE = true;
 			continue;
 		}
 		if ( strcmp(argv[i] , "-f") == 0) {
