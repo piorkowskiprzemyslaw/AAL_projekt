@@ -24,6 +24,10 @@ bool RANDOM_SOURCE = false;
 bool TIMEMEASURE = false;
 // mierzenie cykli procesora
 bool CYCLEMEASURE = false;
+// one dir container sweep
+bool ONEDIRSWEEP = false;
+// two dir containers sweep
+bool TWODIRSWEEP = false;
 // help
 bool HELP = false;
 
@@ -97,7 +101,7 @@ int main(int argc, char* argv[])
 			numberOfContainers = atoi( argv[++i] );
 			minCapacity = atoi( argv[++i] );
 			maxCapacity = atoi( argv[++i] );
-			fillingDegree = atof( argv[++i] );
+			fillingDegree = (float) atof( argv[++i] );
 			colorsNumber = atoi( argv[++i] );
 			continue;
 		}
@@ -107,6 +111,14 @@ int main(int argc, char* argv[])
 		}
 		if ( strcmp( argv[i], "-mc" ) == 0 ) {
 			CYCLEMEASURE = true;
+			continue;
+		}
+		if ( strcmp( argv[i], "-cso" ) == 0 ) {
+			ONEDIRSWEEP = true;
+			continue;
+		}
+		if ( strcmp( argv[i], "-cst" ) == 0 ) {
+			TWODIRSWEEP = true;
 			continue;
 		}
 
@@ -140,6 +152,8 @@ int main(int argc, char* argv[])
 		std::cout << " -mt  mierzenie czasu wykonania algorytmu za pomoca zegara." << std::endl;
 		std::cout << " -mc  mierzenie czasu wykonania algorytmu za pomoca odczytu z licznika" << std::endl;
 		std::cout << "      instrukcji procesora." << std::endl;
+		std::cout << " -cso rozwiazanie metoda omiatania w jedna strone." << std::endl;
+		std::cout << " -cst rozwiazanie metoda omiatania w dwie strony." << std::endl;
 		
 		#ifdef _WIN32
 		system( "PAUSE" );
@@ -172,7 +186,12 @@ int main(int argc, char* argv[])
 			timeCounter.start( );
 		}
 
-		sweep.solveProblem( oneDir );
+		if ( ONEDIRSWEEP ) {
+			sweep.solveProblem( oneDir );
+		}
+		if ( TWODIRSWEEP ) {
+			sweep.solveProblem( twoDir );
+		}
 		
 		if ( CYCLEMEASURE ) {
 			cycleCounter.stopCounting( );
@@ -217,7 +236,12 @@ int main(int argc, char* argv[])
 			timeCounter.start( );
 		}
 
-		sweep.solveProblem( oneDir );
+		if ( ONEDIRSWEEP ) {
+			sweep.solveProblem( oneDir );
+		}
+		if ( TWODIRSWEEP ) {
+			sweep.solveProblem( twoDir );
+		}
 		
 		if ( CYCLEMEASURE ) {
 			cycleCounter.stopCounting( );

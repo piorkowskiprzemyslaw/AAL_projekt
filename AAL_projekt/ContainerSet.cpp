@@ -686,3 +686,15 @@ bool ContainerSet::checkState( ) const
 	}
 	return true;
 }
+
+/**
+ * Test sprawdzajacy czy first i second sa sasiadami.
+ */
+bool ContainerSet::checkForNeighborhood(const iterator & first, const iterator & second ) const
+{
+	iterator tmp1( second );
+	++tmp1;
+	iterator tmp2( second );
+	--tmp2;
+	return (tmp1 == first || tmp2 == first);
+}
