@@ -14,7 +14,7 @@ public:
 	Color(const unsigned int thisColor);
 	~Color();
 	Color& operator=(const Color & rhs);
-	const Color* operator*() const;
+	//const Color& operator*() const;
 	unsigned int getColor() const;
 	bool operator==(const Color & rhs) const;
 	bool operator<(const Color & rhs) const;

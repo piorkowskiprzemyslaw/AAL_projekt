@@ -28,6 +28,8 @@ bool CYCLEMEASURE = false;
 bool ONEDIRSWEEP = false;
 // two dir containers sweep
 bool TWODIRSWEEP = false;
+// search tree metchod
+bool SEARCHTREE = false;
 // help
 bool HELP = false;
 
@@ -121,6 +123,10 @@ int main(int argc, char* argv[])
 			TWODIRSWEEP = true;
 			continue;
 		}
+		if ( strcmp( argv[i], "-st" ) == 0 ) {
+			SEARCHTREE = true;
+			continue;
+		}
 
 		HELP = true;
 		break;
@@ -154,6 +160,7 @@ int main(int argc, char* argv[])
 		std::cout << "      instrukcji procesora." << std::endl;
 		std::cout << " -cso rozwiazanie metoda omiatania w jedna strone." << std::endl;
 		std::cout << " -cst rozwiazanie metoda omiatania w dwie strony." << std::endl;
+		std::cout << " -st  rozwiazanie metoda drzewa przeszukiwan." << std::endl;
 		
 		#ifdef _WIN32
 		system( "PAUSE" );
@@ -170,6 +177,7 @@ int main(int argc, char* argv[])
 
 		ContainerSet containerSet( interpreter.getConatinersCapacity( ), interpreter.getIncludingList( ), interpreter.getColorsNumber( ) );
 		ContainersSweep < SelectionSort> sweep( containerSet );
+		SearchTree searchTree( containerSet );
 
 		if ( VERBOSE ) {
 			containerSet.showInfo( );
@@ -192,6 +200,9 @@ int main(int argc, char* argv[])
 		if ( TWODIRSWEEP ) {
 			sweep.solveProblem( twoDir );
 		}
+		if ( SEARCHTREE ) {
+			searchTree.solve( );
+		}
 		
 		if ( CYCLEMEASURE ) {
 			cycleCounter.stopCounting( );
@@ -200,18 +211,28 @@ int main(int argc, char* argv[])
 			timeCounter.stop( );
 		}
 
-		if ( VERBOSE ) {
+		if ( VERBOSE && ( ONEDIRSWEEP || TWODIRSWEEP ) ) {
 			std::cout << std::endl << "After solving with " << sweep.getCounter( ) << " moves ... " << std::endl;
 			sweep.showContainerSet( );
 		}
 
-		std::cout << std::endl << "Moves : " << sweep.getCounter( ) << " state : " << sweep.getState( ) << std::endl;
+		if ( VERBOSE && SEARCHTREE ) {
+			std::cout << std::endl << "After solving with " << searchTree.getMoves( ) << " moves... " << std::endl;
+			searchTree.showSolution( );
+		}
+
+		if ( ONEDIRSWEEP || TWODIRSWEEP ) {
+			std::cout << std::endl << "Moves : " << sweep.getCounter( ) << " state : " << sweep.getState( ) << std::endl;
+		}
+		if ( SEARCHTREE ) {
+			std::cout << std::endl << "Moves : " << searchTree.getMoves( ) << " state : " << searchTree.getState( ) << std::endl;
+		}
 		
 		if ( CYCLEMEASURE ) {
 			std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << " [x10^6]" << std::endl;
 		}
 		if ( TIMEMEASURE ) {
-			std::cout << std::endl << "Elapsed time : " << timeCounter.getMeasuredTime( ) << "[ms]" << std::endl;
+			std::cout << std::endl << "Elapsed time : " << timeCounter.getMeasuredTime( ) << " [ms]" << std::endl;
 		}
 	}
 
@@ -220,6 +241,7 @@ int main(int argc, char* argv[])
 		generator.generateData( );
 		ContainerSet containerSet( generator.getConatinersCapacity( ), generator.getIncludingList( ), generator.getColorsNumber( ) );
 		ContainersSweep<SelectionSort> sweep( containerSet );
+		SearchTree searchTree( containerSet );
 
 		if ( VERBOSE ) {
 			containerSet.showInfo( );
@@ -242,6 +264,9 @@ int main(int argc, char* argv[])
 		if ( TWODIRSWEEP ) {
 			sweep.solveProblem( twoDir );
 		}
+		if ( SEARCHTREE ) {
+			searchTree.solve( );
+		}
 		
 		if ( CYCLEMEASURE ) {
 			cycleCounter.stopCounting( );
@@ -250,12 +275,22 @@ int main(int argc, char* argv[])
 			timeCounter.stop( );
 		}
 
-		if ( VERBOSE ) {
+		if ( VERBOSE && ( ONEDIRSWEEP || TWODIRSWEEP ) ) {
 			std::cout << std::endl << "After solving with " << sweep.getCounter( ) << " moves ... " << std::endl;
 			sweep.showContainerSet( );
 		}
 
-		std::cout << std::endl << "Moves : " << sweep.getCounter( ) << " state : " << sweep.getState( ) << std::endl;
+		if ( VERBOSE && SEARCHTREE ) {
+			std::cout << std::endl << "After solving with " << searchTree.getMoves( ) << " moves... " << std::endl;
+			searchTree.showSolution( );
+		}
+
+		if ( ONEDIRSWEEP || TWODIRSWEEP ) {
+			std::cout << std::endl << "Moves : " << sweep.getCounter( ) << " state : " << sweep.getState( ) << std::endl;
+		}
+		if ( SEARCHTREE ) {
+			std::cout << std::endl << "Moves : " << searchTree.getMoves( ) << " state : " << searchTree.getState( ) << std::endl;
+		}
 		
 		if ( CYCLEMEASURE ) {
 			std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << " [x10^6]" << std::endl;

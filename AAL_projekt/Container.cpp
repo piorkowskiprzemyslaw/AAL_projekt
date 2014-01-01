@@ -207,3 +207,43 @@ void Container::showInfoToFile( std::ofstream & os ) const
 		os << i << " : " << blockSet.count( Block( i ) ) << "\n";
 	}
 }
+
+/**
+ * Ooperator porownania dwoch pojemnikow. Sprawdza czy ich zawartosci sa takie same.
+ */
+bool Container::operator==( const Container & rhs ) const
+{
+	for ( auto block : blockSet ) {
+		if ( blockSet.count( block ) != rhs.blockSet.count( block ) ) {
+			return false;
+		}
+	}
+
+	for ( auto block : rhs.blockSet ) {
+		if ( rhs.blockSet.count( block ) != blockSet.count( block ) ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Operator roznosci doch pojemnikow.
+ */
+bool Container::operator!=( const Container & rhs ) const
+{
+	return !(*this == rhs);
+}
+
+std::list<Color *> * Container::getAllDifferentColors( ) const
+{
+	std::list<Color *> * returned = new std::list<Color *>( );
+
+	for ( unsigned int i = 0; i < Color::getNumberOfAllColors( ); ++i ) {
+		if ( blockSet.count( Block( i ) ) > 0 )
+			returned->push_back( new Color( i ) );
+	}
+
+	return returned;
+}

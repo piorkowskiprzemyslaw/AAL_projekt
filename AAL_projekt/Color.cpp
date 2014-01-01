@@ -31,11 +31,11 @@ Color& Color::operator=(const Color& rhs)
 
 /**
  * Operator wyluskania
- */
-const Color* Color::operator *() const
+ *
+const Color& Color::operator *() const
 {
-	return this;
-}
+	return *this;
+}*/
 
 /*
  * Pobiera ilosc kolorow definiowanych dla tego przypadku.

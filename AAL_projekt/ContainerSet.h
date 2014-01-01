@@ -38,6 +38,11 @@ public:
 			iter = cont.begin( ) + pos;
 			container = cont;
 		}
+		const_iterator( const const_iterator & a, const size_t pos ) : container( a.container ) 
+		{
+			iter = container.begin( );
+			iter = iter + pos;
+		}
 
 		inline const Container * operator->( ) const { return iter.operator ->( ); }
 		inline const Container& operator*( )  const { return iter.operator *( ); }
@@ -85,6 +90,7 @@ public:
 	public:
 		iterator( const const_iterator & a ) : const_iterator( a ) { }
 		iterator( std::vector<Container> & cont, const size_t pos ) : const_iterator( cont, pos ) { }
+		iterator( const const_iterator & a , const size_t pos) : const_iterator(a,pos) {}
 
 		inline Container& operator*( ) const { return this->iter.operator *( ); }
 		inline Container* operator->( ) const { return this->iter.operator ->( ); }
@@ -143,6 +149,8 @@ public:
 	unsigned int swapBlockFreeSpace( const iterator & freeSpace, const iterator & blockLocation, const Color & color );
 	bool checkState( ) const;
 	bool checkForNeighborhood( const iterator & first, const iterator & second ) const;
+	bool operator==( const ContainerSet & rhs ) const;
+	bool operator!=( const ContainerSet & rhs ) const;
 
 private:
 	unsigned int getDistance(Direction dir, const iterator & first, const iterator & second) const;

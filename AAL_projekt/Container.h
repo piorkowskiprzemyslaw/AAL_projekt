@@ -8,6 +8,7 @@
 #include <vector>
 #include <cassert>
 #include <iterator>
+#include <list>
 #include "Block.h"
 #include "BlockCompare.h"
 #include "Color.h"
@@ -31,6 +32,8 @@ public:
 	~Container();
 	Container(const Container & another);
 	Container& operator=(const Container & rhs);
+	bool operator==( const Container & rhs ) const;
+	bool operator!=( const Container & rhs ) const;
 	bool moveBlock(const Color & color, Container& destiny);
 	unsigned int getColorMultiplicity(const Color & color) const;
 	Color* checkIsColorPresent(const std::map<Color, bool, ColorCompare> & colorOrganizeMap) const;
@@ -42,6 +45,7 @@ public:
 	Color* getTopColor(const Color * anotherColor) const;
 	unsigned int getIndex() const;
 	void showInfoToFile( std::ofstream & os ) const;
+	std::list<Color *> * getAllDifferentColors( ) const;
 };
 
 #endif

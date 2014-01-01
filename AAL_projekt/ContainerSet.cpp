@@ -698,3 +698,29 @@ bool ContainerSet::checkForNeighborhood(const iterator & first, const iterator &
 	--tmp2;
 	return (tmp1 == first || tmp2 == first);
 }
+
+/**
+ * Operator porownania, sprawdza, czy dwa containerSety sa takie same.
+ */
+bool ContainerSet::operator==( const ContainerSet & rhs ) const
+{
+	if ( containers.size( ) != rhs.containers.size( ) ) {
+		return false;
+	}
+
+	for ( size_t i = 0; i < containers.size( ); ++i ) {
+		if ( containers[i] != rhs.containers[i] ) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Operator roznosci dwoch containerSetow.
+ */
+bool ContainerSet::operator!=( const ContainerSet & rhs ) const
+{
+	return !( *this == rhs );
+}
