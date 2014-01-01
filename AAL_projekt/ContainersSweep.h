@@ -63,6 +63,7 @@ private:
 											 const std::vector<bool> & containerOrganized );
 
 	T sort;
+
 public:
 	ContainersSweep( );
 	ContainersSweep( const ContainerSet & containerSet );
@@ -109,7 +110,7 @@ ContainersSweep<T>::~ContainersSweep()
 * Sprawdz warunki poczatkowe.
 */
 template <typename T>
-bool ContainersSweep<T>::checkPreconditions()
+bool ContainersSweep<T>::checkPreconditions( )
 {
     unsigned int allColorSum = 0;
 

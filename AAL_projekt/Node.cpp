@@ -1,5 +1,7 @@
 #include "Node.h"
 
+unsigned int Node::minMoves;
+
 /**
  * Konstruktor domyslny.
  */
@@ -7,6 +9,7 @@ Node::Node( ) : state( false ), moves(0)
 {
 	this->containerSet = nullptr;
 	this->parent = nullptr;
+	Node::minMoves = UINT_MAX;
 }
 
 /**
@@ -17,6 +20,12 @@ Node::Node( const ContainerSet & containerSet ) : moves(0)
 	this->containerSet = new ContainerSet( containerSet );
 	this->parent = nullptr;
 	this->state = this->containerSet->checkState( );
+	Node::minMoves = UINT_MAX;
+	if ( this->state == true ) {
+		if ( Node::minMoves > this->moves ) {
+			Node::minMoves = this->moves;
+		}
+	}
 }
 
 /**
@@ -27,6 +36,11 @@ Node::Node( ContainerSet * containerSet, Node * parent, const unsigned int moves
 	this->containerSet = containerSet;
 	this->parent = parent;
 	this->state = this->containerSet->checkState( );
+	if ( this->state == true ) {
+		if ( Node::minMoves > this->moves ) {
+			Node::minMoves = this->moves;
+		}
+	}
 }
 
 /**
@@ -54,6 +68,10 @@ void Node::addChildrens( )
 		return;
 	}
 
+	if ( moves + 1 > Node::minMoves ) {
+		return;
+	}
+
 	do {
 
 		listOfColors = container->getAllDifferentColors( );
@@ -68,7 +86,7 @@ void Node::addChildrens( )
 			if ( csIteratorLeft->moveBlock( **color, *csLeftNeighbor ) ) {
 				//powiodlo sie przeniesienie klocka kolor do lewego sasiada.
 
-				if ( findACopy( csLeft ) == true )
+				if ( findACopy( csLeft ) == false )
 					children.push_back( new Node( csLeft, this, moves + 1 ) );
 				else
 					delete( csLeft );
@@ -111,10 +129,11 @@ void Node::addChildrens( )
 /**
  * szukanie kopii syttuacji wyzej w drzewie.
  */
-bool Node::findACopy( const ContainerSet * containerSet ) const
+bool Node::findACopy( const ContainerSet * containerSet )
 {
-	Node * tmp = parent;
+	Node * root = this;
 
+	/*
 	while ( tmp != nullptr ) {
 		if ( *(tmp->containerSet) == *containerSet )
 			return false;
@@ -124,6 +143,32 @@ bool Node::findACopy( const ContainerSet * containerSet ) const
 			}
 		}
 		tmp = tmp->parent;
+	}*/
+
+	while ( root->parent != nullptr ) {
+		root = root->parent;
+	}
+
+	return root->check( containerSet, moves + 1 );
+}
+
+/**
+ * Rekurencyjne sprawdzenie wszystkich elelemntow w drzewie.
+ */
+bool Node::check( const ContainerSet * containerSet, unsigned int heigh ) const
+{
+	if ( *(this->containerSet) == *containerSet ) {
+		return true;
+	}
+
+	if ( heigh == 0 ) {
+		return false;
+	}
+
+	for ( auto node : children ) {
+		if ( node->check( containerSet, heigh - 1 ) == false ) {
+			return true;
+		}
 	}
 
 	return true;

@@ -7,6 +7,7 @@ SearchTree::SearchTree()
 {
 	root = nullptr;
 	bestSolution = nullptr;
+	containerSet = nullptr;
 }
 
 /**
@@ -16,6 +17,7 @@ SearchTree::SearchTree( const ContainerSet & containerSet )
 {
 	root = new Node( containerSet );
 	bestSolution = nullptr;
+	this->containerSet = new ContainerSet( containerSet );
 }
 
 /**
@@ -32,6 +34,16 @@ SearchTree::~SearchTree()
 void SearchTree::solve( )
 {
 	std::cout << "Solving with SearchTree..." << std::endl;
+	std::cout << "Checking preconditions ... ";
+
+	//sprawdzanie warunkow poczatkowych umozliwiajacych rozwiazanie zadania.
+	if ( !checkPreconditions( ) ) {
+		std::cout << "[FALSE]" << std::endl;
+		std::cout << "End of solving problem" << std::endl;
+		return;
+	}
+	std::cout << "[OK]" << std::endl;
+	
 	root->addChildrens( );
 	root->findSolution( solutions );
 	findTheBestSolution( );
@@ -85,4 +97,39 @@ void SearchTree::showSolution( ) const
 	} else {
 		std::cout << "No solution found..." << std::endl;
 	}
+}
+
+/**
+ * Prywatna metoda sprawdzajaca spelnienie warunkow poczatkowych.
+ */
+bool SearchTree::checkPreconditions( ) const
+{
+	size_t* colorMultiplicity = new size_t[this->containerSet->getColorsNumber( )];
+	unsigned int allColorSum = 0;
+
+	//liczba kolorow musi byc mniejsza badz rowna liczbe dostepnych pojemnikow.
+	if ( Color::getNumberOfAllColors( ) > this->containerSet->size( ) ) {
+		return false;
+	}
+
+	//lacznie we wszystkich pojemnikach jest nie wiecej niz n klockow danego koloru.
+	//przy okazji wykonuje zliczanie ka¿dego koloru - potrzebne do dalszej czesci algorytmu,
+	for ( size_t i = 0; i < containerSet->getColorsNumber( ); i++ ) {
+		colorMultiplicity[i] = containerSet->colorMultiplicity( i );
+		allColorSum += colorMultiplicity[i];
+		if ( colorMultiplicity[i] > containerSet->size( ) ) {
+			return false;
+		}
+
+	}
+
+	//zapewnienie aby wszystkie klocki miescily sie w pojemnikach, oraz zeby dalo
+	//sie wykonac ruch.
+	if ( allColorSum >= containerSet->getCapacitySum( ) ) {
+		return false;
+	}
+
+	delete( colorMultiplicity );
+
+	return true;
 }

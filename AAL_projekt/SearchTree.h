@@ -4,6 +4,7 @@
 #include <iostream>
 #include <list>
 #include "Node.h"
+#include "Color.h"
 #include "ContainerSet.h"
 
 /*
@@ -17,9 +18,12 @@ private:
 	Node * root;
 	// Znalezione najlepsze rozwiazanie.
 	Node * bestSolution;
+	// Zbior pojemnikow ktory ma zostac uporzadkowany.
+	ContainerSet * containerSet;
 	// Lista z wezlami reprezentujacymi rozwiazania.
 	std::list<Node *> solutions;
 
+	bool checkPreconditions( ) const;
 	void findTheBestSolution( );
 public:
     SearchTree();

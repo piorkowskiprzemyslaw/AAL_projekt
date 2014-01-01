@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include <climits>
 
 
 #include "ContainerSet.h"
@@ -23,6 +24,10 @@ private:
 	bool state;
 	// liczba ruchow pozwalajaca dojsc do tego stanu.
 	const unsigned int moves;
+	// liczba ruchow w najlepszym jak dotad znalezionym rozwiazaniu.
+	static unsigned int minMoves;
+
+	bool check( const ContainerSet* containerSet, unsigned int heigh ) const;
 
 public:
 	Node( );
@@ -30,7 +35,7 @@ public:
 	Node( ContainerSet * containerSet, Node * parent , const unsigned int moves);
 	~Node( );
 	void addChildrens( );
-	bool findACopy( const ContainerSet * containerSet ) const;
+	bool findACopy( const ContainerSet * containerSet );
 	void findSolution( std::list<Node *> & solutions );
 	void showInfo( ) const;
 	unsigned int getMoves( ) const;
