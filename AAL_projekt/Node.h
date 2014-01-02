@@ -34,7 +34,7 @@ public:
 	Node( const ContainerSet & containerSet );
 	Node( ContainerSet * containerSet, Node * parent , const unsigned int moves);
 	~Node( );
-	void addChildrens( );
+	std::list<Node*> * addChildrens( );
 	bool findACopy( const ContainerSet * containerSet );
 	void findSolution( std::list<Node *> & solutions );
 	void showInfo( ) const;

@@ -57,19 +57,21 @@ Node::~Node( )
 /**
  * Automatyczne dodanie wszystkich mozliwych dzieci ( wykonanie wszystkich mozliwych ruchow ).
  */
-void Node::addChildrens( )
+std::list<Node *> * Node::addChildrens( )
 {
 	ContainerSet * csLeft = nullptr;
 	ContainerSet * csRight = nullptr;
 	ContainerSet::iterator container(containerSet->begin( ));
 	std::list<Color *> * listOfColors;
+	std::list<Node *> * creationList = new std::list<Node *>( );
+	Node * tmp = nullptr;
 
 	if ( state == true ) {
-		return;
+		return creationList;
 	}
 
-	if ( moves + 1 > Node::minMoves ) {
-		return;
+	if ( moves + 1 >= Node::minMoves ) {
+		return creationList;
 	}
 
 	do {
@@ -86,8 +88,11 @@ void Node::addChildrens( )
 			if ( csIteratorLeft->moveBlock( **color, *csLeftNeighbor ) ) {
 				//powiodlo sie przeniesienie klocka kolor do lewego sasiada.
 
-				if ( findACopy( csLeft ) == false )
-					children.push_back( new Node( csLeft, this, moves + 1 ) );
+				if ( findACopy( csLeft ) == false ) {
+					tmp = new Node( csLeft, this, moves + 1 );
+					children.push_back( tmp );
+					creationList->push_back( tmp );
+				}
 				else
 					delete( csLeft );
 			
@@ -103,8 +108,11 @@ void Node::addChildrens( )
 			if ( csIteratorRight->moveBlock( **color, *csRightNeighbor ) ) {
 				//powiodlo sie przeniesienie klocka kolor do prawego sasaida.
 
-				if ( findACopy( csRight ) == true )
-					children.push_back( new Node( csRight, this, moves + 1 ) );
+				if ( findACopy( csRight ) == true ) {
+					tmp = new Node( csRight, this, moves + 1 );
+					children.push_back( tmp );
+					creationList->push_back( tmp );
+				}
 				else
 					delete( csRight );
 			
@@ -120,14 +128,11 @@ void Node::addChildrens( )
 		++container;
 	} while ( container != containerSet->begin( ) );
 
-
-	for ( auto node : children ) {
-		node->addChildrens( );
-	}
+	return creationList;
 }
 
 /**
- * szukanie kopii syttuacji wyzej w drzewie.
+ * Sprawdzenie czy uklad containerSet juz wystepuje w drzewie na tym samym poziomie co this lub wyzej.
  */
 bool Node::findACopy( const ContainerSet * containerSet )
 {

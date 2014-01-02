@@ -18,6 +18,7 @@ SearchTree::SearchTree( const ContainerSet & containerSet )
 	root = new Node( containerSet );
 	bestSolution = nullptr;
 	this->containerSet = new ContainerSet( containerSet );
+	creationQueue.push( root );
 }
 
 /**
@@ -44,7 +45,7 @@ void SearchTree::solve( )
 	}
 	std::cout << "[OK]" << std::endl;
 	
-	root->addChildrens( );
+	createTree( );
 	root->findSolution( solutions );
 	findTheBestSolution( );
 }
@@ -132,4 +133,25 @@ bool SearchTree::checkPreconditions( ) const
 	delete( colorMultiplicity );
 
 	return true;
+}
+
+/**
+ * Metoda odpowiedzialna za stworzenie drzewa przeszukiwan.
+ */
+void SearchTree::createTree( )
+{
+	Node * tmp;
+	std::list<Node *> * creationList;
+	while ( !creationQueue.empty( ) ) {
+		tmp = creationQueue.front( );
+		creationQueue.pop( );
+		creationList = tmp->addChildrens( );
+
+		for ( auto it = creationList->begin( ); it != creationList->end( ); ++it ) {
+			creationQueue.push( *it );
+		}
+
+		std::cout << "CreationQueue size :" << creationQueue.size( ) << " Dodano : " << creationList->size() << " Aktualny poziom : " << tmp->getMoves() << std::endl;
+		delete( creationList );
+	}
 }

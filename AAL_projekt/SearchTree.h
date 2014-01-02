@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include <queue>
 #include "Node.h"
 #include "Color.h"
 #include "ContainerSet.h"
@@ -22,9 +23,12 @@ private:
 	ContainerSet * containerSet;
 	// Lista z wezlami reprezentujacymi rozwiazania.
 	std::list<Node *> solutions;
+	// Kolejka wezlow dla ktorych maja zostac utworzone dzieci.
+	std::queue<Node *> creationQueue;
 
 	bool checkPreconditions( ) const;
 	void findTheBestSolution( );
+	void createTree( );
 public:
     SearchTree();
 	SearchTree( const ContainerSet & containerSet );
