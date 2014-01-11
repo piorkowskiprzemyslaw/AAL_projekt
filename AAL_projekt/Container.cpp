@@ -1,5 +1,7 @@
 #include "Container.h"
 
+extern bool VVVERBOSE;
+
 /**
  * Konstruktor domyslny
  */
@@ -70,6 +72,12 @@ bool Container::moveBlock(const Color & color, Container& destiny)
  	{
 		return false;
  	}
+ 	if( VVVERBOSE ){
+ 		std::cout << "Move block of color " << color.getColor()
+ 				<< " from  " << this->getIndex()
+ 				<< " to " << destiny.getIndex() << std::endl;
+ 	}
+
 	blockSet.erase(blockSet.find(block));
 	destiny.blockSet.emplace(block.getColor());
 	return true;
