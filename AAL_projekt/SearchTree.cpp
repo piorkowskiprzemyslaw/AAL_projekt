@@ -29,7 +29,7 @@ SearchTree::~SearchTree()
 	delete( root );
 }
 
-/** 
+/**
  * Rozawiazanie problemu.
  */
 void SearchTree::solve( )
@@ -44,7 +44,7 @@ void SearchTree::solve( )
 		return;
 	}
 	std::cout << "[OK]" << std::endl;
-	
+
 	createTree( );
 	root->findSolution( solutions );
 	findTheBestSolution( );
@@ -86,6 +86,7 @@ bool SearchTree::getState( ) const
 	if ( bestSolution != nullptr ) {
 		return bestSolution->getState( );
 	}
+	return false;
 }
 
 /**
@@ -114,7 +115,7 @@ bool SearchTree::checkPreconditions( ) const
 	}
 
 	//lacznie we wszystkich pojemnikach jest nie wiecej niz n klockow danego koloru.
-	//przy okazji wykonuje zliczanie ka¿dego koloru - potrzebne do dalszej czesci algorytmu,
+	//przy okazji wykonuje zliczanie kaï¿½dego koloru - potrzebne do dalszej czesci algorytmu,
 	for ( size_t i = 0; i < containerSet->getColorsNumber( ); i++ ) {
 		colorMultiplicity[i] = containerSet->colorMultiplicity( i );
 		allColorSum += colorMultiplicity[i];

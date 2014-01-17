@@ -29,30 +29,30 @@ private:
 	bool checkPreconditions( );
 	void organizeColorOneDir( const std::map<Color, bool, ColorCompare> & table, const Color & color );
 	void organizeColorTwoDir( const std::map<Color, bool, ColorCompare> & table, const Color & color );
-	unsigned int falseNeighbor( const ContainerSet::iterator & actual, 
+	unsigned int falseNeighbor( const ContainerSet::iterator & actual,
 								const ContainerSet::iterator & neighbor, const Color & color );
 
-	unsigned int falseNeighborNoPlace( const ContainerSet::iterator & actual, 
+	unsigned int falseNeighborNoPlace( const ContainerSet::iterator & actual,
 									   const ContainerSet::iterator & neighbor, const Color & color,
-									   const std::map<Color, bool, ColorCompare> & table, 
+									   const std::map<Color, bool, ColorCompare> & table,
 									   const int dir, const std::vector<bool> & containerOrganized );
 
-	unsigned int falseNeighborNoPlaceNoPlace( const ContainerSet::iterator & actual, 
-											  const ContainerSet::iterator & neighbor, 
-											  const Color & color, const std::map<Color, 
-											  bool, ColorCompare> & table, const int dir, 
+	unsigned int falseNeighborNoPlaceNoPlace( const ContainerSet::iterator & actual,
+											  const ContainerSet::iterator & neighbor,
+											  const Color & color, const std::map<Color,
+											  bool, ColorCompare> & table, const int dir,
 											  const std::vector<bool> & containerOrganized );
 
-	unsigned int trueNeighbor( const ContainerSet::iterator & actual, 
-							   const ContainerSet::iterator & neighbor, const Color & color, 
-							   const std::map<Color, bool, ColorCompare> & table, const int dir, 
+	unsigned int trueNeighbor( const ContainerSet::iterator & actual,
+							   const ContainerSet::iterator & neighbor, const Color & color,
+							   const std::map<Color, bool, ColorCompare> & table, const int dir,
 							   const std::vector<bool> & containerOrganized );
 
 	unsigned int trueNeighborNoPlace( const ContainerSet::iterator & actual,
-									  const ContainerSet::iterator & neighbor, 
+									  const ContainerSet::iterator & neighbor,
 									  const Color & color,
-									  const std::map<Color, bool, ColorCompare> & table, 
-									  const int dir, 
+									  const std::map<Color, bool, ColorCompare> & table,
+									  const int dir,
 									  const std::vector<bool> & containerOrganized );
 
 	unsigned int trueNeighborNoPlaceNoPlace( const ContainerSet::iterator & actual,
@@ -199,8 +199,8 @@ void ContainersSweep<T>::solveProblem(const Mode mode)
  * sasiad ma flage false i ma wolne miejsce.
  */
 template<typename T>
-unsigned int ContainersSweep<T>::falseNeighbor( const ContainerSet::iterator & actual, 
-												const ContainerSet::iterator & neighbor, 
+unsigned int ContainersSweep<T>::falseNeighbor( const ContainerSet::iterator & actual,
+												const ContainerSet::iterator & neighbor,
 												const Color & color )
 {
 	if ( !containerSet->checkForNeighborhood( actual, neighbor ) ) {
@@ -209,12 +209,12 @@ unsigned int ContainersSweep<T>::falseNeighbor( const ContainerSet::iterator & a
 	}
 
 	actual->moveBlock( color, *neighbor );
-	
+
 	if ( VVERBOSE ) {
 		std::cout << "Sasiad ma falge flase i ma wolne miejsce" << std::endl;
 		containerSet->showInfo( );
 	}
-	
+
 	return 1;
 }
 
@@ -223,10 +223,10 @@ unsigned int ContainersSweep<T>::falseNeighbor( const ContainerSet::iterator & a
  * Sasiad ma flage false i nie ma wolnego miejsca ale w actual jest wolne miejsce.
  */
 template<typename T>
-unsigned int ContainersSweep<T>::falseNeighborNoPlace( const ContainerSet::iterator & actual, 
-													   const ContainerSet::iterator & neighbor, 
-													   const Color & color, 
-													   const std::map<Color, bool, ColorCompare> & colorOrganizeMap, 
+unsigned int ContainersSweep<T>::falseNeighborNoPlace( const ContainerSet::iterator & actual,
+													   const ContainerSet::iterator & neighbor,
+													   const Color & color,
+													   const std::map<Color, bool, ColorCompare> & colorOrganizeMap,
 													   const int dir, const std::vector<bool> & containerOrganized )
 {
 	// Licznik ruchow.
@@ -239,7 +239,7 @@ unsigned int ContainersSweep<T>::falseNeighborNoPlace( const ContainerSet::itera
 	if ( VVERBOSE ) {
 		std::cout << "Sasiad ma flage false i nie ma wolnego miejsca ale w actual jest wolne miejsce." << std::endl;
 	}
-	
+
 	tmpColorPointer = neighbor->checkIsColorPresent( colorOrganizeMap );
 	if ( tmpColorPointer != nullptr ) {
 		// Nie rozpatrywany kolor znajduje sie u sąsiada. Wykonanie swapa.
@@ -264,7 +264,7 @@ unsigned int ContainersSweep<T>::falseNeighborNoPlace( const ContainerSet::itera
 				tmpIter = tmpNeighbor;
 				if ( dir & 0x01 ) ++tmpIter;
 				else  --tmpIter;
-				
+
 				while ( tmpIter != actual ) {
 					tmpColorPointer = tmpIter->checkIsColorPresent( colorOrganizeMap );
 					if ( false == containerOrganized[tmpIter->getIndex( )] && tmpColorPointer != nullptr ) {
@@ -307,15 +307,15 @@ unsigned int ContainersSweep<T>::falseNeighborNoPlace( const ContainerSet::itera
 }
 
 /**
- * Metoda realizujaca przypadek : 
+ * Metoda realizujaca przypadek :
  * Sasaiad ma flage flase, nie ma wolnego miejsca, w akualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca.
  */
 template<typename T>
-unsigned int ContainersSweep<T>::falseNeighborNoPlaceNoPlace( const ContainerSet::iterator & actual, 
-															  const ContainerSet::iterator & neighbor, 
-															  const Color & color, 
-															  const std::map<Color, bool, ColorCompare> & colorOrganizeMap, 
-															  const int dir, 
+unsigned int ContainersSweep<T>::falseNeighborNoPlaceNoPlace( const ContainerSet::iterator & actual,
+															  const ContainerSet::iterator & neighbor,
+															  const Color & color,
+															  const std::map<Color, bool, ColorCompare> & colorOrganizeMap,
+															  const int dir,
 															  const std::vector<bool> & containerOrganized )
 {
 	// Licznik.
@@ -338,7 +338,7 @@ unsigned int ContainersSweep<T>::falseNeighborNoPlaceNoPlace( const ContainerSet
 		if ( freeSpace->getLeftPlace( ) > 0 ) {
 			break;
 		}
-		
+
 		if ( dir & 0x01 ) ++freeSpace;
 		else  --freeSpace;
 	}
@@ -408,11 +408,11 @@ unsigned int ContainersSweep<T>::falseNeighborNoPlaceNoPlace( const ContainerSet
  * Sasiad ma flage true i ma wolone miejsce.
  */
 template <typename T>
-unsigned int ContainersSweep<T>::trueNeighbor( const ContainerSet::iterator & actual, 
-											   const ContainerSet::iterator & neighbor, 
-											   const Color & color, 
-											   const std::map<Color, bool, ColorCompare> & colorOrganizeMap, 
-											   const int dir, 
+unsigned int ContainersSweep<T>::trueNeighbor( const ContainerSet::iterator & actual,
+											   const ContainerSet::iterator & neighbor,
+											   const Color & color,
+											   const std::map<Color, bool, ColorCompare> & colorOrganizeMap,
+											   const int dir,
 											   const std::vector<bool> & containerOrganized )
 {
 	// Licznik
@@ -444,7 +444,7 @@ unsigned int ContainersSweep<T>::trueNeighbor( const ContainerSet::iterator & ac
 		else  --tmpIter;
 	}
 
-	// Jesli nie zostal znaleziony zaden kandydat do zamiany, to szukamy wolnego miejsca w 
+	// Jesli nie zostal znaleziony zaden kandydat do zamiany, to szukamy wolnego miejsca w
 	// pojemnikach po dir stronie. Miejsce takie musi sie znalezc.
 	if ( !flag ) {
 		tmpIter = neighbor;
@@ -483,11 +483,11 @@ unsigned int ContainersSweep<T>::trueNeighbor( const ContainerSet::iterator & ac
  * pojemniku jest wolne miejsce.
  */
 template <typename T>
-unsigned int ContainersSweep<T>::trueNeighborNoPlace( const ContainerSet::iterator & actual, 
-													  const ContainerSet::iterator & neighbor, 
-													  const Color & color, 
-													  const std::map<Color, bool, ColorCompare> & colorOrganizeMap, 
-													  const int dir, 
+unsigned int ContainersSweep<T>::trueNeighborNoPlace( const ContainerSet::iterator & actual,
+													  const ContainerSet::iterator & neighbor,
+													  const Color & color,
+													  const std::map<Color, bool, ColorCompare> & colorOrganizeMap,
+													  const int dir,
 													  const std::vector<bool> & containerOrganized )
 {
 	// Licznik
@@ -554,7 +554,7 @@ unsigned int ContainersSweep<T>::trueNeighborNoPlace( const ContainerSet::iterat
 		std::cerr << "Nie ma mozliwosci rozlozenia [3]" << std::endl;
 		exit( 1 );
 	}
-	
+
 	if ( VVERBOSE ) {
 		containerSet->showInfo( );
 	}
@@ -566,11 +566,11 @@ unsigned int ContainersSweep<T>::trueNeighborNoPlace( const ContainerSet::iterat
  * Sasiad ma flage true i nie ma wolnego miejsca, w aktualnie rozpatrywanym pojemniku tez nie ma wolnego miejsca.
  */
 template <typename T>
-unsigned int ContainersSweep<T>::trueNeighborNoPlaceNoPlace( const ContainerSet::iterator & actual, 
-															 const ContainerSet::iterator & neighbor, 
-															 const Color & color, 
-															 const std::map<Color, bool, ColorCompare> & colorOrganizeMap, 
-															 const int dir, 
+unsigned int ContainersSweep<T>::trueNeighborNoPlaceNoPlace( const ContainerSet::iterator & actual,
+															 const ContainerSet::iterator & neighbor,
+															 const Color & color,
+															 const std::map<Color, bool, ColorCompare> & colorOrganizeMap,
+															 const int dir,
 															 const std::vector<bool> & containerOrganized )
 {
 	unsigned int counter = 0;
@@ -763,7 +763,7 @@ void ContainersSweep<T>::organizeColorTwoDir( const std::map<Color, bool, ColorC
 			std::cout << "Licznosc koloru " << color.getColor( ) << " w pojemniku o indeksie " << actual->getIndex( ) << " = " << blocksNumer << std::endl;
 		}
 
-		// Przekladamy wszystkie nadmiarowe kulki do prawych sasiadow.
+		// Przekladamy wszystkie nadmiarowe kulki do sasiadow.
 		for ( size_t i = 1; i < blocksNumer; ++i ) {
 
 			neighbor = actual;

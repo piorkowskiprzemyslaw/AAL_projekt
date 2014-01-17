@@ -74,8 +74,8 @@ bool Container::moveBlock(const Color & color, Container& destiny)
  	}
  	if( VVVERBOSE ){
  		std::cout << "Move block of color " << color.getColor()
- 				<< " from  " << this->getIndex()
- 				<< " to " << destiny.getIndex() << std::endl;
+ 				<< " from idx " << this->getIndex()
+ 				<< " to idx " << destiny.getIndex() << std::endl;
  	}
 
 	blockSet.erase(blockSet.find(block));

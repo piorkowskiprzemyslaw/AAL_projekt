@@ -161,7 +161,7 @@ int main(int argc, char* argv[])
 		std::cout << " -cso rozwiazanie metoda omiatania w jedna strone." << std::endl;
 		std::cout << " -cst rozwiazanie metoda omiatania w dwie strony." << std::endl;
 		std::cout << " -st  rozwiazanie metoda drzewa przeszukiwan." << std::endl;
-		
+
 		#ifdef _WIN32
 		system( "PAUSE" );
 		#endif
@@ -203,7 +203,7 @@ int main(int argc, char* argv[])
 		if ( SEARCHTREE ) {
 			searchTree.solve( );
 		}
-		
+
 		if ( CYCLEMEASURE ) {
 			cycleCounter.stopCounting( );
 		}
@@ -227,7 +227,7 @@ int main(int argc, char* argv[])
 		if ( SEARCHTREE ) {
 			std::cout << std::endl << "Moves : " << searchTree.getMoves( ) << " state : " << searchTree.getState( ) << std::endl;
 		}
-		
+
 		if ( CYCLEMEASURE ) {
 			std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << " [x10^6]" << std::endl;
 		}
@@ -267,7 +267,7 @@ int main(int argc, char* argv[])
 		if ( SEARCHTREE ) {
 			searchTree.solve( );
 		}
-		
+
 		if ( CYCLEMEASURE ) {
 			cycleCounter.stopCounting( );
 		}
@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
 		if ( SEARCHTREE ) {
 			std::cout << std::endl << "Moves : " << searchTree.getMoves( ) << " state : " << searchTree.getState( ) << std::endl;
 		}
-		
+
 		if ( CYCLEMEASURE ) {
 			std::cout << std::endl << "Number of cycles : " << cycleCounter.getNumerOfCycles( ) << " [x10^6]" << std::endl;
 		}
@@ -299,32 +299,6 @@ int main(int argc, char* argv[])
 			std::cout << std::endl << "Elapsed time : " << timeCounter.getMeasuredTime( ) << "[ms]" << std::endl;
 		}
 	}
-
-	//ContainerSet::iterator firstBlock = containerSet.begin();
-	//++firstBlock;
-	//++firstBlock;
-	//ContainerSet::iterator secondBlock = containerSet.begin();
-	//++secondBlock;
-	//++secondBlock;
-	//++secondBlock;
-	//++secondBlock;
-	//++secondBlock;
-	//ContainerSet::iterator freeSpace = containerSet.begin();
-	//freeSpace++;
-	//freeSpace++;
-	//freeSpace++;
-	//freeSpace++;
-	//freeSpace++;
-	//Color col1(3);
-	//Color col2(1);
-	//containerSet.swapBlockFreeSpace( firstBlock, secondBlock, col2 );
-	//containerSet.showInfo( );
-	//ContainersSweep<SelectionSort> sweep(containerSet);
-	//cycleCounter.startCounting();
-    //sweep.solveProblem();
-    //cycleCounter.startCounting();
-    //ContainerSet containerSet1(generator.getConatinersCapacity(), generator.getIncludingList(), generator.getColorsNumber());
-	//containerSet1.showInfo();
 
     #ifdef _WIN32
 	system("PAUSE");
